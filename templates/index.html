@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Detector</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 1.5rem;
+        }
+        .result p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        .result span {
+            font-weight: bold;
+        }
+        .prediction-benign {
+            color: #28a745;
+        }
+        .prediction-malicious {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>URL Malicious Detector</h2>
+        <form method="POST">
+            <input type="text" name="url" placeholder="Enter URL to check" required value="{{ prediction_result.url if prediction_result }}">
+            <button type="submit">Check</button>
+        </form>
+
+        {% if prediction_result %}
+            <div class="result">
+                <p>URL: <span>{{ prediction_result.url }}</span></p>
+                <p>Prediction: 
+                    <span class="{% if prediction_result.prediction == 'Benign' %}prediction-benign{% else %}prediction-malicious{% endif %}">
+                        {{ prediction_result.prediction }}
+                    </span>
+                </p>
+                <p>Probability (Benign): <span>{{ prediction_result.prob_benign }}</span></p>
+                <p>Probability (Malicious): <span>{{ prediction_result.prob_malicious }}</span></p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
