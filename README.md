@@ -5,11 +5,11 @@
 ---
 
 ## Features
-
+``
 - **Phishing URL Detection**: The system identifies and classifies URLs based on various features that are typical of phishing attempts.
 - **ML-Based Classification**: Trained using machine learning algorithms to classify URLs as **Phishing** or **Legitimate**.
 - **Extensible Framework**: Designed to allow future improvements such as email body and attachment phishing detection, real-time alerts, explainability, and more.
-
+``
 ---
 
 ## Project Overview
