@@ -1,97 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Detector</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 100%;
-            max-width: 500px;
-        }
-        h2 {
-            color: #333;
-            margin-bottom: 1.5rem;
-        }
-        form {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-        }
-        input[type="text"] {
-            flex-grow: 1;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        button {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .result {
-            text-align: left;
-            border-top: 1px solid #eee;
-            padding-top: 1.5rem;
-        }
-        .result p {
-            margin: 0.5rem 0;
-            font-size: 1.1rem;
-        }
-        .result span {
-            font-weight: bold;
-        }
-        .prediction-benign {
-            color: #28a745;
-        }
-        .prediction-malicious {
-            color: #dc3545;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard AI - Advanced Threat Detection</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 2rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    
+    @media (max-width: 968px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    
+    .url-icon {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .email-icon {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .card-header h2 {
+      font-size: 1.5rem;
+      color: #333;
+      font-weight: 600;
+    }
+    
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    input[type="text"], textarea {
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+    }
+    
+    input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .result {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: #f8f9fa;
+      animation: slideIn 0.3s ease;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .result-badge {
+      padding: 0.5rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .badge-benign, .badge-legit {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+    
+    .badge-malicious, .badge-phishing {
+      background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+      color: white;
+    }
+    
+    .probability-bar {
+      margin: 1rem 0;
+    }
+    
+    .probability-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #555;
+    }
+    
+    .progress-bar {
+      height: 12px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      transition: width 0.5s ease;
+    }
+    
+    .progress-benign {
+      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+    }
+    
+    .progress-malicious {
+      background: linear-gradient(90deg, #eb3349 0%, #f45c43 100%);
+    }
+    
+    .features-section {
+      margin-top: 1.5rem;
+    }
+    
+    .features-title {
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    
+    .feature-item {
+      padding: 0.75rem;
+      background: white;
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .feature-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 0.25rem;
+    }
+    
+    .feature-value {
+      font-weight: 700;
+      color: #333;
+      font-size: 1.1rem;
+    }
+    
+    .keywords-section {
+      margin-top: 1rem;
+    }
+    
+    .keywords-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    
+    .keyword-tag {
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .keyword-detected {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+    }
+    
+    .keyword-safe {
+      background: #efe;
+      color: #3a3;
+      border: 1px solid #cfc;
+    }
+    
+    .url-display {
+      word-break: break-all;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      color: #667eea;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 0.5rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>URL Malicious Detector</h2>
-        <form method="POST">
-            <input type="text" name="url" placeholder="Enter URL to check" required value="{{ prediction_result.url if prediction_result }}">
-            <button type="submit">Check</button>
-        </form>
+  <div class="header">
+    <h1>🛡️ PhishGuard AI</h1>
+    <p>Advanced AI-Powered Threat Detection System</p>
+  </div>
 
-        {% if prediction_result %}
-            <div class="result">
-                <p>URL: <span>{{ prediction_result.url }}</span></p>
-                <p>Prediction: 
-                    <span class="{% if prediction_result.prediction == 'Benign' %}prediction-benign{% else %}prediction-malicious{% endif %}">
-                        {{ prediction_result.prediction }}
-                    </span>
-                </p>
-                <p>Probability (Benign): <span>{{ prediction_result.prob_benign }}</span></p>
-                <p>Probability (Malicious): <span>{{ prediction_result.prob_malicious }}</span></p>
+  <div class="main-container">
+    <!-- URL Detector Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon url-icon">🔗</div>
+        <h2>URL Security Scanner</h2>
+      </div>
+      
+      <form method="POST" action="/check_url" id="urlForm">
+        <input type="text" name="url" placeholder="Enter URL to analyze (e.g., https://example.com)" required 
+               value="{{ prediction_result.url if prediction_result }}">
+        <button type="submit">🔍 Scan URL</button>
+      </form>
+
+      {% if prediction_result %}
+        <div class="result">
+          <div class="result-header">
+            <span style="font-weight: 600; color: #555;">Analysis Result</span>
+            <span class="result-badge {% if prediction_result.prediction == 'Benign' %}badge-benign{% else %}badge-malicious{% endif %}">
+              {{ prediction_result.prediction }}
+            </span>
+          </div>
+          
+          <div class="url-display">{{ prediction_result.url }}</div>
+          
+          <div class="probability-bar">
+            <div class="probability-label">
+              <span>✅ Safe</span>
+              <span>{{ (prediction_result.prob_benign | float * 100) | round(1) }}%</span>
             </div>
-        {% endif %}
+            <div class="progress-bar">
+              <div class="progress-fill progress-benign" style="width: {{ (prediction_result.prob_benign | float * 100) }}%"></div>
+            </div>
+          </div>
+          
+          <div class="probability-bar">
+            <div class="probability-label">
+              <span>⚠️ Malicious</span>
+              <span>{{ (prediction_result.prob_malicious | float * 100) | round(1) }}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill progress-malicious" style="width: {{ (prediction_result.prob_malicious | float * 100) }}%"></div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
+
+    <!-- Email Detector Card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon email-icon">📧</div>
+        <h2>Email Phishing Detector</h2>
+      </div>
+      
+      <form method="POST" action="/check_email" id="emailForm">
+        <textarea name="email" id="email" placeholder="Paste email content here for analysis...">{{ email or '' }}</textarea>
+        <button type="submit">🔍 Analyze Email</button>
+      </form>
+      
+      <div id="emailResult"></div>
+    </div>
+  </div>
+
+  <script>
+    // Handle email form submission with AJAX
+    document.getElementById('emailForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const resultDiv = document.getElementById('emailResult');
+      
+      resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing email...</div>';
+      document.querySelector('.loading').style.display = 'block';
+      
+      try {
+        const response = await fetch('/check_email', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        // Build result HTML
+        let html = '<div class="result">';
+        html += '<div class="result-header">';
+        html += '<span style="font-weight: 600; color: #555;">Analysis Result</span>';
+        html += `<span class="result-badge ${data.prediction === 'Legit' ? 'badge-legit' : 'badge-phishing'}">${data.prediction}</span>`;
+        html += '</div>';
+        
+        // Probability
+        html += '<div class="probability-bar">';
+        html += '<div class="probability-label">';
+        html += `<span>${data.prediction === 'Phishing' ? '⚠️ Phishing Confidence' : '✅ Legitimacy Confidence'}</span>`;
+        html += `<span>${(data.probability * 100).toFixed(1)}%</span>`;
+        html += '</div>';
+        html += '<div class="progress-bar">';
+        html += `<div class="progress-fill ${data.prediction === 'Phishing' ? 'progress-malicious' : 'progress-benign'}" style="width: ${data.probability * 100}%"></div>`;
+        html += '</div>';
+        html += '</div>';
+        
+        // Features
+        if (data.features) {
+          html += '<div class="features-section">';
+          html += '<div class="features-title">📊 Email Analysis</div>';
+          html += '<div class="features-grid">';
+          html += `<div class="feature-item"><div class="feature-label">Body Length</div><div class="feature-value">${data.features.body_length}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Word Count</div><div class="feature-value">${data.features.body_words}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Uppercase Ratio</div><div class="feature-value">${(data.features.uppercase_ratio * 100).toFixed(1)}%</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">URLs Found</div><div class="feature-value">${data.features.num_urls}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Exclamation Marks</div><div class="feature-value">${data.features.exclamation_marks}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Question Marks</div><div class="feature-value">${data.features.question_marks}</div></div>`;
+          html += '</div>';
+          
+          // Suspicious keywords
+          html += '<div class="keywords-section">';
+          html += '<div class="features-title">🔍 Suspicious Keywords</div>';
+          html += '<div class="keywords-grid">';
+          
+          const keywords = data.features.suspicious_keywords;
+          for (const [key, detected] of Object.entries(keywords)) {
+            const label = key.replace(/_/g, ' ').toUpperCase();
+            html += `<span class="keyword-tag ${detected ? 'keyword-detected' : 'keyword-safe'}">${label}</span>`;
+          }
+          
+          html += '</div>';
+          html += '</div>';
+          html += '</div>';
+        }
+        
+        html += '</div>';
+        
+        resultDiv.innerHTML = html;
+      } catch (error) {
+        resultDiv.innerHTML = '<div class="result" style="background: #fee; color: #c33;">Error analyzing email. Please try again.</div>';
+      }
+    });
+  </script>
 </body>
 </html>
