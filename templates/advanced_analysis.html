@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhishGuard AI - Advanced Analysis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 2rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .nav-links {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      margin: 0 0.5rem;
+      background: rgba(255,255,255,0.2);
+      border-radius: 8px;
+      transition: background 0.3s;
+    }
+    
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    
+    .api-status {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .api-item {
+      padding: 1rem;
+      border-radius: 8px;
+      border: 2px solid #e0e0e0;
+    }
+    
+    .api-item.configured {
+      border-color: #4caf50;
+      background: #f1f8f4;
+    }
+    
+    .api-item.not-configured {
+      border-color: #ff9800;
+      background: #fff8f0;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .tab {
+      padding: 1rem 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.3s;
+    }
+    
+    .tab.active {
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    button {
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+    }
+    
+    .result {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      background: #f8f9fa;
+    }
+    
+    .result-section {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .result-section h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .verdict-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 700;
+      margin: 0.5rem 0;
+    }
+    
+    .verdict-malicious {
+      background: #ff5252;
+      color: white;
+    }
+    
+    .verdict-clean {
+      background: #4caf50;
+      color: white;
+    }
+    
+    .verdict-unknown {
+      background: #9e9e9e;
+      color: white;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #667eea;
+      font-weight: 600;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .info-box {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+    
+    .warning-box {
+      background: #fff3e0;
+      border-left: 4px solid #ff9800;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🔬 Advanced Threat Analysis</h1>
+    <p>Deep analysis using external security APIs</p>
+  </div>
+
+  <div class="nav-links">
+    <a href="/">← Back to Main</a>
+    <a href="#api-config">API Configuration</a>
+  </div>
+
+  <div class="container">
+    <!-- API Status Card -->
+    <div class="card">
+      <h2>📡 API Status</h2>
+      <div class="api-status">
+        <div class="api-item {% if api_status.virustotal %}configured{% else %}not-configured{% endif %}">
+          <strong>VirusTotal</strong><br>
+          {% if api_status.virustotal %}✅ Configured{% else %}⚠️ Not Configured{% endif %}
+        </div>
+        <div class="api-item {% if api_status.urlscan %}configured{% else %}not-configured{% endif %}">
+          <strong>URLScan.io</strong><br>
+          {% if api_status.urlscan %}✅ Configured{% else %}⚠️ Not Configured{% endif %}
+        </div>
+        <div class="api-item {% if api_status.google_safe_browsing %}configured{% else %}not-configured{% endif %}">
+          <strong>Google Safe Browsing</strong><br>
+          {% if api_status.google_safe_browsing %}✅ Configured{% else %}⚠️ Not Configured{% endif %}
+        </div>
+        <div class="api-item {% if api_status.abuseipdb %}configured{% else %}not-configured{% endif %}">
+          <strong>AbuseIPDB</strong><br>
+          {% if api_status.abuseipdb %}✅ Configured{% else %}⚠️ Not Configured{% endif %}
+        </div>
+        <div class="api-item configured">
+          <strong>PhishTank</strong><br>
+          ✅ Available
+        </div>
+        <div class="api-item {% if api_status.whois %}configured{% else %}not-configured{% endif %}">
+          <strong>WHOIS</strong><br>
+          {% if api_status.whois %}✅ Configured{% else %}⚠️ Not Configured{% endif %}
+        </div>
+      </div>
+      
+      <div class="info-box">
+        <strong>ℹ️ Note:</strong> Configure API keys below to enable deep analysis. Free tiers available for all services.
+      </div>
+    </div>
+
+    <!-- Analysis Tabs -->
+    <div class="card">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('email')">📧 Email Deep Analysis</button>
+        <button class="tab" onclick="switchTab('url')">🔗 URL Analysis</button>
+        <button class="tab" onclick="switchTab('ip')">🌐 IP Analysis</button>
+        <button class="tab" onclick="switchTab('domain')">🏢 Domain Analysis</button>
+      </div>
+
+      <!-- Email Deep Analysis Tab -->
+      <div id="email-tab" class="tab-content active">
+        <h2>📧 Email Deep Analysis</h2>
+        <div class="info-box">
+          Paste an email to extract and analyze all URLs, IPs, and domains using multiple security APIs.
+        </div>
+        <form id="emailDeepForm">
+          <textarea name="email" rows="10" placeholder="Paste email content here..." required></textarea>
+          <button type="submit">🔍 Analyze Email Components</button>
+        </form>
+        <div id="emailDeepResult"></div>
+      </div>
+
+      <!-- URL Analysis Tab -->
+      <div id="url-tab" class="tab-content">
+        <h2>🔗 URL Deep Analysis</h2>
+        <div class="info-box">
+          Analyze a URL using VirusTotal, URLScan.io, Google Safe Browsing, and PhishTank.
+        </div>
+        <form id="urlDeepForm">
+          <input type="text" name="url" placeholder="https://example.com" required>
+          <button type="submit">🔍 Analyze URL</button>
+        </form>
+        <div id="urlDeepResult"></div>
+      </div>
+
+      <!-- IP Analysis Tab -->
+      <div id="ip-tab" class="tab-content">
+        <h2>🌐 IP Address Analysis</h2>
+        <div class="info-box">
+          Check IP reputation using VirusTotal and AbuseIPDB.
+        </div>
+        <form id="ipForm">
+          <input type="text" name="ip" placeholder="192.168.1.1" required>
+          <button type="submit">🔍 Analyze IP</button>
+        </form>
+        <div id="ipResult"></div>
+      </div>
+
+      <!-- Domain Analysis Tab -->
+      <div id="domain-tab" class="tab-content">
+        <h2>🏢 Domain Analysis</h2>
+        <div class="info-box">
+          Analyze domain reputation and WHOIS information.
+        </div>
+        <form id="domainForm">
+          <input type="text" name="domain" placeholder="example.com" required>
+          <button type="submit">🔍 Analyze Domain</button>
+        </form>
+        <div id="domainResult"></div>
+      </div>
+    </div>
+
+    <!-- API Configuration Card -->
+    <div class="card" id="api-config">
+      <h2>⚙️ API Configuration</h2>
+      <div class="warning-box">
+        <strong>⚠️ Security Note:</strong> API keys are stored in memory only and will be lost when the server restarts. For production, use environment variables.
+      </div>
+      
+      <div class="info-box">
+        <strong>📚 Get Free API Keys:</strong><br>
+        • <a href="https://www.virustotal.com/gui/join-us" target="_blank">VirusTotal</a> (500 requests/day)<br>
+        • <a href="https://urlscan.io/user/signup" target="_blank">URLScan.io</a> (100 requests/day)<br>
+        • <a href="https://developers.google.com/safe-browsing" target="_blank">Google Safe Browsing</a> (10,000 requests/day)<br>
+        • <a href="https://www.abuseipdb.com/register" target="_blank">AbuseIPDB</a> (1,000 requests/day)<br>
+        • <a href="https://whoisxmlapi.com/" target="_blank">WHOIS API</a> (Free tier available)
+      </div>
+
+      <form id="apiConfigForm">
+        <div class="grid-2">
+          <div>
+            <label><strong>Service:</strong></label>
+            <select name="service" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;">
+              <option value="virustotal">VirusTotal</option>
+              <option value="urlscan">URLScan.io</option>
+              <option value="google_safe_browsing">Google Safe Browsing</option>
+              <option value="abuseipdb">AbuseIPDB</option>
+              <option value="whois">WHOIS API</option>
+              <option value="phishtank">PhishTank (Optional)</option>
+            </select>
+          </div>
+          <div>
+            <label><strong>API Key:</strong></label>
+            <input type="text" name="api_key" placeholder="Enter API key" required>
+          </div>
+        </div>
+        <button type="submit">💾 Save API Key</button>
+      </form>
+      <div id="apiConfigResult"></div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // Email Deep Analysis
+    document.getElementById('emailDeepForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const resultDiv = document.getElementById('emailDeepResult');
+      resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing email components... This may take 30-60 seconds...</div>';
+      
+      try {
+        const formData = new FormData(this);
+        const response = await fetch('/analyze_email_deep', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        resultDiv.innerHTML = formatEmailDeepResult(data);
+      } catch (error) {
+        resultDiv.innerHTML = '<div class="result"><div class="warning-box">Error: ' + error.message + '</div></div>';
+      }
+    });
+
+    // URL Deep Analysis
+    document.getElementById('urlDeepForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const resultDiv = document.getElementById('urlDeepResult');
+      resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing URL... This may take 20-30 seconds...</div>';
+      
+      try {
+        const formData = new FormData(this);
+        const response = await fetch('/analyze_url_deep', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        resultDiv.innerHTML = formatURLResult(data);
+      } catch (error) {
+        resultDiv.innerHTML = '<div class="result"><div class="warning-box">Error: ' + error.message + '</div></div>';
+      }
+    });
+
+    // IP Analysis
+    document.getElementById('ipForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const resultDiv = document.getElementById('ipResult');
+      resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing IP address...</div>';
+      
+      try {
+        const formData = new FormData(this);
+        const response = await fetch('/analyze_ip', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        resultDiv.innerHTML = formatIPResult(data);
+      } catch (error) {
+        resultDiv.innerHTML = '<div class="result"><div class="warning-box">Error: ' + error.message + '</div></div>';
+      }
+    });
+
+    // Domain Analysis
+    document.getElementById('domainForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const resultDiv = document.getElementById('domainResult');
+      resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing domain...</div>';
+      
+      try {
+        const formData = new FormData(this);
+        const response = await fetch('/analyze_domain', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        resultDiv.innerHTML = formatDomainResult(data);
+      } catch (error) {
+        resultDiv.innerHTML = '<div class="result"><div class="warning-box">Error: ' + error.message + '</div></div>';
+      }
+    });
+
+    // API Configuration
+    document.getElementById('apiConfigForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const resultDiv = document.getElementById('apiConfigResult');
+      
+      try {
+        const formData = new FormData(this);
+        const response = await fetch('/api_config', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+          resultDiv.innerHTML = '<div class="result"><div class="info-box">✅ ' + data.message + '</div></div>';
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          resultDiv.innerHTML = '<div class="result"><div class="warning-box">❌ ' + data.message + '</div></div>';
+        }
+      } catch (error) {
+        resultDiv.innerHTML = '<div class="result"><div class="warning-box">Error: ' + error.message + '</div></div>';
+      }
+    });
+
+    // Format functions
+    function formatEmailDeepResult(data) {
+      let html = '<div class="result">';
+      
+      // Email Features
+      if (data.email_features) {
+        html += '<div class="result-section">';
+        html += '<h3>📧 Email Overview</h3>';
+        html += `<p>From Domain: <strong>${data.email_features.from_domain || 'N/A'}</strong></p>`;
+        html += `<p>URLs Found: <strong>${data.email_features.num_urls}</strong></p>`;
+        html += `<p>IPs Found: <strong>${data.email_features.num_ips}</strong></p>`;
+        html += `<p>Domains Found: <strong>${data.email_features.num_domains}</strong></p>`;
+        html += '</div>';
+      }
+      
+      // URLs
+      if (data.urls && data.urls.length > 0) {
+        html += '<div class="result-section">';
+        html += '<h3>🔗 URL Analysis Results</h3>';
+        data.urls.forEach(url => {
+          html += `<div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">`;
+          html += `<strong>${url.url}</strong><br>`;
+          html += `<span class="verdict-badge verdict-${url.overall_verdict.is_malicious ? 'malicious' : 'clean'}">`;
+          html += url.overall_verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+          html += `</span>`;
+          html += `<p>Confidence: ${url.overall_verdict.confidence.toFixed(1)}% (${url.overall_verdict.malicious_sources}/${url.overall_verdict.total_sources} sources)</p>`;
+          html += `</div>`;
+        });
+        html += '</div>';
+      }
+      
+      // IPs
+      if (data.ips && data.ips.length > 0) {
+        html += '<div class="result-section">';
+        html += '<h3>🌐 IP Analysis Results</h3>';
+        data.ips.forEach(ip => {
+          html += `<div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">`;
+          html += `<strong>${ip.ip}</strong><br>`;
+          html += `<span class="verdict-badge verdict-${ip.overall_verdict.is_malicious ? 'malicious' : 'clean'}">`;
+          html += ip.overall_verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+          html += `</span>`;
+          html += `</div>`;
+        });
+        html += '</div>';
+      }
+      
+      // Domains
+      if (data.domains && data.domains.length > 0) {
+        html += '<div class="result-section">';
+        html += '<h3>🏢 Domain Analysis Results</h3>';
+        data.domains.forEach(domain => {
+          html += `<div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">`;
+          html += `<strong>${domain.domain}</strong><br>`;
+          html += `<span class="verdict-badge verdict-${domain.overall_verdict.is_malicious ? 'malicious' : 'clean'}">`;
+          html += domain.overall_verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+          html += `</span>`;
+          html += `</div>`;
+        });
+        html += '</div>';
+      }
+      
+      html += '</div>';
+      return html;
+    }
+
+    function formatURLResult(data) {
+      let html = '<div class="result">';
+      html += '<div class="result-section">';
+      html += '<h3>🔗 URL Analysis: ' + data.url + '</h3>';
+      
+      const verdict = data.overall_verdict;
+      html += `<span class="verdict-badge verdict-${verdict.is_malicious ? 'malicious' : 'clean'}">`;
+      html += verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+      html += `</span>`;
+      html += `<p>Confidence: ${verdict.confidence.toFixed(1)}% (${verdict.malicious_sources}/${verdict.total_sources} sources flagged)</p>`;
+      html += '</div>';
+      
+      // Individual service results
+      if (data.virustotal && data.virustotal.available) {
+        html += '<div class="result-section">';
+        html += '<h3>VirusTotal</h3>';
+        html += `<p>Malicious: ${data.virustotal.malicious} | Suspicious: ${data.virustotal.suspicious} | Clean: ${data.virustotal.harmless}</p>`;
+        if (data.virustotal.permalink) {
+          html += `<p><a href="${data.virustotal.permalink}" target="_blank">View Full Report →</a></p>`;
+        }
+        html += '</div>';
+      }
+      
+      if (data.urlscan && data.urlscan.available) {
+        html += '<div class="result-section">';
+        html += '<h3>URLScan.io</h3>';
+        html += `<p>Malicious: ${data.urlscan.malicious ? 'Yes' : 'No'}</p>`;
+        if (data.urlscan.screenshot) {
+          html += `<p><img src="${data.urlscan.screenshot}" style="max-width: 100%; border-radius: 8px;" alt="Screenshot"></p>`;
+        }
+        html += '</div>';
+      }
+      
+      html += '</div>';
+      return html;
+    }
+
+    function formatIPResult(data) {
+      let html = '<div class="result">';
+      html += '<div class="result-section">';
+      html += '<h3>🌐 IP Analysis: ' + data.ip + '</h3>';
+      
+      const verdict = data.overall_verdict;
+      html += `<span class="verdict-badge verdict-${verdict.is_malicious ? 'malicious' : 'clean'}">`;
+      html += verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+      html += `</span>`;
+      html += '</div>';
+      
+      if (data.abuseipdb && data.abuseipdb.available) {
+        html += '<div class="result-section">';
+        html += '<h3>AbuseIPDB</h3>';
+        html += `<p>Abuse Confidence Score: <strong>${data.abuseipdb.abuse_confidence_score}%</strong></p>`;
+        html += `<p>Total Reports: ${data.abuseipdb.total_reports}</p>`;
+        html += `<p>Country: ${data.abuseipdb.country || 'Unknown'}</p>`;
+        html += '</div>';
+      }
+      
+      html += '</div>';
+      return html;
+    }
+
+    function formatDomainResult(data) {
+      let html = '<div class="result">';
+      html += '<div class="result-section">';
+      html += '<h3>🏢 Domain Analysis: ' + data.domain + '</h3>';
+      
+      const verdict = data.overall_verdict;
+      html += `<span class="verdict-badge verdict-${verdict.is_malicious ? 'malicious' : 'clean'}">`;
+      html += verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+      html += `</span>`;
+      html += '</div>';
+      
+      if (data.whois && data.whois.available) {
+        html += '<div class="result-section">';
+        html += '<h3>WHOIS Information</h3>';
+        html += `<p>Created: ${data.whois.created_date || 'Unknown'}</p>`;
+        html += `<p>Age: ${data.whois.age_days ? data.whois.age_days + ' days' : 'Unknown'}</p>`;
+        html += `<p>Registrar: ${data.whois.registrar || 'Unknown'}</p>`;
+        if (data.whois.is_recently_registered) {
+          html += '<p class="warning-box">⚠️ Recently registered domain (< 30 days)</p>';
+        }
+        html += '</div>';
+      }
+      
+      html += '</div>';
+      return html;
+    }
+  </script>
+</body>
+</html>
