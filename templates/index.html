@@ -12,36 +12,41 @@
     }
     
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #0f172a;
       min-height: 100vh;
-      padding: 2rem 1rem;
+      padding: 0;
+      color: #e2e8f0;
     }
     
     .header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid #334155;
+      padding: 2rem 1rem;
       text-align: center;
-      color: white;
-      margin-bottom: 2rem;
     }
     
     .header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
+      font-size: 2rem;
+      font-weight: 600;
       margin-bottom: 0.5rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+      color: #f8fafc;
+      letter-spacing: -0.5px;
     }
     
     .header p {
-      font-size: 1.1rem;
-      opacity: 0.9;
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-weight: 400;
     }
     
     .main-container {
-      max-width: 1200px;
+      max-width: 1400px;
       margin: 0 auto;
+      padding: 2rem 1rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+      gap: 1.5rem;
     }
     
     @media (max-width: 968px) {
@@ -51,16 +56,15 @@
     }
     
     .card {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.75rem;
+      transition: border-color 0.2s ease;
     }
     
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+      border-color: #475569;
     }
     
     .card-header {
@@ -69,31 +73,25 @@
       gap: 0.75rem;
       margin-bottom: 1.5rem;
       padding-bottom: 1rem;
-      border-bottom: 2px solid #f0f0f0;
+      border-bottom: 1px solid #334155;
     }
     
     .card-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.5rem;
-    }
-    
-    .url-icon {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .email-icon {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      font-size: 1.25rem;
+      background: #334155;
     }
     
     .card-header h2 {
-      font-size: 1.5rem;
-      color: #333;
+      font-size: 1.25rem;
+      color: #f8fafc;
       font-weight: 600;
+      letter-spacing: -0.3px;
     }
     
     form {
@@ -103,19 +101,25 @@
     }
     
     input[type="text"], textarea {
-      padding: 1rem;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 1rem;
+      padding: 0.875rem;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      font-size: 0.95rem;
       font-family: inherit;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background: #0f172a;
+      color: #e2e8f0;
+      transition: border-color 0.2s ease;
       width: 100%;
     }
     
     input[type="text"]:focus, textarea:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: #3b82f6;
+      background: #1e293b;
+    }
+    
+    input[type="text"]::placeholder, textarea::placeholder {
+      color: #64748b;
     }
     
     textarea {
@@ -124,31 +128,31 @@
     }
     
     button {
-      padding: 1rem 2rem;
+      padding: 0.75rem 1.5rem;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      background: #3b82f6;
       color: white;
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: background 0.2s ease;
     }
     
     button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      background: #2563eb;
     }
     
     button:active {
-      transform: translateY(0);
+      background: #1d4ed8;
     }
     
     .result {
       margin-top: 1.5rem;
       padding: 1.5rem;
-      border-radius: 12px;
-      background: #f8f9fa;
+      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid #334155;
       animation: slideIn 0.3s ease;
     }
     
@@ -169,25 +173,25 @@
       justify-content: space-between;
       margin-bottom: 1rem;
       padding-bottom: 1rem;
-      border-bottom: 2px solid #e0e0e0;
+      border-bottom: 1px solid #334155;
     }
     
     .result-badge {
-      padding: 0.5rem 1.5rem;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.875rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
     
     .badge-benign, .badge-legit {
-      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      background: #10b981;
       color: white;
     }
     
     .badge-malicious, .badge-phishing {
-      background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+      background: #ef4444;
       color: white;
     }
     
@@ -199,29 +203,30 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 0.5rem;
-      font-weight: 600;
-      color: #555;
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: #94a3b8;
     }
     
     .progress-bar {
-      height: 12px;
-      background: #e0e0e0;
-      border-radius: 10px;
+      height: 8px;
+      background: #334155;
+      border-radius: 4px;
       overflow: hidden;
     }
     
     .progress-fill {
       height: 100%;
-      border-radius: 10px;
+      border-radius: 4px;
       transition: width 0.5s ease;
     }
     
     .progress-benign {
-      background: linear-gradient(90deg, #11998e 0%, #38ef7d 100%);
+      background: #10b981;
     }
     
     .progress-malicious {
-      background: linear-gradient(90deg, #eb3349 0%, #f45c43 100%);
+      background: #ef4444;
     }
     
     .features-section {
@@ -229,10 +234,10 @@
     }
     
     .features-title {
-      font-weight: 700;
-      color: #333;
+      font-weight: 600;
+      color: #f8fafc;
       margin-bottom: 1rem;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     
     .features-grid {
@@ -243,21 +248,21 @@
     
     .feature-item {
       padding: 0.75rem;
-      background: white;
-      border-radius: 8px;
-      border-left: 3px solid #667eea;
+      background: #0f172a;
+      border-radius: 6px;
+      border: 1px solid #334155;
     }
     
     .feature-label {
-      font-size: 0.85rem;
-      color: #666;
+      font-size: 0.8rem;
+      color: #94a3b8;
       margin-bottom: 0.25rem;
     }
     
     .feature-value {
-      font-weight: 700;
-      color: #333;
-      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f8fafc;
+      font-size: 1rem;
     }
     
     .keywords-section {
@@ -271,46 +276,47 @@
     }
     
     .keyword-tag {
-      padding: 0.4rem 0.8rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
     
     .keyword-detected {
-      background: #fee;
-      color: #c33;
-      border: 1px solid #fcc;
+      background: #7f1d1d;
+      color: #fca5a5;
+      border: 1px solid #991b1b;
     }
     
     .keyword-safe {
-      background: #efe;
-      color: #3a3;
-      border: 1px solid #cfc;
+      background: #14532d;
+      color: #86efac;
+      border: 1px solid #166534;
     }
     
     .url-display {
       word-break: break-all;
       padding: 0.75rem;
-      background: white;
-      border-radius: 8px;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 6px;
       margin-bottom: 1rem;
       font-family: 'Courier New', monospace;
-      font-size: 0.9rem;
-      color: #555;
+      font-size: 0.875rem;
+      color: #94a3b8;
     }
     
     .loading {
       display: none;
       text-align: center;
-      color: #667eea;
-      font-weight: 600;
+      color: #3b82f6;
+      font-weight: 500;
       margin-top: 1rem;
     }
     
     .spinner {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
+      border: 3px solid #334155;
+      border-top: 3px solid #3b82f6;
       border-radius: 50%;
       width: 30px;
       height: 30px;
@@ -326,8 +332,13 @@
 </head>
 <body>
   <div class="header">
-    <h1>🛡️ PhishGuard AI</h1>
-    <p>Advanced AI-Powered Threat Detection System</p>
+    <h1>PhishGuard AI</h1>
+    <p>Advanced Threat Detection & Analysis Platform</p>
+    <div style="margin-top: 1.25rem;">
+      <a href="/advanced_analysis" style="color: #e2e8f0; text-decoration: none; padding: 0.625rem 1.25rem; background: #334155; border-radius: 6px; display: inline-block; transition: background 0.2s; font-size: 0.9rem; font-weight: 500; border: 1px solid #475569;">
+        Advanced Analysis →
+      </a>
+    </div>
   </div>
 
   <div class="main-container">
@@ -433,20 +444,83 @@
         
         // Features
         if (data.features) {
+          // Basic Statistics
           html += '<div class="features-section">';
-          html += '<div class="features-title">📊 Email Analysis</div>';
+          html += '<div class="features-title">📊 Basic Statistics</div>';
           html += '<div class="features-grid">';
           html += `<div class="feature-item"><div class="feature-label">Body Length</div><div class="feature-value">${data.features.body_length}</div></div>`;
           html += `<div class="feature-item"><div class="feature-label">Word Count</div><div class="feature-value">${data.features.body_words}</div></div>`;
           html += `<div class="feature-item"><div class="feature-label">Uppercase Ratio</div><div class="feature-value">${(data.features.uppercase_ratio * 100).toFixed(1)}%</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">URLs Found</div><div class="feature-value">${data.features.num_urls}</div></div>`;
           html += `<div class="feature-item"><div class="feature-label">Exclamation Marks</div><div class="feature-value">${data.features.exclamation_marks}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Question Marks</div><div class="feature-value">${data.features.question_marks}</div></div>`;
+          html += '</div>';
+          html += '</div>';
+          
+          // Header Features
+          html += '<div class="features-section">';
+          html += '<div class="features-title">📧 Header Analysis</div>';
+          html += '<div class="features-grid">';
+          html += `<div class="feature-item"><div class="feature-label">SPF Authentication</div><div class="feature-value">${data.features.has_spf ? '✅ Present' : '❌ Missing'}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">DKIM Signature</div><div class="feature-value">${data.features.has_dkim ? '✅ Present' : '❌ Missing'}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Domain Mismatch</div><div class="feature-value">${data.features.from_return_mismatch ? '⚠️ Yes' : '✅ No'}</div></div>`;
+          html += '</div>';
+          html += '</div>';
+          
+          // URL Features
+          html += '<div class="features-section">';
+          html += '<div class="features-title">🔗 URL Analysis</div>';
+          html += '<div class="features-grid">';
+          html += `<div class="feature-item"><div class="feature-label">Total URLs</div><div class="feature-value">${data.features.num_urls}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">URL Shorteners</div><div class="feature-value">${data.features.num_shorteners || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">IP-based URLs</div><div class="feature-value">${data.features.num_ip_urls || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Domain Mismatch</div><div class="feature-value">${data.features.domain_mismatch ? '⚠️ Yes' : '✅ No'}</div></div>`;
+          html += '</div>';
+          html += '</div>';
+          
+          // Content Analysis
+          html += '<div class="features-section">';
+          html += '<div class="features-title">📝 Content Analysis</div>';
+          html += '<div class="features-grid">';
+          html += `<div class="feature-item"><div class="feature-label">Spammy Keywords</div><div class="feature-value">${data.features.spammy_keyword_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Urgency Keywords</div><div class="feature-value">${data.features.urgency_keyword_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Threat Keywords</div><div class="feature-value">${data.features.threat_keyword_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Generic Salutation</div><div class="feature-value">${data.features.has_generic_salutation ? '⚠️ Yes' : '✅ No'}</div></div>`;
+          html += '</div>';
+          html += '</div>';
+          
+          // Psychological Features
+          html += '<div class="features-section">';
+          html += '<div class="features-title">🧠 Psychological Triggers</div>';
+          html += '<div class="features-grid">';
+          html += `<div class="feature-item"><div class="feature-label">Fear Triggers</div><div class="feature-value">${data.features.emotion_fear || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Urgency Triggers</div><div class="feature-value">${data.features.emotion_urgency || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Greed Triggers</div><div class="feature-value">${data.features.emotion_greed || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Scarcity Score</div><div class="feature-value">${data.features.scarcity_score || 0}</div></div>`;
+          html += '</div>';
+          html += '</div>';
+          
+          // Attachment Features
+          if (data.features.num_attachments > 0) {
+            html += '<div class="features-section">';
+            html += '<div class="features-title">📎 Attachment Analysis</div>';
+            html += '<div class="features-grid">';
+            html += `<div class="feature-item"><div class="feature-label">Attachments</div><div class="feature-value">${data.features.num_attachments}</div></div>`;
+            html += `<div class="feature-item"><div class="feature-label">Suspicious Files</div><div class="feature-value">${data.features.has_suspicious_attachment ? '⚠️ Yes' : '✅ No'}</div></div>`;
+            html += '</div>';
+            html += '</div>';
+          }
+          
+          // Technical Features
+          html += '<div class="features-section">';
+          html += '<div class="features-title">⚙️ Technical Analysis</div>';
+          html += '<div class="features-grid">';
+          html += `<div class="feature-item"><div class="feature-label">Homoglyph Characters</div><div class="feature-value">${data.features.homoglyph_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Suspicious Encoding</div><div class="feature-value">${data.features.suspicious_encoding ? '⚠️ Yes' : '✅ No'}</div></div>`;
+          html += '</div>';
           html += '</div>';
           
           // Suspicious keywords
           html += '<div class="keywords-section">';
-          html += '<div class="features-title">🔍 Suspicious Keywords</div>';
+          html += '<div class="features-title">🔍 Suspicious Keywords Detected</div>';
           html += '<div class="keywords-grid">';
           
           const keywords = data.features.suspicious_keywords;
@@ -455,7 +529,6 @@
             html += `<span class="keyword-tag ${detected ? 'keyword-detected' : 'keyword-safe'}">${label}</span>`;
           }
           
-          html += '</div>';
           html += '</div>';
           html += '</div>';
         }
