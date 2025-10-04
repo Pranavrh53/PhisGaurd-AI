@@ -303,9 +303,19 @@
         <div class="info-box">
           Paste an email to extract and analyze all URLs, IPs, and domains using multiple security APIs.
         </div>
-        <form id="emailDeepForm">
-          <textarea name="email" rows="10" placeholder="Paste email content here..." required></textarea>
-          <button type="submit">🔍 Analyze Email Components</button>
+        <form id="emailDeepForm" enctype="multipart/form-data">
+          <div>
+            <label for="email">Or paste email content:</label>
+            <textarea name="email" rows="5" placeholder="Paste email content here..."></textarea>
+          </div>
+          <div style="margin: 1rem 0;">
+            <strong>OR</strong>
+          </div>
+          <div>
+            <label for="emailFile">Upload .eml file:</label>
+            <input type="file" name="file" id="emailFile" accept=".eml,.txt">
+          </div>
+          <button type="submit">🔍 Analyze Email</button>
         </form>
         <div id="emailDeepResult"></div>
       </div>
@@ -404,18 +414,40 @@
     document.getElementById('emailDeepForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const resultDiv = document.getElementById('emailDeepResult');
+      const form = this;
+      
+      // Validate that either text or file is provided
+      const emailText = form.email.value.trim();
+      const fileInput = form.file;
+      
+      if (!emailText && (!fileInput || !fileInput.files || fileInput.files.length === 0)) {
+        resultDiv.innerHTML = '<div class="warning-box">Please provide either email text or upload a file.</div>';
+        return;
+      }
+      
       resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div>Analyzing email components... This may take 30-60 seconds...</div>';
       
       try {
-        const formData = new FormData(this);
+        const formData = new FormData(form);
+        // If no file is selected but text is provided, ensure it's sent
+        if (fileInput.files.length === 0 && emailText) {
+          formData.set('email', emailText);
+        }
+        
         const response = await fetch('/analyze_email_deep', {
           method: 'POST',
           body: formData
         });
         
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(`Server error: ${response.status} - ${error}`);
+        }
+        
         const data = await response.json();
         resultDiv.innerHTML = formatEmailDeepResult(data);
       } catch (error) {
+        console.error('Error analyzing email:', error);
         resultDiv.innerHTML = '<div class="result"><div class="warning-box">Error: ' + error.message + '</div></div>';
       }
     });
@@ -508,58 +540,128 @@
     function formatEmailDeepResult(data) {
       let html = '<div class="result">';
       
+      // Check for errors first
+      if (data.error) {
+        html += `<div class="warning-box">Error: ${data.error}</div>`;
+        html += '</div>';
+        return html;
+      }
+
       // Email Features
       if (data.email_features) {
         html += '<div class="result-section">';
         html += '<h3>📧 Email Overview</h3>';
         html += `<p>From Domain: <strong>${data.email_features.from_domain || 'N/A'}</strong></p>`;
-        html += `<p>URLs Found: <strong>${data.email_features.num_urls}</strong></p>`;
-        html += `<p>IPs Found: <strong>${data.email_features.num_ips}</strong></p>`;
-        html += `<p>Domains Found: <strong>${data.email_features.num_domains}</strong></p>`;
+        html += `<p>URLs Found: <strong>${data.email_features.num_urls || 0}</strong></p>`;
+        html += `<p>IPs Found: <strong>${data.email_features.num_ips || 0}</strong></p>`;
+        html += `<p>Domains Found: <strong>${data.email_features.num_domains || 0}</strong></p>`;
         html += '</div>';
       }
       
-      // URLs
+      // Process URLs
       if (data.urls && data.urls.length > 0) {
         html += '<div class="result-section">';
         html += '<h3>🔗 URL Analysis Results</h3>';
-        data.urls.forEach(url => {
+        data.urls.forEach(item => {
+          const isMalicious = item.verdict === 'malicious' || (item.is_malicious === true);
+          const confidence = item.confidence || 0;
+          
           html += `<div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">`;
-          html += `<strong>${url.url}</strong><br>`;
-          html += `<span class="verdict-badge verdict-${url.overall_verdict.is_malicious ? 'malicious' : 'clean'}">`;
-          html += url.overall_verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
-          html += `</span>`;
-          html += `<p>Confidence: ${url.overall_verdict.confidence.toFixed(1)}% (${url.overall_verdict.malicious_sources}/${url.overall_verdict.total_sources} sources)</p>`;
+          html += `<strong>${item.url || 'Unknown URL'}</strong><br>`;
+          
+          if (item.error) {
+            html += `<span class="verdict-badge verdict-unknown">ERROR</span>`;
+            html += `<p>${item.error}</p>`;
+          } else {
+            html += `<span class="verdict-badge verdict-${isMalicious ? 'malicious' : 'clean'}">`;
+            html += isMalicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+            html += `</span>`;
+            
+            if (confidence > 0) {
+              html += `<p>Confidence: ${confidence}%</p>`;
+            }
+            
+            // Add any additional details if available
+            if (item.threats && item.threats.length > 0) {
+              html += '<div style="margin-top: 0.5rem; font-size: 0.9em;">';
+              html += '<strong>Threats detected:</strong><ul style="margin: 0.5rem 0 0 1.5rem;">';
+              item.threats.forEach(threat => {
+                html += `<li>${threat}</li>`;
+              });
+              html += '</ul></div>';
+            }
+          }
+          
           html += `</div>`;
         });
         html += '</div>';
       }
       
-      // IPs
+      // Process IPs
       if (data.ips && data.ips.length > 0) {
         html += '<div class="result-section">';
         html += '<h3>🌐 IP Analysis Results</h3>';
-        data.ips.forEach(ip => {
+        data.ips.forEach(item => {
+          const isMalicious = item.verdict === 'malicious' || (item.is_malicious === true);
+          
           html += `<div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">`;
-          html += `<strong>${ip.ip}</strong><br>`;
-          html += `<span class="verdict-badge verdict-${ip.overall_verdict.is_malicious ? 'malicious' : 'clean'}">`;
-          html += ip.overall_verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
-          html += `</span>`;
+          html += `<strong>${item.ip || 'Unknown IP'}</strong><br>`;
+          
+          if (item.error) {
+            html += `<span class="verdict-badge verdict-unknown">ERROR</span>`;
+            html += `<p>${item.error}</p>`;
+          } else {
+            html += `<span class="verdict-badge verdict-${isMalicious ? 'malicious' : 'clean'}">`;
+            html += isMalicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+            html += `</span>`;
+            
+            // Add any additional details if available
+            if (item.details) {
+              html += '<div style="margin-top: 0.5rem; font-size: 0.9em;">';
+              for (const [key, value] of Object.entries(item.details)) {
+                if (value) {
+                  html += `<p><strong>${key.replace(/_/g, ' ').toUpperCase()}:</strong> ${value}</p>`;
+                }
+              }
+              html += '</div>';
+            }
+          }
+          
           html += `</div>`;
         });
         html += '</div>';
       }
       
-      // Domains
+      // Process Domains
       if (data.domains && data.domains.length > 0) {
         html += '<div class="result-section">';
         html += '<h3>🏢 Domain Analysis Results</h3>';
-        data.domains.forEach(domain => {
+        data.domains.forEach(item => {
+          const isMalicious = item.verdict === 'malicious' || (item.is_malicious === true);
+          
           html += `<div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">`;
-          html += `<strong>${domain.domain}</strong><br>`;
-          html += `<span class="verdict-badge verdict-${domain.overall_verdict.is_malicious ? 'malicious' : 'clean'}">`;
-          html += domain.overall_verdict.is_malicious ? '🚨 MALICIOUS' : '✅ CLEAN';
-          html += `</span>`;
+          html += `<strong>${item.domain || 'Unknown Domain'}</strong><br>`;
+          
+          if (item.error) {
+            html += `<span class="verdict-badge verdict-unknown">ERROR</span>`;
+            html += `<p>${item.error}</p>`;
+          } else {
+            html += `<span class="verdict-badge verdict-${isMalicious ? 'malicious' : 'clean'}">`;
+            html += isMalicious ? '🚨 MALICIOUS' : '✅ CLEAN';
+            html += `</span>`;
+            
+            // Add any additional details if available
+            if (item.details) {
+              html += '<div style="margin-top: 0.5rem; font-size: 0.9em;">';
+              for (const [key, value] of Object.entries(item.details)) {
+                if (value) {
+                  html += `<p><strong>${key.replace(/_/g, ' ').toUpperCase()}:</strong> ${value}</p>`;
+                }
+              }
+              html += '</div>';
+            }
+          }
+          
           html += `</div>`;
         });
         html += '</div>';
