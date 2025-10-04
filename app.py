@@ -264,65 +264,172 @@ def analyze_email_deep():
     Deep analysis of email - extracts all URLs, IPs, domains
     and analyzes them with external APIs
     """
-    raw_email = request.form.get("email", "")
+    print("\n=== DEBUG: analyze_email_deep called ===")
+    print(f"Request form data: {request.form}")
+    print(f"Request files: {request.files}")
+    
+    raw_email = ""
+    
+    # Check for file upload first
+    if 'file' in request.files:
+        file = request.files.get('file')
+        print(f"File object: {file}")
+        if file and file.filename != '':
+            print(f"Processing file: {file.filename}")
+            try:
+                raw_email = file.read().decode('utf-8', errors='ignore')
+                print(f"Successfully read {len(raw_email)} bytes from file")
+            except Exception as e:
+                error_msg = f"Error reading file: {str(e)}"
+                print(error_msg)
+                return jsonify({"error": error_msg}), 400
+    
+    # If no file or file read failed, try to get text from form
+    if not raw_email:
+        print("No file or empty file, checking form data...")
+        raw_email = request.form.get("email", "").strip()
+        print(f"Got email from form: {'Yes' if raw_email else 'No'}")
     
     if not raw_email:
-        return jsonify({"error": "No email content provided"}), 400
+        error_msg = "No email content provided. Please either upload a file or paste the email content."
+        print(error_msg)
+        return jsonify({"error": error_msg}), 400
+    print(f"Processing email with {len(raw_email)} characters")
     
-    # Extract features first
-    features = extract_all_features(raw_email)
-    
-    # Extract URLs from email
-    url_pattern = re.compile(r'https?://[^\s\'"<>]+', re.IGNORECASE)
-    urls = url_pattern.findall(raw_email)
-    
-    # Extract IPs
-    ip_pattern = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
-    ips = ip_pattern.findall(raw_email)
-    
-    # Extract domains from URLs
-    domains = []
-    for url in urls:
+    try:
+        # Extract features first
+        print("Extracting features from email...")
         try:
-            parsed = urlparse(url)
-            if parsed.netloc:
-                domains.append(parsed.netloc)
-        except:
-            pass
-    
-    # Also add sender domain
-    if features.get('from_domain'):
-        domains.append(features['from_domain'])
-    
-    # Remove duplicates
-    urls = list(set(urls))
-    ips = list(set(ips))
-    domains = list(set(domains))
-    
-    # Prepare data for analysis
-    email_data = {
-        "urls": urls[:5],  # Limit to 5 URLs to avoid rate limits
-        "ips": ips[:5],
-        "domains": domains[:5],
-        "attachments": []  # File analysis would require actual file content
-    }
-    
-    # Run comprehensive analysis
-    analysis = analyze_email_components(email_data)
-    
-    # Add basic email features
-    analysis['email_features'] = {
-        "from_domain": features.get('from_domain'),
-        "has_spf": features.get('has_spf'),
-        "has_dkim": features.get('has_dkim'),
-        "domain_mismatch": features.get('from_return_mismatch'),
-        "num_urls": len(urls),
-        "num_ips": len(ips),
-        "num_domains": len(domains)
-    }
-    
-    return jsonify(analysis)
+            features = extract_all_features(raw_email)
+            print("Feature extraction completed successfully")
+        except Exception as e:
+            error_msg = f"Error in extract_all_features: {str(e)}"
+            print(error_msg)
+            import traceback
+            traceback.print_exc()
+            return jsonify({"error": error_msg}), 500
+        
+        # Extract URLs from email
+        print("Extracting URLs...")
+        url_pattern = re.compile(r'https?://[^\s\'"<>]+', re.IGNORECASE)
+        urls = url_pattern.findall(raw_email)
+        
+        # Extract IPs
+        print("Extracting IPs...")
+        ip_pattern = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
+        ips = ip_pattern.findall(raw_email)
+        
+        # Extract domains from URLs
+        print("Extracting domains...")
+        domains = []
+        for url in urls:
+            try:
+                parsed = urlparse(url)
+                if parsed.netloc:
+                    domains.append(parsed.netloc)
+            except Exception as e:
+                print(f"Error parsing URL {url}: {str(e)}")
+        
+        # Also add sender domain if available
+        if features and isinstance(features, dict) and features.get('from_domain'):
+            domains.append(features['from_domain'])
+        
+        # Remove duplicates and limit the number of items to process
+        urls = list(set(urls))[:5]  # Limit to 5 URLs to avoid rate limits
+        ips = list(set(ips))[:5]
+        domains = list(set(domains))[:5]
+        
+        print(f"Found {len(urls)} URLs, {len(ips)} IPs, and {len(domains)} domains for analysis")
+        
+        # Initialize analyzers
+        print("Initializing analyzers...")
+        try:
+            url_analyzer = URLAnalyzer()
+            ip_analyzer = IPAnalyzer()
+            domain_analyzer = DomainAnalyzer()
+        except Exception as e:
+            error_msg = f"Error initializing analyzers: {str(e)}"
+            print(error_msg)
+            return jsonify({"error": error_msg}), 500
+        
+        # Analyze each component
+        print("Starting analysis...")
+        try:
+            url_results = []
+            ip_results = []
+            domain_results = []
+            
+            # Analyze URLs
+            for url in urls:
+                try:
+                    result = url_analyzer.analyze_url_comprehensive(url)
+                    url_results.append(result)
+                except Exception as e:
+                    print(f"Error analyzing URL {url}: {str(e)}")
+                    url_results.append({"url": url, "error": str(e)})
+            
+            # Analyze IPs
+            for ip in ips:
+                try:
+                    result = ip_analyzer.analyze_ip_comprehensive(ip)
+                    ip_results.append(result)
+                except Exception as e:
+                    print(f"Error analyzing IP {ip}: {str(e)}")
+                    ip_results.append({"ip": ip, "error": str(e)})
+            
+            # Analyze domains
+            for domain in domains:
+                try:
+                    result = domain_analyzer.analyze_domain_comprehensive(domain)
+                    domain_results.append(result)
+                except Exception as e:
+                    print(f"Error analyzing domain {domain}: {str(e)}")
+                    domain_results.append({"domain": domain, "error": str(e)})
+            
+            # Compile results in the format expected by the frontend
+            print("Compiling results...")
+            result = {
+                'status': 'success',
+                'email_features': {
+                    'from_domain': features.get('from_domain', ''),
+                    'num_urls': len(urls),
+                    'num_ips': len(ips),
+                    'num_domains': len(domains)
+                },
+                'urls': url_results,
+                'ips': ip_results,
+                'domains': domain_results,
+                'summary': {
+                    'total_urls': len(urls),
+                    'total_ips': len(ips),
+                    'total_domains': len(domains),
+                    'suspicious_count': (
+                        sum(1 for r in url_results if isinstance(r, dict) and (r.get('is_malicious') or r.get('is_suspicious'))) +
+                        sum(1 for r in ip_results if isinstance(r, dict) and (r.get('is_malicious') or r.get('is_suspicious'))) +
+                        sum(1 for r in domain_results if isinstance(r, dict) and (r.get('is_malicious') or r.get('is_suspicious')))
+                    )
+                }
+            }
+            print("Analysis completed successfully")
+            return jsonify(result)
+            
+        except Exception as e:
+            error_msg = f"Error during analysis: {str(e)}"
+            print(error_msg)
+            import traceback
+            traceback.print_exc()
+            return jsonify({"error": error_msg}), 500
 
+    except Exception as e:
+        error_msg = f"Unexpected error in analyze_email_deep: {str(e)}"
+        print(error_msg)
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "error": error_msg,
+            "verdict": "error",
+            "is_malicious": False
+        }), 500
 
 @app.route("/advanced_analysis")
 def advanced_analysis_page():
