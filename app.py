@@ -1,18 +1,17 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 import joblib
+import re
 import pandas as pd
 import numpy as np
 from scipy.sparse import hstack
 from email_features import extract_all_features
 from advanced_analysis import (
-    URLAnalyzer, IPAnalyzer, DomainAnalyzer, FileAnalyzer,
+    URLAnalyzer, IPAnalyzer, DomainAnalyzer, FileAnalyzer, DeepEmailAnalyzer,
     analyze_email_components, get_api_status, set_api_key
 )
-import re
-from urllib.parse import urlparse
 
-# ------------------ Load Models ------------------
-# URL model + preprocessing assets
+# Initialize the deep email analyzer
+deep_analyzer = DeepEmailAnalyzer()
 url_model = joblib.load("pkl/URL_detection_model.pkl")
 expected_columns = joblib.load("pkl/expected_columns.pkl")
 top_tlds = joblib.load("pkl/top_tlds.pkl")
@@ -92,6 +91,7 @@ def preprocess_raw_email(raw_email_str):
     # Merge extracted features with defaults
     default_features.update(features)
     
+    # Convert the dictionary to a DataFrame and return it
     return pd.DataFrame([default_features])
 
 
@@ -437,6 +437,24 @@ def advanced_analysis_page():
     api_status = get_api_status()
     return render_template("advanced_analysis.html", api_status=api_status)
 
+
+@app.route("/analyze_ai", methods=["POST"])
+def analyze_ai():
+    """Analyze email content for AI generation"""
+    try:
+        data = request.get_json()
+        email_content = data.get('email', '').strip()
+        
+        if not email_content:
+            return jsonify({"error": "No email content provided"}), 400
+            
+        # Use the DeepEmailAnalyzer to detect AI content
+        ai_analysis = deep_analyzer.detect_ai_generated_content(email_content)
+        
+        return jsonify(ai_analysis)
+        
+    except Exception as e:
+        return jsonify({"error": f"Error analyzing AI content: {str(e)}"}), 500
 
 @app.route("/api_config", methods=["GET", "POST"])
 def api_config():
