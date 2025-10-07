@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up - PhishGuard AI{% endblock %}
+
+{% block extra_css %}
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    .auth-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .auth-header {
+        background: #4e73df;
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    .auth-logo {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    .auth-body {
+        padding: 2.5rem;
+        background: white;
+    }
+    .btn-get-started {
+        background: #4e73df;
+        color: white;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 30px;
+        transition: all 0.3s;
+    }
+    .btn-get-started:hover {
+        background: #2e59d9;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(78, 115, 223, 0.3);
+    }
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    .divider-text {
+        padding: 0 1rem;
+        color: #b7b9cc;
+        font-size: 0.9rem;
+    }
+    .password-strength {
+        height: 4px;
+        background: #eaecf4;
+        margin-top: 0.5rem;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .strength-bar {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease, background-color 0.3s;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-logo">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h2>Create Your Account</h2>
+                        <p class="mb-0">Join PhishGuard AI today and secure your online presence</p>
+                    </div>
+                    <div class="auth-body">
+                        <form id="signupForm" method="POST" action="{{ url_for('auth.signup') }}">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" 
+                                           placeholder="Create a strong password" minlength="6" required
+                                           oninput="checkPasswordStrength(this.value)">
+                                </div>
+                                <div class="password-strength">
+                                    <div id="strengthBar" class="strength-bar"></div>
+                                </div>
+                                <div class="form-text">Password must be at least 6 characters long</div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="confirm_password" 
+                                           name="confirm_password" placeholder="Confirm your password" minlength="6" required>
+                                </div>
+                                <div id="passwordMatch" class="form-text"></div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-user-plus me-2"></i> Create Account
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div class="divider">
+                            <span class="divider-text">OR SIGN UP WITH</span>
+                        </div>
+                        
+                        <div class="text-center mb-4">
+                            <button class="btn btn-outline-primary me-2" onclick="signUpWithGoogle()">
+                                <i class="fab fa-google me-2"></i> Google
+                            </button>
+                            <button class="btn btn-outline-dark" onclick="signUpWithGithub()">
+                                <i class="fab fa-github me-2"></i> GitHub
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">Already have an account? 
+                                <a href="{{ url_for('auth.login') }}" class="text-primary fw-bold">Login here</a>
+                            </p>
+                        </div>
+                        
+                        <!-- Get Started Button (Visible after signup) -->
+                        {% if current_user.is_authenticated %}
+                        <div class="text-center mt-4">
+                            <a href="{{ url_for('index') }}" class="btn btn-get-started">
+                                <i class="fas fa-rocket me-2"></i> Get Started
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        const strengthBar = document.getElementById('strengthBar');
+        let strength = 0;
+        
+        // Check password length
+        if (password.length >= 8) strength += 1;
+        // Check for numbers
+        if (password.match(/([0-9])/)) strength += 1;
+        // Check for special characters
+        if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength += 1;
+        // Check for both uppercase and lowercase letters
+        if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1;
+        
+        // Update the strength bar
+        switch(strength) {
+            case 0:
+                strengthBar.style.width = '0%';
+                strengthBar.style.backgroundColor = '#e74a3b'; // Red
+                break;
+            case 1:
+                strengthBar.style.width = '25%';
+                strengthBar.style.backgroundColor = '#e74a3b'; // Red
+                break;
+            case 2:
+                strengthBar.style.width = '50%';
+                strengthBar.style.backgroundColor = '#f6c23e'; // Yellow
+                break;
+            case 3:
+                strengthBar.style.width = '75%';
+                strengthBar.style.backgroundColor = '#1cc88a'; // Green
+                break;
+            case 4:
+                strengthBar.style.width = '100%';
+                strengthBar.style.backgroundColor = '#4e73df'; // Blue
+                break;
+        }
+    }
+    
+    // Password match checker
+    document.addEventListener('DOMContentLoaded', function() {
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const passwordMatch = document.getElementById('passwordMatch');
+        
+        function validatePassword() {
+            if (password.value !== confirmPassword.value) {
+                passwordMatch.textContent = 'Passwords do not match';
+                passwordMatch.style.color = '#e74a3b';
+                confirmPassword.setCustomValidity('Passwords do not match');
+            } else {
+                passwordMatch.textContent = 'Passwords match';
+                passwordMatch.style.color = '#1cc88a';
+                confirmPassword.setCustomValidity('');
+            }
+        }
+        
+        password.onchange = validatePassword;
+        confirmPassword.onkeyup = validatePassword;
+        
+        // Handle form submission
+        const form = document.getElementById('signupForm');
+        if (form) {
+            form.addEventListener('submit', function(event) {
+                if (password.value !== confirmPassword.value) {
+                    event.preventDefault();
+                    alert('Passwords do not match!');
+                    return false;
+                }
+                return true;
+            });
+        }
+    });
+    
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('signupForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
+                
+                // Validate passwords match
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating account...';
+                
+                // Create user with email and password
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then((userCredential) => {
+                        // Send email verification
+                        return userCredential.user.sendEmailVerification()
+                            .then(() => {
+                                // Show success message
+                                alert('Account created successfully! Please check your email to verify your account.');
+                                // Redirect to dashboard
+                                window.location.href = "{{ url_for('index') }}";
+                            });
+                    })
+                    .catch((error) => {
+                        console.error('Sign up error:', error);
+                        // Show user-friendly error messages
+                        let errorMessage = error.message;
+                        if (error.code === 'auth/email-already-in-use') {
+                            errorMessage = 'This email is already registered. Please use a different email or log in.';
+                        } else if (error.code === 'auth/weak-password') {
+                            errorMessage = 'Password should be at least 6 characters long.';
+                        } else if (error.code === 'auth/invalid-email') {
+                            errorMessage = 'Please enter a valid email address.';
+                        } else if (error.code === 'auth/operation-not-allowed') {
+                            errorMessage = 'Email/password accounts are not enabled. Please contact support.';
+                        }
+                        alert(errorMessage);
+                    })
+                    .finally(() => {
+                        // Reset button state
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnText;
+                    });
+            });
+        }
+    });
+    
+    // Google Sign-Up
+    function signUpWithGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                // This gives you a Google Access Token
+                const token = result.credential.accessToken;
+                // The signed-in user info
+                const user = result.user;
+                window.location.href = "{{ url_for('dashboard') }}";
+            }).catch((error) => {
+                console.error(error);
+                alert(error.message);
+            });
+    }
+    
+    // GitHub Sign-Up
+    function signUpWithGithub() {
+        const provider = new firebase.auth.GithubAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                // This gives you a GitHub Access Token
+                const token = result.credential.accessToken;
+                // The signed-in user info
+                const user = result.user;
+                window.location.href = "{{ url_for('dashboard') }}";
+            }).catch((error) => {
+                console.error(error);
+                alert(error.message);
+            });
+    }
+</script>
+{% endblock %}

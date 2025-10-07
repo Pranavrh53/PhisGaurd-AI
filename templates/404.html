@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - PhishGuard AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center py-5 my-5">
+            <div class="error-template">
+                <h1 class="display-1 text-primary">404</h1>
+                <h2 class="display-5">Oops! Page Not Found</h2>
+                <div class="error-details mb-4">
+                    The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-home me-2"></i> Take Me Home
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i> Go to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .error-template {
+        padding: 40px 15px;
+        text-align: center;
+    }
+    
+    .error-actions {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .error-actions .btn {
+        margin-right: 10px;
+    }
+    
+    .display-1 {
+        font-size: 8rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+    
+    .display-5 {
+        font-size: 2.5rem;
+        font-weight: 300;
+        line-height: 1.2;
+        margin: 1.5rem 0;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - PhishGuard AI{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-body text-center">
+                <div class="position-relative d-inline-block mb-3">
+                    <img src="{{ user.photo_url if user.photo_url else url_for('static', filename='img/default-avatar.png') }}" 
+                         class="rounded-circle" 
+                         width="120" 
+                         height="120" 
+                         alt="Profile Picture">
+                    <button class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            title="Change Photo">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <h4 class="mb-1">{{ user.display_name or 'User' }}</h4>
+                <p class="text-muted mb-3">{{ user.email }}</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <span class="badge bg-{{ 'success' if user.email_verified else 'secondary' }}">
+                        {{ 'Verified' if user.email_verified else 'Unverified' }}
+                    </span>
+                    <span class="badge bg-primary">Free Plan</span>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <div class="d-grid">
+                    <button class="btn btn-outline-primary" onclick="document.getElementById('profileForm').requestSubmit()">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">Account Security</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="mb-0">Password</h6>
+                        <small class="text-muted">Last changed: 3 months ago</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        Change
+                    </button>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Two-Factor Authentication</h6>
+                        <small class="text-muted">Add an extra layer of security</small>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="twoFactorSwitch">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm mb-4">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <form id="profileForm">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" value="{{ user.display_name.split(' ')[0] if user.display_name else '' }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" value="{{ user.display_name.split(' ')[1] if user.display_name and ' ' in user.display_name else '' }}">
+                        </div>
+                        <div class="col-12">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <input type="email" class="form-control" id="email" value="{{ user.email }}" disabled>
+                                <span class="input-group-text">
+                                    <span class="badge bg-{{ 'success' if user.email_verified else 'warning' }}">
+                                        {{ 'Verified' if user.email_verified else 'Unverified' }}
+                                    </span>
+                                </span>
+                            </div>
+                            {% if not user.email_verified %}
+                                <div class="form-text">
+                                    <a href="#" onclick="sendVerificationEmail()">Send verification email</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" value="+1 (555) 123-4567">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="country" class="form-label">Country</label>
+                            <select class="form-select" id="country">
+                                <option selected>United States</option>
+                                <option>Canada</option>
+                                <option>United Kingdom</option>
+                                <option>Australia</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white border-0 py-3">
+                <h5 class="mb-0">Account Preferences</h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                        <label class="form-check-label" for="emailNotifications">Email Notifications</label>
+                    </div>
+                    <small class="text-muted">Receive email notifications for important account activities and security alerts.</small>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="marketingEmails" checked>
+                        <label class="form-check-label" for="marketingEmails">Marketing Communications</label>
+                    </div>
+                    <small class="text-muted">Receive tips, updates, and offers from PhishGuard AI.</small>
+                </div>
+                <div class="mb-0">
+                    <div class="form-check form-switch mb-2">
+                        <input class="form-check-input" type="checkbox" id="darkMode">
+                        <label class="form-check-label" for="darkMode">Dark Mode</label>
+                    </div>
+                    <small class="text-muted">Enable dark mode for a better viewing experience in low-light conditions.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="passwordForm">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="currentPassword" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="newPassword" required minlength="8">
+                        <div class="form-text">Must be at least 8 characters long</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updatePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Email Verification Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="verificationToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Email Sent</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            A verification email has been sent to your email address. Please check your inbox.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+    
+    // Send verification email
+    function sendVerificationEmail() {
+        // TODO: Implement email verification
+        console.log('Sending verification email...');
+        
+        // Show toast
+        const toast = new bootstrap.Toast(document.getElementById('verificationToast'));
+        toast.show();
+    }
+    
+    // Update password
+    function updatePassword() {
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Validate passwords
+        if (newPassword !== confirmPassword) {
+            alert('New passwords do not match!');
+            return;
+        }
+        
+        if (newPassword.length < 8) {
+            alert('Password must be at least 8 characters long!');
+            return;
+        }
+        
+        // TODO: Implement password update with Firebase
+        console.log('Updating password...');
+        
+        // Show success message
+        const toast = document.createElement('div');
+        toast.className = 'position-fixed bottom-0 end-0 p-3';
+        toast.style.zIndex = '11';
+        toast.innerHTML = `
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-success text-white">
+                    <strong class="me-auto">Success</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Your password has been updated successfully.
+                </div>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        
+        // Hide the modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+        modal.hide();
+        
+        // Clear form
+        document.getElementById('passwordForm').reset();
+        
+        // Remove toast after 3 seconds
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+    
+    // Save profile changes
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Get form data
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const phone = document.getElementById('phone').value;
+        const country = document.getElementById('country').value;
+        const bio = document.getElementById('bio').value;
+        
+        // TODO: Update user profile in Firebase
+        console.log('Updating profile:', { firstName, lastName, phone, country, bio });
+        
+        // Show success message
+        const toast = document.createElement('div');
+        toast.className = 'position-fixed bottom-0 end-0 p-3';
+        toast.style.zIndex = '11';
+        toast.innerHTML = `
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-success text-white">
+                    <strong class="me-auto">Success</strong>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    Your profile has been updated successfully.
+                </div>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        
+        // Remove toast after 3 seconds
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    });
+</script>
+{% endblock %}

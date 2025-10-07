@@ -1,14 +1,27 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for
+from flask import Flask, request, render_template, jsonify, redirect, url_for, flash, session
+from flask_login import LoginManager, login_required, current_user
+from flask_session import Session
+from auth import auth_bp, login_manager, admin_required
+from firebase_config import initialize_firebase
+from datetime import datetime
 import joblib
 import re
 import pandas as pd
 import numpy as np
+import os
+from dotenv import load_dotenv
 from scipy.sparse import hstack
 from email_features import extract_all_features
 from advanced_analysis import (
     URLAnalyzer, IPAnalyzer, DomainAnalyzer, FileAnalyzer, DeepEmailAnalyzer,
     analyze_email_components, get_api_status, set_api_key
 )
+
+# Load environment variables
+load_dotenv()
+
+# Initialize Firebase
+db, firebase_auth, storage_bucket = initialize_firebase()
 
 # Initialize the deep email analyzer
 deep_analyzer = DeepEmailAnalyzer()
@@ -25,6 +38,19 @@ email_model = email_assets["model"]
 
 # ------------------ Flask Init ------------------
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', 'dev-key-123')
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hour in seconds
+
+# Initialize Flask extensions
+Session(app)
+login_manager.init_app(app)
+
+# Register blueprints
+app.register_blueprint(auth_bp, url_prefix='/auth')
+
+# Initialize Firebase
+initialize_firebase()
 
 # ------------------ Feature Extraction: URL ------------------
 def extract_features(url):
@@ -99,7 +125,30 @@ def preprocess_raw_email(raw_email_str):
 
 @app.route("/", methods=["GET"])
 def home():
-    return render_template("index.html")
+    # Check if user is authenticated
+    is_authenticated = current_user.is_authenticated
+    user_email = current_user.email if is_authenticated else None
+    
+    # Prepare context for the template
+    context = {
+        'current_user': {
+            'is_authenticated': is_authenticated,
+            'email': user_email,
+            'is_admin': hasattr(current_user, 'is_admin') and current_user.is_admin
+        },
+        'config': {
+            'FIREBASE_API_KEY': os.getenv('FIREBASE_API_KEY'),
+            'FIREBASE_AUTH_DOMAIN': os.getenv('FIREBASE_AUTH_DOMAIN'),
+            'FIREBASE_PROJECT_ID': os.getenv('FIREBASE_PROJECT_ID'),
+            'FIREBASE_STORAGE_BUCKET': os.getenv('FIREBASE_STORAGE_BUCKET'),
+            'FIREBASE_MESSAGING_SENDER_ID': os.getenv('FIREBASE_MESSAGING_SENDER_ID'),
+            'FIREBASE_APP_ID': os.getenv('FIREBASE_APP_ID'),
+            'FIREBASE_MEASUREMENT_ID': os.getenv('FIREBASE_MEASUREMENT_ID')
+        }
+    }
+    
+    # Render the combined template with the context
+    return render_template("index_combined.html", **context)
 
 
 @app.route("/check_url", methods=["POST"])
@@ -473,5 +522,14 @@ def api_config():
 
 
 # ------------------ Run ------------------
+# Error handlers
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv('FLASK_ENV') == 'development')
