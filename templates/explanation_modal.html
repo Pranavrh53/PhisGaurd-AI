@@ -1,0 +1,262 @@
+<!-- Explanation Modal -->
+<div class="modal fade" id="explanationModal" tabindex="-1" role="dialog" aria-labelledby="explanationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="explanationModalLabel">Analysis Explanation</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="chat-container" id="explanationChat" style="height: 400px; overflow-y: auto; margin-bottom: 15px; border: 1px solid #eee; padding: 15px; border-radius: 5px;">
+                    <!-- Messages will be added here by JavaScript -->
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="userQuestion" placeholder="Ask a question about this analysis...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="button" id="askQuestion">Ask</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 80%;
+    }
+    .bot-message {
+        background-color: #f1f1f1;
+        margin-right: auto;
+    }
+    .user-message {
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+    }
+    .explanation-item {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-left: 4px solid #007bff;
+        background-color: #f8f9fa;
+    }
+    .explanation-warning {
+        border-left-color: #dc3545;
+        background-color: #fff3f3;
+    }
+    .explanation-info {
+        border-left-color: #17a2b8;
+    }
+</style>
+
+<script>
+    // Global variable to store analysis data
+    let currentAnalysisData = null;
+    
+    // Function to show explanation modal
+    function showExplanation(analysisData, analysisType) {
+        currentAnalysisData = analysisData;
+        
+        // Clear previous messages
+        const chatContainer = document.getElementById('explanationChat');
+        chatContainer.innerHTML = '';
+        
+        // Add bot greeting
+        addBotMessage("Hello! I'll help you understand this analysis.");
+        
+        // Add explanation based on analysis type
+        if (analysisType === 'url') {
+            explainUrlAnalysis(analysisData);
+        } else if (analysisType === 'email') {
+            explainEmailAnalysis(analysisData);
+        }
+        
+        // Show the modal
+        $('#explanationModal').modal('show');
+    }
+    
+    // Function to explain URL analysis
+    function explainUrlAnalysis(analysis) {
+        const chatContainer = document.getElementById('explanationChat');
+        
+        // Add verdict
+        const verdict = analysis.verdict || 'unknown';
+        let verdictMessage = '';
+        
+        if (verdict === 'malicious') {
+            verdictMessage = 'This URL has been identified as potentially malicious.';
+        } else if (verdict === 'suspicious') {
+            verdictMessage = 'This URL shows some suspicious characteristics.';
+        } else {
+            verdictMessage = 'This URL appears to be safe.';
+        }
+        
+        addBotMessage(verdictMessage);
+        
+        // Add specific findings
+        if (analysis.threats && analysis.threats.length > 0) {
+            addBotMessage('Here are the potential issues I found:');
+            
+            analysis.threats.forEach(threat => {
+                addBotMessage(`• ${threat}`, 'warning');
+            });
+        }
+        
+        // Add security recommendations
+        addSecurityRecommendations(analysis);
+    }
+    
+    // Function to explain email analysis
+    function explainEmailAnalysis(analysis) {
+        const chatContainer = document.getElementById('explanationChat');
+        
+        // Add header analysis
+        if (analysis.header_analysis) {
+            const headers = analysis.header_analysis;
+            
+            // Authentication results
+            if (headers.spf === false) {
+                addBotMessage('❌ SPF check failed. The sending server might not be authorized.', 'warning');
+            } else if (headers.spf === true) {
+                addBotMessage('✅ SPF check passed. The sending server is authorized.', 'info');
+            }
+            
+            if (headers.dkim === false) {
+                addBotMessage('❌ DKIM signature verification failed. The email may have been tampered with.', 'warning');
+            } else if (headers.dkim === true) {
+                addBotMessage('✅ DKIM signature is valid. The email is authentic.', 'info');
+            }
+            
+            // Anomalies
+            if (headers.anomalies && headers.anomalies.length > 0) {
+                addBotMessage('I noticed some anomalies in the email headers:', 'warning');
+                headers.anomalies.forEach(anomaly => {
+                    addBotMessage(`• ${anomaly}`, 'warning');
+                });
+            }
+        }
+        
+        // Add content analysis
+        if (analysis.content_analysis) {
+            const content = analysis.content_analysis;
+            
+            if (content.urgency_score > 0.7) {
+                addBotMessage('⚠️ The email uses urgent language, which is common in phishing attempts.', 'warning');
+            }
+            
+            if (content.suspicious_keywords && content.suspicious_keywords.length > 0) {
+                addBotMessage('I found some potentially concerning phrases in the email:', 'warning');
+                content.suspicious_keywords.forEach(keyword => {
+                    addBotMessage(`• "${keyword}"`, 'info');
+                });
+            }
+        }
+        
+        // Add link analysis
+        if (analysis.link_analysis) {
+            const links = analysis.link_analysis;
+            
+            if (links.suspicious_links > 0) {
+                addBotMessage(`⚠️ Found ${links.suspicious_links} suspicious links in the email.`, 'warning');
+            }
+            
+            if (links.redirect_chains && links.redirect_chains.length > 0) {
+                addBotMessage('I found some links that redirect to different domains:', 'warning');
+                links.redirect_chains.forEach(chain => {
+                    addBotMessage(`• ${chain.join(' → ')}`, 'info');
+                });
+            }
+        }
+        
+        // Add security recommendations
+        addSecurityRecommendations(analysis);
+    }
+    
+    // Function to add security recommendations
+    function addSecurityRecommendations(analysis) {
+        const recommendations = [
+            'Be cautious with links and attachments from unknown senders.',
+            'Verify the sender\'s email address is legitimate.',
+            'Hover over links to see the actual URL before clicking.',
+            'Use multi-factor authentication for important accounts.'
+        ];
+        
+        addBotMessage('Security recommendations:', 'info');
+        recommendations.forEach(rec => {
+            addBotMessage(`• ${rec}`, 'info');
+        });
+    }
+    
+    // Function to add a bot message to the chat
+    function addBotMessage(message, type = 'info') {
+        const chatContainer = document.getElementById('explanationChat');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message bot-message ${type}-message`;
+        
+        if (type === 'warning') {
+            messageDiv.innerHTML = `⚠️ ${message}`;
+        } else if (type === 'info') {
+            messageDiv.innerHTML = `ℹ️ ${message}`;
+        } else {
+            messageDiv.textContent = message;
+        }
+        
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Function to add a user message to the chat
+    function addUserMessage(message) {
+        const chatContainer = document.getElementById('explanationChat');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message user-message';
+        messageDiv.textContent = message;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // Handle ask question button click
+    document.getElementById('askQuestion')?.addEventListener('click', function() {
+        const input = document.getElementById('userQuestion');
+        const question = input.value.trim();
+        
+        if (question) {
+            addUserMessage(question);
+            input.value = '';
+            
+            // Simple Q&A handling
+            const lowerQuestion = question.toLowerCase();
+            
+            if (lowerQuestion.includes('what') && lowerQuestion.includes('spf')) {
+                addBotMessage('SPF (Sender Policy Framework) is an email authentication method that verifies the sender\'s IP address is authorized to send emails for the domain in the "From" address.', 'info');
+            } else if (lowerQuestion.includes('what') && lowerQuestion.includes('dkim')) {
+                addBotMessage('DKIM (DomainKeys Identified Mail) is an email authentication method that uses digital signatures to verify that the email was sent by an authorized server and wasn\'t altered in transit.', 'info');
+            } else if (lowerQuestion.includes('safe') || lowerQuestion.includes('legitimate')) {
+                if (currentAnalysisData.verdict === 'malicious') {
+                    addBotMessage('This item has been flagged as potentially malicious. I recommend not interacting with it.', 'warning');
+                } else if (currentAnalysisData.verdict === 'suspicious') {
+                    addBotMessage('This item shows some suspicious characteristics. Please be cautious and verify its legitimacy before taking any action.', 'warning');
+                } else {
+                    addBotMessage('This item appears to be safe, but always remain vigilant when interacting with unknown content.', 'info');
+                }
+            } else {
+                addBotMessage('I\'m an AI assistant that can help explain the security analysis. You can ask me about SPF, DKIM, or any other security terms you see in the analysis.', 'info');
+            }
+        }
+    });
+    
+    // Allow pressing Enter to send a question
+    document.getElementById('userQuestion')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            document.getElementById('askQuestion').click();
+        }
+    });
+</script>

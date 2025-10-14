@@ -297,28 +297,38 @@ class URLAnalyzer:
             'credential', 'confirm', 'billing', 'auth', 'authenticate', 'verification',
             'validate', 'identity', 'profile', 'settings', 'secure', 'unlock', 'reset',
             'change', 'recover', 'restore', 'access', 'authorize', 'validation',
+            'passwordreset', 'changepassword', 'forgotpassword', 'accountrecovery',
+            'accountverify', 'accountconfirm', 'accountsecurity', 'accountupdate',
             
             # Financial institutions (commonly spoofed)
             'paypal', 'banking', 'chase', 'wellsfargo', 'bankofamerica', 'citibank',
             'hsbc', 'barclays', 'santander', 'capitalone', 'americanexpress', 'visa',
             'mastercard', 'discover', 'amex', 'swift', 'routing', 'accountnumber',
+            'bankofamerica', 'wellsfargo', 'chase', 'citibank', 'hsbc', 'barclays',
+            'santander', 'capitalone', 'americanexpress', 'visa', 'mastercard',
             
             # Government and tax related
             'irs', 'ssn', 'socialsecurity', 'taxrefund', 'taxreturn', 'incometax',
             'gov', 'government', 'irs-gov', 'ssa.gov', 'treasury', 'irsform',
+            'socialsecurity', 'ssa', 'treasury', 'tax', 'irs', 'federal', 'state',
             
             # Common services (often phished)
             'amazon', 'ebay', 'paypal', 'netflix', 'microsoft', 'apple', 'google',
             'facebook', 'twitter', 'instagram', 'linkedin', 'whatsapp', 'dropbox',
             'adobe', 'microsoftonline', 'office365', 'outlook', 'onedrive', 'teams',
+            'skype', 'zoom', 'slack', 'discord', 'telegram', 'signal', 'whatsapp',
             
             # Urgency and warning words
             'urgent', 'immediate', 'actionrequired', 'suspended', 'verifynow',
             'securityalert', 'unauthorized', 'compromised', 'breach', 'hacked',
+            'critical', 'important', 'warning', 'alert', 'attention', 'notice',
+            'required', 'immediately', 'now', 'today', 'asap', 'final', 'last',
             
             # File and document related
             'document', 'invoice', 'statement', 'receipt', 'shipping', 'tracking',
-            'order', 'purchase', 'transaction', 'payment', 'invoice', 'quotation'
+            'order', 'purchase', 'transaction', 'payment', 'invoice', 'quotation',
+            'bill', 'statement', 'receipt', 'shipping', 'tracking', 'order',
+            'purchase', 'transaction', 'payment', 'invoice', 'quotation', 'bill'
         ]
         
         # Check for IP address in URL (often used in phishing)
@@ -596,6 +606,17 @@ class URLAnalyzer:
         
         # Add all API results to the main results
         results.update(api_results)
+        
+        # Check for suspicious URL patterns
+        is_suspicious, reason = URLAnalyzer.is_suspicious_url(url)
+        if is_suspicious:
+            results['scores']['suspicious'] += 2  # Medium weight for suspicious patterns
+            results['threats'].append(f'Suspicious URL pattern: {reason}')
+            results['risk_factors'].append({
+                'factor': 'suspicious_pattern',
+                'description': f'Suspicious URL pattern: {reason}',
+                'severity': 'high' if 'highly suspicious' in reason.lower() else 'medium'
+            })
         
         # Calculate final verdict based on scores and risk factors
         total_checks = sum(results['scores'].values())

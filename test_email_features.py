@@ -105,7 +105,7 @@ The file is named: Payroll_Update_Form.pdf.exe
 
 You must complete this within 24 hours or your next paycheck will be delayed.
 
-Click here if you have trouble opening the attachment: http://192.168.50.10/payroll
+Click here if you have trouble opening the attachment: 
 
 Regards,
 HR Department
@@ -228,5 +228,48 @@ def main():
     print("-" * 80 + "\n")
 
 
+def test_url_analysis():
+    """Test URL analysis for suspicious patterns"""
+    from advanced_analysis import URLAnalyzer
+    
+    test_urls = [
+        "http://paypal-secure-login.com",  # Brand impersonation
+        "http://192.168.1.1/login",         # Private IP address
+        "http://bit.ly/paypal-login",       # URL shortener with brand name
+        "https://www.paypal.com/login",     # Legitimate URL
+        "http://malware.wicar.org/"          # Test malware URL (should be clean)
+    ]
+    
+    print("\n" + "="*80)
+    print("TESTING URL ANALYSIS")
+    print("="*80)
+    
+    for url in test_urls:
+        print(f"\nAnalyzing URL: {url}")
+        
+        # Check if URL is suspicious
+        is_suspicious, reason = URLAnalyzer.is_suspicious_url(url)
+        print(f"Suspicious: {is_suspicious}")
+        if is_suspicious:
+            print(f"Reason: {reason}")
+        
+        # Run comprehensive analysis
+        print("\nComprehensive Analysis:")
+        result = URLAnalyzer.analyze_url_comprehensive(url)
+        print(f"Verdict: {result.get('verdict', 'unknown').upper()}")
+        print(f"Confidence: {result.get('confidence', 0)}%")
+        
+        # Print threats if any
+        if result.get('threats'):
+            print("\nThreats found:")
+            for threat in result['threats']:
+                print(f"- {threat}")
+        
+        print("\n" + "-"*80)
+
 if __name__ == "__main__":
+    # Run email tests
     main()
+    
+    # Run URL analysis tests
+    test_url_analysis()
