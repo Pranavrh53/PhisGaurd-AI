@@ -46,23 +46,99 @@ SPAMMY_KEYWORDS = [
     'confirm', 'update', 'security', 'bank', 'login', 'expire', 'limited time',
     'act now', 'congratulations', 'winner', 'free', 'prize', 'claim',
     'refund', 'tax', 'payment', 'invoice', 'delivery', 'package',
-    'social security', 'ssn', 'credit card', 'debit card', 'pin',
+    'social security', 'ssn', 'credit card', 'debit card', 'pin', 'cvv',
     'verify your identity', 'unusual activity', 'locked', 'blocked',
-    'reactivate', 'restore', 'validate', 'authenticate'
+    'reactivate', 'restore', 'validate', 'authenticate', 'payroll',
+    'update your information', 'account verification', 'security alert',
+    'immediate action required', 'account compromised', 'verify now',
+    'account access', 'suspicious login', 'verify account', 'account update',
+    'verification required', 'account notification', 'action required',
+    'important notice', 'security notification', 'account security',
+    'unauthorized access', 'account warning', 'account closure',
+    'account restricted', 'account deactivated', 'account verification',
+    'account confirmation', 'account validation', 'account recovery',
+    'account access', 'account suspension', 'account termination',
+    'account verification', 'account verification', 'account verification',
+    'account verification', 'account verification', 'account verification'
 ]
 
 URGENCY_KEYWORDS = [
-    'urgent', 'immediately', 'asap', 'right now', 'act now', 'hurry',
-    'expire', 'expires', 'expiring', 'deadline', 'limited time',
-    'last chance', 'final notice', 'time sensitive', 'within 24 hours',
-    'within 48 hours', 'before it\'s too late', 'don\'t miss out'
+    # Time-critical actions
+    'urgent', 'immediately', 'asap', 'right now', 'act now', 'hurry', 'quick',
+    'expire', 'expires', 'expiring', 'expiration', 'deadline', 'limited time',
+    'last chance', 'final notice', 'time sensitive', 'time-critical', 'time is running out',
+    'within 24 hours', 'within 48 hours', 'today only', 'while supplies last',
+    'before it\'s too late', 'don\'t miss out', 'ending soon', 'almost gone',
+    'closing soon', 'limited availability', 'temporary offer', 'flash sale',
+    'act fast', 'immediate action required', 'response required', 'attention required',
+    'requires immediate attention', 'your immediate attention is required',
+    'take action now', 'do not delay', 'without delay', 'right away', 'promptly',
+    'as soon as possible', 'at your earliest convenience', 'at once', 'without hesitation',
+    'urgent action required', 'immediate response needed', 'time is of the essence',
+    'countdown', 'limited period', 'special offer expires', 'offer ends soon',
+    'don\'t wait', 'only a few left', 'while stocks last', 'hurry up', 'be quick',
+    'don\'t miss this opportunity', 'last opportunity', 'one-time offer',
+    'exclusive offer', 'urgent update', 'important update', 'security alert',
+    'account action required', 'verification needed', 'confirm now', 'verify now',
+    'update now', 'reactivate now', 'restore now', 'unlock now', 'secure now',
+    'protect your account', 'prevent account closure', 'avoid account suspension',
+    'account termination notice', 'final warning', 'last warning', 'immediate suspension',
+    'account locked', 'account suspended', 'account deactivated', 'account disabled'
 ]
 
 THREAT_KEYWORDS = [
+    # Account status threats
     'suspended', 'locked', 'blocked', 'closed', 'terminated', 'deactivated',
-    'restricted', 'frozen', 'disabled', 'cancelled', 'revoked',
+    'restricted', 'frozen', 'disabled', 'cancelled', 'revoked', 'banned',
+    'compromised', 'hacked', 'breached', 'leaked', 'stolen', 'hijacked',
+    'expired', 'inactive', 'invalidated', 'withdrawn', 'seized', 'confiscated',
+    'under review', 'under investigation', 'flagged', 'quarantined', 'blacklisted',
+    
+    # Legal and authority threats
     'legal action', 'lawsuit', 'arrest', 'warrant', 'investigation',
-    'fraud', 'unauthorized', 'suspicious activity', 'unusual activity'
+    'subpoena', 'summons', 'lawsuit', 'litigation', 'lawsuit', 'court order',
+    'legal notice', 'legal department', 'legal proceedings', 'criminal charges',
+    'fbi', 'police', 'law enforcement', 'authorities', 'government agency',
+    'irs', 'tax authority', 'hmrc', 'cra', 'ato', 'inland revenue',
+    
+    # Security threats
+    'fraud', 'unauthorized', 'suspicious activity', 'unusual activity',
+    'security breach', 'data breach', 'security alert', 'account takeover',
+    'identity theft', 'phishing attempt', 'malware detected', 'virus found',
+    'ransomware', 'cyber attack', 'hacking attempt', 'password leak',
+    'credential stuffing', 'brute force', 'account compromise', 'session hijacking',
+    'man-in-the-middle', 'spoofing', 'impersonation', 'forgery', 'scam', 'con',
+    
+    # Financial threats
+    'overdue', 'past due', 'payment required', 'unpaid balance', 'delinquent',
+    'collection notice', 'debt collection', 'outstanding payment', 'late payment',
+    'payment declined', 'card declined', 'insufficient funds', 'overdraft',
+    'tax evasion', 'tax fraud', 'tax penalty', 'tax lien', 'tax debt',
+    'bank levy', 'wage garnishment', 'asset seizure', 'property lien',
+    
+    # Account access threats
+    'login attempt', 'failed login', 'unusual login', 'new device', 'new location',
+    'login from', 'access from', 'sign-in attempt', 'verification failed',
+    'authentication required', 'verify your identity', 'confirm your account',
+    'account recovery', 'password reset', 'change password', 'update information',
+    'account verification', 'secure your account', 'protect your account',
+    
+    # Technical threats
+    'virus detected', 'malware found', 'security risk', 'vulnerability found',
+    'system update', 'security update', 'critical update', 'patch required',
+    'certificate expired', 'ssl error', 'tls error', 'encryption error',
+    'server maintenance', 'system maintenance', 'service interruption',
+    'account migration', 'system upgrade', 'platform update', 'service termination',
+    
+    # Social engineering threats
+    'verify now', 'confirm now', 'update now', 'click here', 'download attachment',
+    'open attachment', 'enable content', 'enable macros', 'allow editing',
+    'security check', 'account review', 'policy update', 'terms update',
+    'privacy policy', 'user agreement', 'service agreement', 'license agreement',
+    'subscription renewal', 'billing update', 'payment method', 'invoice attached',
+    'order confirmation', 'shipping notice', 'delivery notification',
+    'package tracking', 'refund notification', 'payment receipt', 'bank statement',
+    'tax document', 'w2 form', '1099 form', 'invoice', 'receipt', 'statement'
 ]
 
 AUTHORITY_KEYWORDS = [
@@ -94,8 +170,46 @@ LEGITIMATE_DOMAINS = {
 
 # URL regex patterns
 URL_REGEX = re.compile(r'https?://[^\s\'"<>]+', re.IGNORECASE)
-IP_IN_URL_REGEX = re.compile(r'https?://(?:\d{1,3}\.){3}\d{1,3}')
+IP_IN_URL_REGEX = re.compile(r'https?://(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?')
 EMAIL_REGEX = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
+
+# Suspicious URL patterns
+SUSPICIOUS_URL_PATTERNS = [
+    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}',  # IP address in URL
+    r'@',                                         # @ symbol in URL
+    r'\\\\x[0-9a-fA-F]{2}',                    # Hex encoding (double backslash for literal \x)
+    r'%[0-9a-fA-F]{2}',                          # URL encoding
+    r'\s',                                       # Whitespace in URL
+    r'\\\\x[0-9a-fA-F]{2}',                    # Hex escape sequences (double backslash for literal \x)
+    r'&amp;',                                      # HTML entity encoding
+    r'&#x[0-9a-fA-F]+;',                         # HTML hex entities
+    r'%u[0-9a-fA-F]{4}',                         # Unicode encoding
+    r'\\\\x[0-9a-fA-F]{2}',                    # Hex encoding (double backslash for literal \x)
+    r'\s+',                                      # Multiple spaces
+    r'//',                                       # Multiple slashes
+    r'(?:\\.|%2E){2,}'                          # Multiple dots or encoded dots
+]
+
+# Compile patterns for better performance
+SUSPICIOUS_URL_REGEXES = [re.compile(pattern) for pattern in SUSPICIOUS_URL_PATTERNS]
+
+# Known malicious TLDs (example list, should be expanded)
+MALICIOUS_TLDS = {
+    'xyz', 'top', 'gq', 'ml', 'cf', 'tk', 'ga', 'gq', 'cricket', 'date',
+    'download', 'gdn', 'gq', 'racing', 'stream', 'surf', 'tk', 'top', 'win'
+}
+
+# Known URL shortener domains (expanded list)
+SHORTENER_DOMAINS = {
+    'bit.ly', 'tinyurl.com', 't.co', 'goo.gl', 'ow.ly', 'is.gd', 'buff.ly',
+    'shorturl.at', 'tiny.cc', 'rb.gy', 'cutt.ly', 'short.io', 's.id',
+    'bit.do', 'cutt.us', 'adf.ly', 'bc.vc', 'goo.su', 'ow.ly', 't.co',
+    'tiny.cc', 'tinyurl.com', 'v.gd', 'yfrog.com', 'is.gd', 'bitly.com',
+    'budurl.com', 'j.mp', 'soo.gd', 'tr.im', 'twitthis.com', 'u.to', 'vzturl.com',
+    'qr.ae', 'adcrun.ch', 'adf.ly', 'adfoc.us', 'bc.vc', 'bitly.com', 'buzurl.com',
+    'cutt.us', 'db.tt', 'goo.gl', 'ity.im', 'mcaf.ee', 'ow.ly', 'p.tl', 's.coop',
+    'soo.gd', 't.co', 'tinyurl.com', 'tr.im', 'twitthis.com', 'u.to', 'vzturl.com'
+}
 
 
 # ==================== HEADER-BASED FEATURES ====================
@@ -418,28 +532,65 @@ class ContentFeatureExtractor:
 # ==================== URL-BASED FEATURES ====================
 
 class URLFeatureExtractor:
-    """Extract features from URLs in email"""
+    """Extract features from URLs in email with advanced analysis"""
     
     @staticmethod
     def extract_urls(text, html):
-        """Extract all URLs from text and HTML"""
-        urls = []
+        """Extract all URLs from text and HTML with additional processing"""
+        urls = set()
+        
+        def clean_url(url):
+            """Clean and normalize URL"""
+            # Remove common unwanted characters
+            url = url.strip('\'"<>(){}[]|\\^`')
+            # Handle HTML entities
+            url = url.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
+            # Remove JavaScript and data URIs
+            if url.lower().startswith(('javascript:', 'data:', 'file:', 'ftp:')):
+                return None
+            # Add http:// if no scheme is present
+            if not url.lower().startswith(('http://', 'https://')):
+                url = 'http://' + url
+            return url
+        
+        def extract_from_text(content):
+            """Extract URLs from plain text"""
+            found = set()
+            for url in URL_REGEX.findall(content):
+                cleaned = clean_url(url)
+                if cleaned:
+                    found.add(cleaned)
+            return found
         
         # Extract from text
         if text:
-            urls.extend(URL_REGEX.findall(text))
+            urls.update(extract_from_text(text))
         
         # Extract from HTML
         if html:
-            soup = BeautifulSoup(html, 'html.parser')
-            for a in soup.find_all('a', href=True):
-                urls.append(a['href'])
-            
-            # Also find URLs in text
-            urls.extend(URL_REGEX.findall(html))
+            try:
+                soup = BeautifulSoup(html, 'html.parser')
+                # Get links from href attributes
+                for a in soup.find_all('a', href=True):
+                    cleaned = clean_url(a['href'])
+                    if cleaned:
+                        urls.add(cleaned)
+                
+                # Also find URLs in text content
+                urls.update(extract_from_text(html))
+                
+                # Check for hidden links
+                for tag in soup.find_all(True):
+                    if tag.get('style', '').lower() == 'display:none' and tag.get('href'):
+                        cleaned = clean_url(tag['href'])
+                        if cleaned:
+                            urls.add(cleaned)
+                            
+            except Exception as e:
+                print(f"Error parsing HTML for URLs: {str(e)}")
         
-        # Remove duplicates
-        return list(set(urls))
+        # Filter out None values and return as list
+        return [url for url in urls if url]
     
     @staticmethod
     def extract_anchor_texts(html):
@@ -462,14 +613,31 @@ class URLFeatureExtractor:
         try:
             parsed = urlparse(url)
             domain = parsed.netloc.lower()
-            return domain in SHORTENER_DOMAINS
+            # Check if it's a known shortener
+            if domain in SHORTENER_DOMAINS:
+                return True
+            # Also check for URL patterns that suggest shortening
+            path = parsed.path.strip('/')
+            if len(path) < 10 and not any(c in path for c in ['/', '?', '&', '=']):
+                return True
+            return False
         except:
             return False
     
     @staticmethod
     def has_ip_address(url):
         """Check if URL uses IP address instead of domain"""
-        return bool(IP_IN_URL_REGEX.match(url))
+        try:
+            parsed = urlparse(url)
+            # Check if netloc is an IP address
+            if IP_IN_URL_REGEX.match(parsed.netloc):
+                return True
+            # Also check for IP in path (common in localhost testing)
+            if any(IP_IN_URL_REGEX.match(part) for part in parsed.path.split('/') if part):
+                return True
+            return False
+        except:
+            return False
     
     @staticmethod
     def count_subdomains(url):
@@ -510,34 +678,211 @@ class URLFeatureExtractor:
         return mismatches
     
     @staticmethod
+    def is_valid_url(url):
+        """Check if a URL is valid and can be parsed"""
+        try:
+            if not url or not isinstance(url, str):
+                return False
+                
+            result = urlparse(url)
+            
+            # Basic validation
+            if not all([result.scheme, result.netloc]):
+                return False
+                
+            # Check for suspicious patterns
+            url_lower = url.lower()
+            if any(sus in url_lower for sus in ['{', '}', '|', '\\', '^', '~', '`']):
+                return False
+                
+            # Check for suspicious URL patterns
+            for pattern in SUSPICIOUS_URL_REGEXES:
+                if pattern.search(url):
+                    return False
+                    
+            # Check for valid TLD
+            domain_parts = result.netloc.split('.')
+            if len(domain_parts) < 2:
+                return False
+                
+            tld = domain_parts[-1].lower()
+            if tld in MALICIOUS_TLDS:
+                return False
+                
+            # Check for valid characters in domain
+            if not re.match(r'^[a-z0-9.-]+$', result.netloc.lower()):
+                return False
+                
+            return True
+            
+        except (ValueError, AttributeError) as e:
+            return False
+
+    @staticmethod
+    def get_netloc(url):
+        """Safely get netloc from URL with error handling"""
+        try:
+            return urlparse(url).netloc
+        except (ValueError, AttributeError):
+            return None
+
+    @staticmethod
+    def analyze_url_structure(url):
+        """Analyze URL structure for suspicious patterns"""
+        try:
+            parsed = urlparse(url)
+            features = {
+                'has_port': ':' in parsed.netloc,
+                'has_credentials': '@' in parsed.netloc,
+                'has_obfuscation': any(
+                    pattern in url.lower() 
+                    for pattern in ['%', '\\x', '&amp;', '&lt;', '&gt;', '&#']
+                ),
+                'is_encoded': url != url.encode('idna').decode('ascii', 'ignore'),
+                'tld': parsed.netloc.split('.')[-1].lower() if '.' in parsed.netloc else ''
+            }
+            return features
+        except:
+            return {}
+
+    @staticmethod
+    def check_url_reputation(url):
+        """Check URL against known malicious indicators"""
+        try:
+            parsed = urlparse(url)
+            domain = parsed.netloc.lower()
+            
+            # Check against known malicious patterns
+            if any(part in domain for part in ['hack', 'phish', 'scam', 'malware']):
+                return True
+                
+            # Check TLD against suspicious list
+            tld = domain.split('.')[-1] if '.' in domain else ''
+            if tld in MALICIOUS_TLDS:
+                return True
+                
+            # Check for URL shorteners
+            if domain in SHORTENER_DOMAINS:
+                return True
+                
+            return False
+            
+        except:
+            return False
+
+    @staticmethod
     def extract_url_features(body_text, body_html):
-        """Extract all URL-based features"""
-        features = {}
+        """Extract comprehensive URL-based features with advanced analysis"""
+        features = {
+            # Basic counts
+            'num_urls': 0,
+            'num_unique_domains': 0,
+            'num_shorteners': 0,
+            'num_ip_urls': 0,
+            'num_http_urls': 0,
+            'num_suspicious_urls': 0,
+            'num_obfuscated_urls': 0,
+            'num_redirects': 0,
+            'num_ports_used': 0,
+            'has_credentials_in_url': 0,
+            'has_unicode_url': 0,
+            'max_url_length': 0,
+            'avg_url_length': 0,
+            'max_subdomains': 0,
+            'anchor_mismatch_count': 0,
+            'domain_mismatch': 0,
+            'suspicious_tld_count': 0,
+            'has_malicious_pattern': 0,
+            'url_entropy': 0.0
+        }
         
-        # Extract URLs
-        urls = URLFeatureExtractor.extract_urls(body_text, body_html)
-        anchors = URLFeatureExtractor.extract_anchor_texts(body_html)
-        
-        # Basic counts
-        features['num_urls'] = len(urls)
-        features['num_unique_domains'] = len(set(urlparse(url).netloc for url in urls if urlparse(url).netloc))
-        
-        # URL characteristics
-        features['num_shorteners'] = sum(1 for url in urls if URLFeatureExtractor.is_shortener(url))
-        features['num_ip_urls'] = sum(1 for url in urls if URLFeatureExtractor.has_ip_address(url))
-        features['num_http_urls'] = sum(1 for url in urls if not URLFeatureExtractor.is_https(url))
-        
-        # Average URL length
-        if urls:
-            features['avg_url_len'] = sum(len(url) for url in urls) / len(urls)
-            features['max_subdomains'] = max(URLFeatureExtractor.count_subdomains(url) for url in urls)
-        else:
-            features['avg_url_len'] = 0
-            features['max_subdomains'] = 0
-        
-        # Anchor text mismatch
-        features['anchor_mismatch_count'] = URLFeatureExtractor.check_anchor_mismatch(anchors)
-        features['domain_mismatch'] = 1 if features['anchor_mismatch_count'] > 0 else 0
+        try:
+            # Extract and clean URLs
+            urls = URLFeatureExtractor.extract_urls(body_text, body_html)
+            valid_urls = [url for url in urls if URLFeatureExtractor.is_valid_url(url)]
+            anchors = URLFeatureExtractor.extract_anchor_texts(body_html)
+            
+            if not valid_urls:
+                return features
+                
+            # Basic URL counts
+            features['num_urls'] = len(valid_urls)
+            
+            # Analyze each URL
+            domains = set()
+            url_lengths = []
+            
+            for url in valid_urls:
+                parsed = urlparse(url)
+                netloc = parsed.netloc.lower()
+                domains.add(netloc)
+                url_lengths.append(len(url))
+                
+                # Check for suspicious patterns
+                url_features = URLFeatureExtractor.analyze_url_structure(url)
+                
+                if url_features.get('has_obfuscation', False):
+                    features['num_obfuscated_urls'] += 1
+                    
+                if url_features.get('has_credentials', False):
+                    features['has_credentials_in_url'] = 1
+                    
+                if url_features.get('is_encoded', False):
+                    features['has_unicode_url'] = 1
+                    
+                if url_features.get('has_port', False):
+                    features['num_ports_used'] += 1
+                    
+                if url_features.get('tld', '') in MALICIOUS_TLDS:
+                    features['suspicious_tld_count'] += 1
+                    
+                # Check URL reputation
+                if URLFeatureExtractor.check_url_reputation(url):
+                    features['has_malicious_pattern'] = 1
+            
+            # Update domain-based features
+            features['num_unique_domains'] = len(domains)
+            
+            # URL length statistics
+            if url_lengths:
+                features['max_url_length'] = max(url_lengths)
+                features['avg_url_length'] = sum(url_lengths) / len(url_lengths)
+            
+            # URL characteristics
+            features['num_shorteners'] = sum(1 for url in valid_urls if URLFeatureExtractor.is_shortener(url))
+            features['num_ip_urls'] = sum(1 for url in valid_urls if URLFeatureExtractor.has_ip_address(url))
+            features['num_http_urls'] = sum(1 for url in valid_urls if not URLFeatureExtractor.is_https(url))
+            
+            # Subdomain analysis
+            max_subs = 0
+            for url in valid_urls:
+                try:
+                    sub_count = URLFeatureExtractor.count_subdomains(url)
+                    max_subs = max(max_subs, sub_count)
+                except:
+                    continue
+            features['max_subdomains'] = max_subs
+            
+            # Anchor text analysis
+            try:
+                features['anchor_mismatch_count'] = URLFeatureExtractor.check_anchor_mismatch(anchors)
+                features['domain_mismatch'] = 1 if features['anchor_mismatch_count'] > 0 else 0
+            except:
+                features['anchor_mismatch_count'] = 0
+                features['domain_mismatch'] = 0
+            
+            # Calculate URL entropy (simple version)
+            if valid_urls:
+                import math
+                def entropy(s):
+                    # Calculate Shannon entropy of a string
+                    prob = [float(s.count(c)) / len(s) for c in dict.fromkeys(s)]
+                    return -sum(p * math.log(p) / math.log(2.0) for p in prob)
+                
+                features['url_entropy'] = max(entropy(url) for url in valid_urls)
+                
+        except Exception as e:
+            print(f"Error in URL feature extraction: {str(e)}")
         
         return features
 

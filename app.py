@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from scipy.sparse import hstack
 from email_features import extract_all_features
+from explanation_handler import ExplanationHandler
 from advanced_analysis import (
     URLAnalyzer, IPAnalyzer, DomainAnalyzer, FileAnalyzer, DeepEmailAnalyzer,
     analyze_email_components, get_api_status, set_api_key
@@ -25,6 +26,7 @@ email_model = email_assets["model"]
 
 # ------------------ Flask Init ------------------
 app = Flask(__name__)
+explanation_handler = ExplanationHandler()
 
 # ------------------ Feature Extraction: URL ------------------
 def extract_features(url):

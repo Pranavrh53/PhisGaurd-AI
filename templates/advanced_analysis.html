@@ -7,6 +7,498 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
+    /* Base Styles */
+    :root {
+      /* Color System */
+      --primary: #4361ee;
+      --primary-light: #4cc9f0;
+      --secondary: #7209b7;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #f8961e;
+      --info: #4cc9f0;
+      --dark: #1a1a2e;
+      --darker: #16213e;
+      --light: #f8f9fa;
+      --gray: #6c757d;
+      
+      /* Spacing */
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 1.5rem;
+      --spacing-lg: 2rem;
+      --spacing-xl: 3rem;
+      
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 1rem;
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+      
+      /* Transitions */
+      --transition: all 0.2s ease-in-out;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      color: #e0e0e0;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    /* Header */
+    .header {
+      background: rgba(26, 26, 46, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, #4cc9f0, #4361ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+    }
+    
+    .header p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Navigation */
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn i {
+      font-size: 1rem;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: white;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    /* Cards */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .card h2 i {
+      color: var(--primary-light);
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(30, 30, 60, 0.5);
+      color: #f0f0f0;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .form-control::placeholder {
+      color: rgba(200, 200, 220, 0.6);
+    }
+    
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+    }
+    
+    textarea.form-control {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 0.5rem;
+    }
+    
+    .tab {
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-md);
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .tab i {
+      font-size: 1rem;
+    }
+    
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #e0e0e0;
+    }
+    
+    .tab.active {
+      background: rgba(67, 97, 238, 0.3);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Results */
+    .result-container {
+      margin-top: 1.5rem;
+    }
+    
+    .result-header {
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .result-header.malicious {
+      background: rgba(247, 37, 133, 0.1);
+      border-left: 4px solid var(--danger);
+      color: #ff6b9e;
+    }
+    
+    .result-header.suspicious {
+      background: rgba(248, 150, 30, 0.1);
+      border-left: 4px solid var(--warning);
+      color: #ffc46b;
+    }
+    
+    .result-header.clean {
+      background: rgba(76, 201, 240, 0.1);
+      border-left: 4px solid var(--success);
+      color: #6bd9ff;
+    }
+    
+    .result-section {
+      margin-bottom: 1.5rem;
+    }
+    
+    .result-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .result-section h3 i {
+      color: var(--primary-light);
+    }
+    
+    .result-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border-left: 3px solid var(--gray);
+    }
+    
+    .result-item.critical {
+      border-left-color: var(--danger);
+    }
+    
+    .result-item.high {
+      border-left-color: #ff6b6b;
+    }
+    
+    .result-item.medium {
+      border-left-color: var(--warning);
+    }
+    
+    .result-item.low {
+      border-left-color: var(--info);
+    }
+    
+    .result-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .result-item-title {
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    /* Fix for form labels */
+    .form-group label {
+      color: #e0e0e0 !important;
+    }
+    
+    /* Fix for input text color */
+    input, textarea, select {
+      color: #f0f0f0 !important;
+    }
+    
+    .result-item-meta {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .result-item-content {
+      font-size: 0.95rem;
+      color: #e0e0e0;
+      line-height: 1.6;
+    }
+    
+    /* Fix for form text visibility */
+    .form-text, .text-muted {
+      color: rgba(200, 200, 220, 0.8) !important;
+    }
+    
+    /* Fix for result text visibility */
+    .result-text {
+      color: #e0e0e0;
+    }
+    
+    /* Fix for card text */
+    .card {
+      color: #e0e0e0;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .badge-danger {
+      background: rgba(247, 37, 133, 0.2);
+      color: #ff6b9e;
+    }
+    
+    .badge-warning {
+      background: rgba(248, 150, 30, 0.2);
+      color: #ffc46b;
+    }
+    
+    .badge-success {
+      background: rgba(76, 201, 240, 0.2);
+      color: #6bd9ff;
+    }
+    
+    .badge-info {
+      background: rgba(67, 97, 238, 0.2);
+      color: #8fa3ff;
+    }
+    
+    /* API Status */
+    .api-status {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .api-status-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: var(--transition);
+    }
+    
+    .api-status-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+    
+    .api-status-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+    
+    .api-status-icon.active {
+      background: rgba(76, 201, 240, 0.2);
+      color: var(--success);
+    }
+    
+    .api-status-icon.inactive {
+      background: rgba(247, 37, 133, 0.2);
+      color: var(--danger);
+    }
+    
+    .api-status-info h4 {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.25rem;
+    }
+    
+    .api-status-info p {
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      margin: 0;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .api-status {
+        grid-template-columns: 1fr;
+      }
+      
+      .tabs {
+        flex-direction: column;
+      }
+      
+      .tab {
+        justify-content: center;
+      }
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
     :root {
       /* Color System */
       --primary-50: #eff6ff;
@@ -623,6 +1115,10 @@
       }
     }
   </style>
+  <!-- Include jQuery and Bootstrap for the modal -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
   <div class="header">
@@ -820,7 +1316,28 @@
       </form>
       <div id="apiConfigResult"></div>
     </div>
-  </div>
+  </main>
+
+  <!-- Include the explanation modal -->
+  {% include 'explanation_modal.html' %}
+  
+  <script>
+    // Toggle API key visibility
+    document.getElementById('toggleApiKey')?.addEventListener('click', function() {
+      const apiKeyInput = document.getElementById('apiKey');
+      const icon = this.querySelector('i');
+      
+      if (apiKeyInput.type === 'password') {
+        apiKeyInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        apiKeyInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    });
+  </script>
 
   <script>
     // Tab switching
@@ -979,6 +1496,36 @@
     });
 
     // Format functions
+    // Function to show explanation for email analysis
+    function showEmailExplanation(data) {
+      // Prepare analysis data for the explanation
+      const analysisData = {
+        verdict: data.verdict,
+        header_analysis: data.header_analysis || {},
+        content_analysis: data.content_analysis || {},
+        link_analysis: data.link_analysis || {}
+      };
+      
+      // Call the global showExplanation function
+      window.showExplanation(analysisData, 'email');
+    }
+
+    // Function to show explanation for URL analysis
+    function showURLExplanation(data) {
+      // Prepare analysis data for the explanation
+      const analysisData = {
+        verdict: data.verdict,
+        threats: data.threats || [],
+        security: data.security || {}
+      };
+      
+      // Call the global showExplanation function
+      window.showExplanation(analysisData, 'url');
+    }
+
+    // Make showExplanation globally available
+    window.showExplanation = showExplanation;
+
     function formatEmailDeepResult(data) {
       let html = '<div class="result">';
       
@@ -1117,25 +1664,49 @@
     }
 
     function formatURLResult(data) {
+      // Add explanation button to the URL result
+      const explanationButton = `
+        <button class="btn btn-sm btn-outline-primary mt-2" 
+                onclick="showURLExplanation(${JSON.stringify(data).replace(/"/g, '&quot;')})">
+          <i class="fas fa-robot"></i> Explain Analysis
+        </button>`;
       let html = '<div class="result">';
       html += '<div class="result-section">';
       html += '<h3><i class="fas fa-link"></i> URL Analysis: ' + data.url + '</h3>';
       
-      const verdict = data.overall_verdict;
-      html += `<span class="verdict-badge verdict-${verdict.is_malicious ? 'malicious' : 'clean'}">`;
-      html += `<i class="fas ${verdict.is_malicious ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>`;
-      html += verdict.is_malicious ? 'MALICIOUS' : 'CLEAN';
+      const verdict = data.overall_verdict || {};
+      const isMalicious = verdict && (verdict.is_malicious || verdict.verdict === 'malicious');
+      const confidence = verdict && verdict.confidence ? verdict.confidence.toFixed(1) : '0.0';
+      const maliciousSources = verdict && verdict.malicious_sources ? verdict.malicious_sources : 0;
+      const totalSources = verdict && verdict.total_sources ? verdict.total_sources : 0;
+      
+      html += `<span class="verdict-badge verdict-${isMalicious ? 'malicious' : 'clean'}">`;
+      html += `<i class="fas ${isMalicious ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>`;
+      html += isMalicious ? 'MALICIOUS' : 'CLEAN';
       html += `</span>`;
-      html += `<p style="color: var(--dark-text-secondary); margin-top: var(--space-2);">Confidence: <strong>${verdict.confidence.toFixed(1)}%</strong> (${verdict.malicious_sources}/${verdict.total_sources} sources flagged)</p>`;
+      html += `<p style="color: var(--dark-text-secondary); margin-top: var(--space-2);">Confidence: <strong>${confidence}%</strong> (${maliciousSources}/${totalSources} sources flagged)</p>`;
       html += '</div>';
       
       // Individual service results
       if (data.virustotal && data.virustotal.available) {
         html += '<div class="result-section">';
         html += '<h3><i class="fas fa-shield-virus"></i> VirusTotal</h3>';
-        html += `<p style="color: var(--dark-text-secondary);">Malicious: <strong>${data.virustotal.malicious}</strong> | Suspicious: <strong>${data.virustotal.suspicious}</strong> | Clean: <strong>${data.virustotal.harmless}</strong></p>`;
-        if (data.virustotal.permalink) {
-          html += `<p><a href="${data.virustotal.permalink}" target="_blank" style="color: var(--primary-500); text-decoration: none;">View Full Report <i class="fas fa-external-link-alt"></i></a></p>`;
+        
+        // Check if the URL has been scanned before
+        const totalScans = (data.virustotal.malicious || 0) + 
+                          (data.virustotal.suspicious || 0) + 
+                          (data.virustotal.harmless || 0);
+        
+        html += `<p style="color: var(--dark-text-secondary);">`;
+        html += `Malicious: <strong>${data.virustotal.malicious || 0}</strong> | `;
+        html += `Suspicious: <strong>${data.virustotal.suspicious || 0}</strong> | `;
+        html += `Clean: <strong>${data.virustotal.harmless || 0}</strong>`;
+        
+        if (totalScans === 0) {
+          html += `<br><span style="color: var(--warning-500);"><i class="fas fa-info-circle"></i> This URL has not been scanned by VirusTotal yet.</span>`;
+          html += `<br><a href="https://www.virustotal.com/gui/url/submission" target="_blank" style="color: var(--primary-500); text-decoration: none;">Submit for Analysis <i class="fas fa-external-link-alt"></i></a>`;
+        } else if (data.virustotal.permalink) {
+          html += `<br><a href="${data.virustotal.permalink}" target="_blank" style="color: var(--primary-500); text-decoration: none;">View Full Report <i class="fas fa-external-link-alt"></i></a>`;
         }
         html += '</div>';
       }
