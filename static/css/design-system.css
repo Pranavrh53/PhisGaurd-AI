@@ -120,7 +120,7 @@ body {
 }
 
 .card {
-  background: var(--dark-bg-secondary);
+  background: gray;
   border: 1px solid var(--dark-border);
   border-radius: var(--radius-2xl);
   padding: var(--space-8);
@@ -161,7 +161,13 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
-    padding: var(--space-8) var(--space-4);
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-4);
+    /* --- FIX: Add these lines --- */
+    position: relative; 
+    z-index: 10;      
+    /* --------------------------- */
   }
   
   .header {

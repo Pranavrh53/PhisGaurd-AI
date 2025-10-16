@@ -7,498 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    /* Base Styles */
-    :root {
-      /* Color System */
-      --primary: #4361ee;
-      --primary-light: #4cc9f0;
-      --secondary: #7209b7;
-      --success: #4cc9f0;
-      --danger: #f72585;
-      --warning: #f8961e;
-      --info: #4cc9f0;
-      --dark: #1a1a2e;
-      --darker: #16213e;
-      --light: #f8f9fa;
-      --gray: #6c757d;
-      
-      /* Spacing */
-      --spacing-xs: 0.5rem;
-      --spacing-sm: 1rem;
-      --spacing-md: 1.5rem;
-      --spacing-lg: 2rem;
-      --spacing-xl: 3rem;
-      
-      /* Border Radius */
-      --radius-sm: 0.375rem;
-      --radius-md: 0.5rem;
-      --radius-lg: 1rem;
-      
-      /* Shadows */
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-      
-      /* Transitions */
-      --transition: all 0.2s ease-in-out;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-      color: #e0e0e0;
-      line-height: 1.6;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-    }
-    
-    /* Header */
-    .header {
-      background: rgba(26, 26, 46, 0.8);
-      backdrop-filter: blur(10px);
-      padding: 1.5rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-      z-index: 10;
-    }
-    
-    .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1rem;
-      text-align: center;
-    }
-    
-    .header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(90deg, #4cc9f0, #4361ee);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-    }
-    
-    .header p {
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 1.5rem;
-    }
-    
-    /* Navigation */
-    .nav-links {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1.25rem;
-      border-radius: var(--radius-md);
-      font-weight: 500;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: var(--transition);
-      border: none;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .btn i {
-      font-size: 1rem;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(90deg, var(--primary), var(--primary-light));
-      color: white;
-      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
-    }
-    
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-    
-    /* Cards */
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: var(--shadow-md);
-    }
-    
-    .card h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1.5rem;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    
-    .card h2 i {
-      color: var(--primary-light);
-    }
-    
-    /* Forms */
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    
-    .form-control {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(30, 30, 60, 0.5);
-      color: #f0f0f0;
-      font-size: 1rem;
-      transition: var(--transition);
-    }
-    
-    .form-control::placeholder {
-      color: rgba(200, 200, 220, 0.6);
-    }
-    
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
-    }
-    
-    textarea.form-control {
-      min-height: 150px;
-      resize: vertical;
-    }
-    
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 0.5rem;
-    }
-    
-    .tab {
-      padding: 0.5rem 1.25rem;
-      border-radius: var(--radius-md);
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.7);
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .tab i {
-      font-size: 1rem;
-    }
-    
-    .tab:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #e0e0e0;
-    }
-    
-    .tab.active {
-      background: rgba(67, 97, 238, 0.3);
-      color: #ffffff;
-      font-weight: 600;
-    }
-    
-    .tab-content {
-      display: none;
-    }
-    
-    .tab-content.active {
-      display: block;
-      animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    /* Results */
-    .result-container {
-      margin-top: 1.5rem;
-    }
-    
-    .result-header {
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-    }
-    
-    .result-header.malicious {
-      background: rgba(247, 37, 133, 0.1);
-      border-left: 4px solid var(--danger);
-      color: #ff6b9e;
-    }
-    
-    .result-header.suspicious {
-      background: rgba(248, 150, 30, 0.1);
-      border-left: 4px solid var(--warning);
-      color: #ffc46b;
-    }
-    
-    .result-header.clean {
-      background: rgba(76, 201, 240, 0.1);
-      border-left: 4px solid var(--success);
-      color: #6bd9ff;
-    }
-    
-    .result-section {
-      margin-bottom: 1.5rem;
-    }
-    
-    .result-section h3 {
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .result-section h3 i {
-      color: var(--primary-light);
-    }
-    
-    .result-item {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: var(--radius-md);
-      padding: 1rem;
-      margin-bottom: 0.75rem;
-      border-left: 3px solid var(--gray);
-    }
-    
-    .result-item.critical {
-      border-left-color: var(--danger);
-    }
-    
-    .result-item.high {
-      border-left-color: #ff6b6b;
-    }
-    
-    .result-item.medium {
-      border-left-color: var(--warning);
-    }
-    
-    .result-item.low {
-      border-left-color: var(--info);
-    }
-    
-    .result-item-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.5rem;
-    }
-    
-    .result-item-title {
-      font-weight: 600;
-      color: #ffffff;
-    }
-    
-    /* Fix for form labels */
-    .form-group label {
-      color: #e0e0e0 !important;
-    }
-    
-    /* Fix for input text color */
-    input, textarea, select {
-      color: #f0f0f0 !important;
-    }
-    
-    .result-item-meta {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .result-item-content {
-      font-size: 0.95rem;
-      color: #e0e0e0;
-      line-height: 1.6;
-    }
-    
-    /* Fix for form text visibility */
-    .form-text, .text-muted {
-      color: rgba(200, 200, 220, 0.8) !important;
-    }
-    
-    /* Fix for result text visibility */
-    .result-text {
-      color: #e0e0e0;
-    }
-    
-    /* Fix for card text */
-    .card {
-      color: #e0e0e0;
-    }
-    
-    .badge {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .badge-danger {
-      background: rgba(247, 37, 133, 0.2);
-      color: #ff6b9e;
-    }
-    
-    .badge-warning {
-      background: rgba(248, 150, 30, 0.2);
-      color: #ffc46b;
-    }
-    
-    .badge-success {
-      background: rgba(76, 201, 240, 0.2);
-      color: #6bd9ff;
-    }
-    
-    .badge-info {
-      background: rgba(67, 97, 238, 0.2);
-      color: #8fa3ff;
-    }
-    
-    /* API Status */
-    .api-status {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    
-    .api-status-item {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--radius-md);
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      transition: var(--transition);
-    }
-    
-    .api-status-item:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-    }
-    
-    .api-status-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-    }
-    
-    .api-status-icon.active {
-      background: rgba(76, 201, 240, 0.2);
-      color: var(--success);
-    }
-    
-    .api-status-icon.inactive {
-      background: rgba(247, 37, 133, 0.2);
-      color: var(--danger);
-    }
-    
-    .api-status-info h4 {
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 0.25rem;
-    }
-    
-    .api-status-info p {
-      font-size: 1rem;
-      font-weight: 600;
-      color: white;
-      margin: 0;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .api-status {
-        grid-template-columns: 1fr;
-      }
-      
-      .tabs {
-        flex-direction: column;
-      }
-      
-      .tab {
-        justify-content: center;
-      }
-    }
-    
-    /* Animations */
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-    
-    .pulse {
-      animation: pulse 2s infinite;
-    }
     :root {
       /* Color System */
       --primary-50: #eff6ff;
@@ -677,6 +185,7 @@
       background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
       color: white;
       box-shadow: var(--shadow-md);
+      padding: 12px 24px;
     }
     
     .btn-primary:hover {
@@ -1115,10 +624,6 @@
       }
     }
   </style>
-  <!-- Include jQuery and Bootstrap for the modal -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
   <div class="header">
@@ -1219,21 +724,51 @@
 
       <!-- URL Analysis Tab -->
       <div id="url-tab" class="tab-content">
-        <h2><i class="fas fa-link"></i> URL Deep Analysis</h2>
-        <div class="info-box">
-          <strong><i class="fas fa-info-circle"></i> Analysis:</strong> Analyze a URL using VirusTotal, URLScan.io, Google Safe Browsing, and PhishTank.
-        </div>
-        <form id="urlDeepForm">
-          <div class="form-group">
-            <label class="form-label" for="url">Website URL</label>
-            <input type="text" name="url" id="url" placeholder="https://example.com" required>
+        <div class="analysis-header">
+          <div class="header-icon">
+            <i class="fas fa-link"></i>
           </div>
-          <button type="submit" class="form-button">
-            <i class="fas fa-search"></i>
-            Analyze URL
-          </button>
-        </form>
-        <div id="urlDeepResult"></div>
+          <div class="header-text">
+            <h2>URL Deep Analysis</h2>
+            <p class="subtitle">Comprehensive security analysis of web addresses</p>
+          </div>
+        </div>
+        
+        <div class="info-box glass">
+          <div class="info-icon">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div class="info-content">
+            <h4>How It Works</h4>
+            <p>Enter a URL to analyze it across multiple threat intelligence services including VirusTotal, URLScan.io, Google Safe Browsing, and PhishTank. Our system will provide a comprehensive security assessment.</p>
+          </div>
+        </div>
+        
+        <div class="card glass form-card">
+          <form id="urlDeepForm" class="url-analysis-form">
+            <div class="form-group">
+              <div class="input-group">
+                <span class="input-icon"><i class="fas fa-link"></i></span>
+                <input type="text" 
+                       name="url" 
+                       id="url" 
+                       placeholder="https://example.com" 
+                       required
+                       autocomplete="off"
+                       class="form-control">
+                <button type="submit" class="btn-primary">
+                  <i class="fas fa-search"></i>
+                  Analyze URL
+                </button>
+              </div>
+              <div class="form-hint">
+                <i class="fas fa-lightbulb"></i> Enter a complete URL including http:// or https://
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        <div id="urlDeepResult" class="results-container"></div>
       </div>
 
       <!-- IP Analysis Tab -->
@@ -1316,28 +851,7 @@
       </form>
       <div id="apiConfigResult"></div>
     </div>
-  </main>
-
-  <!-- Include the explanation modal -->
-  {% include 'explanation_modal.html' %}
-  
-  <script>
-    // Toggle API key visibility
-    document.getElementById('toggleApiKey')?.addEventListener('click', function() {
-      const apiKeyInput = document.getElementById('apiKey');
-      const icon = this.querySelector('i');
-      
-      if (apiKeyInput.type === 'password') {
-        apiKeyInput.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-      } else {
-        apiKeyInput.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-      }
-    });
-  </script>
+  </div>
 
   <script>
     // Tab switching
@@ -1496,36 +1010,6 @@
     });
 
     // Format functions
-    // Function to show explanation for email analysis
-    function showEmailExplanation(data) {
-      // Prepare analysis data for the explanation
-      const analysisData = {
-        verdict: data.verdict,
-        header_analysis: data.header_analysis || {},
-        content_analysis: data.content_analysis || {},
-        link_analysis: data.link_analysis || {}
-      };
-      
-      // Call the global showExplanation function
-      window.showExplanation(analysisData, 'email');
-    }
-
-    // Function to show explanation for URL analysis
-    function showURLExplanation(data) {
-      // Prepare analysis data for the explanation
-      const analysisData = {
-        verdict: data.verdict,
-        threats: data.threats || [],
-        security: data.security || {}
-      };
-      
-      // Call the global showExplanation function
-      window.showExplanation(analysisData, 'url');
-    }
-
-    // Make showExplanation globally available
-    window.showExplanation = showExplanation;
-
     function formatEmailDeepResult(data) {
       let html = '<div class="result">';
       
@@ -1664,65 +1148,215 @@
     }
 
     function formatURLResult(data) {
-      // Add explanation button to the URL result
-      const explanationButton = `
-        <button class="btn btn-sm btn-outline-primary mt-2" 
-                onclick="showURLExplanation(${JSON.stringify(data).replace(/"/g, '&quot;')})">
-          <i class="fas fa-robot"></i> Explain Analysis
-        </button>`;
-      let html = '<div class="result">';
-      html += '<div class="result-section">';
-      html += '<h3><i class="fas fa-link"></i> URL Analysis: ' + data.url + '</h3>';
+      // Handle error case first
+      if (data.error) {
+        return `
+        <div class="result-card glass">
+          <div class="result-header">
+            <div class="result-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="result-title">
+              <h3>Error</h3>
+              <p class="result-subtitle">${new Date().toLocaleString()}</p>
+            </div>
+          </div>
+          <div class="result-body">
+            <div class="warning-box">
+              <i class="fas fa-exclamation-circle"></i>
+              <strong>Error:</strong> ${data.error}
+            </div>
+          </div>
+        </div>`;
+      }
+
+      // Determine if the URL is malicious based on available data
+      let isMalicious = false;
+      let confidence = 0;
+      let maliciousSources = 0;
+      let totalSources = 0;
       
-      const verdict = data.overall_verdict || {};
-      const isMalicious = verdict && (verdict.is_malicious || verdict.verdict === 'malicious');
-      const confidence = verdict && verdict.confidence ? verdict.confidence.toFixed(1) : '0.0';
-      const maliciousSources = verdict && verdict.malicious_sources ? verdict.malicious_sources : 0;
-      const totalSources = verdict && verdict.total_sources ? verdict.total_sources : 0;
-      
-      html += `<span class="verdict-badge verdict-${isMalicious ? 'malicious' : 'clean'}">`;
-      html += `<i class="fas ${isMalicious ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>`;
-      html += isMalicious ? 'MALICIOUS' : 'CLEAN';
-      html += `</span>`;
-      html += `<p style="color: var(--dark-text-secondary); margin-top: var(--space-2);">Confidence: <strong>${confidence}%</strong> (${maliciousSources}/${totalSources} sources flagged)</p>`;
-      html += '</div>';
-      
-      // Individual service results
-      if (data.virustotal && data.virustotal.available) {
-        html += '<div class="result-section">';
-        html += '<h3><i class="fas fa-shield-virus"></i> VirusTotal</h3>';
-        
-        // Check if the URL has been scanned before
-        const totalScans = (data.virustotal.malicious || 0) + 
-                          (data.virustotal.suspicious || 0) + 
-                          (data.virustotal.harmless || 0);
-        
-        html += `<p style="color: var(--dark-text-secondary);">`;
-        html += `Malicious: <strong>${data.virustotal.malicious || 0}</strong> | `;
-        html += `Suspicious: <strong>${data.virustotal.suspicious || 0}</strong> | `;
-        html += `Clean: <strong>${data.virustotal.harmless || 0}</strong>`;
-        
-        if (totalScans === 0) {
-          html += `<br><span style="color: var(--warning-500);"><i class="fas fa-info-circle"></i> This URL has not been scanned by VirusTotal yet.</span>`;
-          html += `<br><a href="https://www.virustotal.com/gui/url/submission" target="_blank" style="color: var(--primary-500); text-decoration: none;">Submit for Analysis <i class="fas fa-external-link-alt"></i></a>`;
-        } else if (data.virustotal.permalink) {
-          html += `<br><a href="${data.virustotal.permalink}" target="_blank" style="color: var(--primary-500); text-decoration: none;">View Full Report <i class="fas fa-external-link-alt"></i></a>`;
-        }
-        html += '</div>';
+      // Check VirusTotal results
+      if (data.virustotal && data.virustotal.detection_ratio) {
+        const [detected, total] = data.virustotal.detection_ratio.split('/').map(Number);
+        maliciousSources += detected;
+        totalSources += total || 1;
       }
       
-      if (data.urlscan && data.urlscan.available) {
-        html += '<div class="result-section">';
-        html += '<h3><i class="fas fa-search"></i> URLScan.io</h3>';
-        html += `<p style="color: var(--dark-text-secondary);">Malicious: <strong>${data.urlscan.malicious ? 'Yes' : 'No'}</strong></p>`;
-        if (data.urlscan.screenshot) {
-          html += `<p><img src="${data.urlscan.screenshot}" style="max-width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--dark-border);" alt="Screenshot"></p>`;
-        }
-        html += '</div>';
+      // Check URLScan results
+      if (data.urlscan && data.urlscan.malicious) {
+        maliciousSources += 1;
+        totalSources += 1;
       }
       
-      html += '</div>';
+      // Calculate confidence based on available sources
+      if (totalSources > 0) {
+        confidence = Math.round((maliciousSources / totalSources) * 100);
+        isMalicious = maliciousSources > 0;
+      }
+      
+      // Extract URL from the data or use a placeholder
+      const url = data.url || 'Unknown URL';
+      
+      let html = `
+      <div class="result-card glass">
+        <div class="result-header ${isMalicious ? 'malicious' : 'clean'}">
+          <div class="result-icon">
+            <i class="fas ${isMalicious ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i>
+          </div>
+          <div class="result-title">
+            <h3>${url}</h3>
+            <p class="result-subtitle">Analyzed ${new Date().toLocaleString()}</p>
+          </div>
+          <div class="verdict-badge ${isMalicious ? 'verdict-malicious' : 'verdict-clean'}">
+            ${isMalicious ? 'MALICIOUS' : 'CLEAN'}
+          </div>
+        </div>
+        
+        <div class="result-body">
+          <!-- Overall Verdict -->
+          <div class="verdict-summary">
+            <div class="verdict-metric">
+              <span class="metric-label">Confidence</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${confidence}%; background: ${getConfidenceColor(confidence)};">
+                  <span>${confidence}%</span>
+                </div>
+              </div>
+            </div>
+            <div class="verdict-metric">
+              <span class="metric-label">Threat Score</span>
+              <div class="threat-score ${getThreatLevel(confidence)}">
+                ${getThreatLevelText(confidence)}
+              </div>
+            </div>
+            <div class="verdict-metric">
+              <span class="metric-label">Sources Flagged</span>
+              <div class="sources-flagged">
+                <span class="sources-count">${maliciousSources}/${totalSources}</span>
+                <span class="sources-label">security sources</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="divider"></div>
+          
+          <!-- Service Results -->
+          <div class="service-results">
+            ${formatServiceResult('VirusTotal', data.virustotal, 'shield-virus', {
+              'Malicious': data.virustotal?.malicious,
+              'Suspicious': data.virustotal?.suspicious,
+              'Harmless': data.virustotal?.harmless,
+              'Undetected': data.virustotal?.undetected
+            }, data.virustotal?.permalink)}
+            
+            ${formatServiceResult('URLScan.io', data.urlscan, 'search', {
+              'Malicious': data.urlscan?.malicious ? 'Yes' : 'No',
+              'Screenshot': data.urlscan?.screenshot ? 'Available' : 'Not available'
+            }, data.urlscan?.report_url)}
+            
+            ${formatServiceResult('Google Safe Browsing', data.googlesafebrowsing, 'google', {
+              'Threats Detected': data.googlesafebrowsing?.threats_found?.length || 0,
+              'Status': data.googlesafebrowsing?.threats_found?.length ? 'Unsafe' : 'Safe'
+            })}
+            
+            ${formatServiceResult('PhishTank', data.phishtank, 'fish', {
+              'Phishing': data.phishtank?.in_database ? 'Detected' : 'Not Detected',
+              'Verified': data.phishtank?.verified ? 'Yes' : 'No'
+            }, data.phishtank?.details_url)}
+          </div>
+          
+          ${data.urlscan?.screenshot ? `
+          <div class="screenshot-preview">
+            <h4><i class="fas fa-camera"></i> Website Preview</h4>
+            <div class="screenshot-container">
+              <img src="${data.urlscan.screenshot}" alt="Website Screenshot" class="screenshot">
+              <div class="screenshot-overlay">
+                <a href="${data.url}" target="_blank" class="btn-outline">
+                  <i class="fas fa-external-link-alt"></i> Visit Site
+                </a>
+              </div>
+            </div>
+          </div>` : ''}
+          
+          <div class="result-footer">
+            <div class="last-updated">
+              <i class="fas fa-sync-alt"></i> Results update in 24 hours
+            </div>
+            <div class="report-actions">
+              <button class="btn-text" onclick="downloadReport('${data.url}')">
+                <i class="fas fa-download"></i> Download Report
+              </button>
+              <button class="btn-text" onclick="shareResults('${data.url}')">
+                <i class="fas fa-share-alt"></i> Share
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      
       return html;
+      
+      // Helper function to format service results
+      function formatServiceResult(name, service, icon, metrics, url) {
+        if (!service) return '';
+        
+        // Check if the service has data in the expected format
+        const hasData = service.available || 
+                       (service.detection_ratio !== undefined) || 
+                       (service.malicious !== undefined) ||
+                       (service.threats_found !== undefined);
+        
+        if (!hasData) return '';
+        
+        let metricsHtml = '';
+        for (const [label, value] of Object.entries(metrics)) {
+          if (value !== undefined) {
+            metricsHtml += `
+            <div class="metric-item">
+              <span class="metric-label">${label}</span>
+              <span class="metric-value">${value}</span>
+            </div>`;
+          }
+        }
+        
+        const reportLink = url ? `
+        <a href="${url}" target="_blank" class="report-link">
+          View Report <i class="fas fa-external-link-alt"></i>
+        </a>` : '';
+        
+        return `
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-icon">
+              <i class="fas fa-${icon}"></i>
+            </div>
+            <h4>${name}</h4>
+            ${reportLink}
+          </div>
+          <div class="service-metrics">
+            ${metricsHtml}
+          </div>
+        </div>`;
+      }
+      
+      function getConfidenceColor(confidence) {
+        if (confidence > 70) return 'var(--danger-500)';
+        if (confidence > 30) return 'var(--warning-500)';
+        return 'var(--success-500)';
+      }
+      
+      function getThreatLevel(confidence) {
+        if (confidence > 70) return 'high';
+        if (confidence > 30) return 'medium';
+        return 'low';
+      }
+      
+      function getThreatLevelText(confidence) {
+        if (confidence > 70) return 'High Risk';
+        if (confidence > 30) return 'Medium Risk';
+        return 'Low Risk';
+      }
     }
 
     function formatIPResult(data) {
@@ -1777,6 +1411,448 @@
       html += '</div>';
       return html;
     }
+  </script>
+  
+  <script>
+    function formatDate(date = new Date()) {
+      return date.toISOString().split('T')[0] + ' ' + date.toLocaleTimeString();
+    }
+
+    function generateReportContent(url, verdict, confidence, maliciousSources, totalSources, analysisData) {
+      const reportDate = new Date().toLocaleString();
+      let report = `PhishGuard AI Analysis Report\n`;
+      report += `================================\n\n`;
+      report += `URL: ${url}\n`;
+      report += `Analysis Date: ${reportDate}\n`;
+      report += `Verdict: ${verdict}\n`;
+      report += `Confidence: ${confidence}%\n`;
+      report += `Threat Level: ${getThreatLevelText(confidence)}\n`;
+      report += `Sources Flagged: ${maliciousSources}/${totalSources}\n\n`;
+      
+      // Add VirusTotal results if available
+      if (analysisData.virustotal) {
+        report += `VirusTotal Results:\n`;
+        report += `-------------------\n`;
+        if (analysisData.virustotal.detection_ratio) {
+          report += `Detection Ratio: ${analysisData.virustotal.detection_ratio}\n`;
+        }
+        if (analysisData.virustotal.malicious !== undefined) {
+          report += `Malicious: ${analysisData.virustotal.malicious ? 'Yes' : 'No'}\n`;
+        }
+        if (analysisData.virustotal.permalink) {
+          report += `Report: ${analysisData.virustotal.permalink}\n`;
+        }
+        report += '\n';
+      }
+
+      // Add URLScan results if available
+      if (analysisData.urlscan) {
+        report += `URLScan.io Results:\n`;
+        report += `-------------------\n`;
+        if (analysisData.urlscan.malicious !== undefined) {
+          report += `Malicious: ${analysisData.urlscan.malicious ? 'Yes' : 'No'}\n`;
+        }
+        if (analysisData.urlscan.report_url) {
+          report += `Report: ${analysisData.urlscan.report_url}\n`;
+        }
+        report += '\n';
+      }
+
+      // Add Google Safe Browsing results if available
+      if (analysisData.googlesafebrowsing) {
+        report += `Google Safe Browsing Results:\n`;
+        report += `-----------------------------\n`;
+        const threats = analysisData.googlesafebrowsing.threats_found || [];
+        report += `Threats Found: ${threats.length}\n`;
+        threats.forEach((threat, index) => {
+          report += `${index + 1}. ${threat.threatType}: ${threat.platformType} - ${threat.threatEntryType}\n`;
+        });
+        report += '\n';
+      }
+
+      // Add PhishTank results if available
+      if (analysisData.phishtank) {
+        report += `PhishTank Results:\n`;
+        report += `------------------\n`;
+        if (analysisData.phishtank.in_database !== undefined) {
+          report += `In Database: ${analysisData.phishtank.in_database ? 'Yes' : 'No'}\n`;
+        }
+        if (analysisData.phishtank.verified !== undefined) {
+          report += `Verified: ${analysisData.phishtank.verified ? 'Yes' : 'No'}\n`;
+        }
+        if (analysisData.phishtank.details_url) {
+          report += `Details: ${analysisData.phishtank.details_url}\n`;
+        }
+      }
+
+      report += `\n\n---\n`;
+      report += `Report generated by PhishGuard AI - ${window.location.origin}\n`;
+      report += `© ${new Date().getFullYear()} PhishGuard AI. All rights reserved.`;
+      
+      return report;
+    }
+
+    function downloadAnalysisReport(url, verdict, confidence, maliciousSources, totalSources, analysisData) {
+      try {
+        // Parse the analysisData if it's a string
+        const data = typeof analysisData === 'string' ? JSON.parse(analysisData.replace(/&quot;/g, '"')) : analysisData;
+        
+        const reportContent = generateReportContent(url, verdict, confidence, maliciousSources, totalSources, data);
+        const filename = `phishguard-report-${url.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${new Date().getTime()}.txt`;
+        
+        // Create a Blob with the report content
+        const blob = new Blob([reportContent], { type: 'text/plain' });
+        
+        // Create a download link
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        
+        // Trigger the download
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+        }, 0);
+        
+        // Show success message
+        showToast('Report downloaded successfully!', 'success');
+      } catch (error) {
+        console.error('Error generating report:', error);
+        showToast('Error generating report. Please try again.', 'error');
+      }
+    }
+
+    async function shareAnalysisResults(url, verdict) {
+      try {
+        if (navigator.share) {
+          await navigator.share({
+            title: 'PhishGuard AI Analysis',
+            text: `PhishGuard AI Analysis for ${url} - Verdict: ${verdict}`,
+            url: window.location.href,
+          });
+        } else {
+          // Fallback for browsers that don't support Web Share API
+          const shareText = `PhishGuard AI Analysis for ${url}\nVerdict: ${verdict}\n\nView full report at: ${window.location.href}`;
+          
+          // Try to copy to clipboard
+          if (navigator.clipboard) {
+            await navigator.clipboard.writeText(shareText);
+            showToast('Link copied to clipboard!', 'success');
+          } else {
+            // Fallback to prompt
+            const textArea = document.createElement('textarea');
+            textArea.value = shareText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('Link copied to clipboard!', 'success');
+          }
+        }
+      } catch (error) {
+        console.error('Error sharing results:', error);
+        if (error.name !== 'AbortError') {
+          showToast('Error sharing results. Please try again.', 'error');
+        }
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      // Create toast element if it doesn't exist
+      let toastContainer = document.getElementById('toast-container');
+      if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '9999';
+        document.body.appendChild(toastContainer);
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      toast.style.padding = '12px 20px';
+      toast.style.borderRadius = '4px';
+      toast.style.marginBottom = '10px';
+      toast.style.color = 'white';
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s';
+      
+      // Set background color based on type
+      switch (type) {
+        case 'success':
+          toast.style.backgroundColor = '#4CAF50';
+          break;
+        case 'error':
+          toast.style.backgroundColor = '#f44336';
+          break;
+        case 'warning':
+          toast.style.backgroundColor = '#ff9800';
+          break;
+        default:
+          toast.style.backgroundColor = '#2196F3';
+      }
+
+      toastContainer.appendChild(toast);
+      
+      // Trigger reflow
+      setTimeout(() => {
+        toast.style.opacity = '1';
+      }, 10);
+      
+      // Remove toast after delay
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          toastContainer.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+  </script>
+  
+  <script>
+    function formatDate(date = new Date()) {
+      return date.toISOString().split('T')[0] + ' ' + date.toLocaleTimeString();
+    }
+
+    function generateReportContent(analysisType, analysisData) {
+      const reportDate = new Date().toLocaleString();
+      let report = `PhishGuard AI ${analysisType.toUpperCase()} Analysis Report\n`;
+      report += `================================\n\n`;
+      report += `Analysis Type: ${analysisType.toUpperCase()}\n`;
+      report += `Analysis Date: ${reportDate}\n`;
+      
+      // Common report sections
+      report += `\n=== ANALYSIS DETAILS ===\n`;
+      
+      // Add specific content based on analysis type
+      if (analysisType === 'url') {
+        report += `URL: ${analysisData.url || 'N/A'}\n`;
+        report += `Verdict: ${analysisData.isMalicious ? 'MALICIOUS' : 'CLEAN'}\n`;
+        report += `Confidence: ${analysisData.confidence || 0}%\n`;
+        report += `Threat Level: ${getThreatLevelText(analysisData.confidence || 0)}\n`;
+        report += `Sources Flagged: ${analysisData.maliciousSources || 0}/${analysisData.totalSources || 0}\n`;
+        
+        if (analysisData.virustotal) {
+          report += '\n--- VIRUSTOTAL ---\n';
+          report += `Detection Ratio: ${analysisData.virustotal.detection_ratio || 'N/A'}\n`;
+          report += `Malicious: ${analysisData.virustotal.malicious ? 'Yes' : 'No'}\n`;
+          if (analysisData.virustotal.permalink) {
+            report += `Report: ${analysisData.virustotal.permalink}\n`;
+          }
+        }
+      } 
+      else if (analysisType === 'email') {
+        report += `From: ${analysisData.sender || 'N/A'}\n`;
+        report += `Subject: ${analysisData.subject || 'No Subject'}\n`;
+        report += `Verdict: ${analysisData.isPhishing ? 'PHISHING' : 'LEGITIMATE'}\n`;
+        report += `Confidence: ${analysisData.confidence || 0}%\n`;
+        report += `Risk Level: ${analysisData.riskLevel || 'Medium'}\n`;
+        
+        if (analysisData.suspiciousElements) {
+          report += '\n--- SUSPICIOUS ELEMENTS ---\n';
+          analysisData.suspiciousElements.forEach((elem, i) => {
+            report += `${i+1}. ${elem.type}: ${elem.value}\n`;
+            if (elem.description) {
+              report += `   ${elem.description}\n`;
+            }
+          });
+        }
+      }
+      else if (analysisType === 'ip') {
+        report += `IP Address: ${analysisData.ip || 'N/A'}\n`;
+        report += `Threat Level: ${analysisData.threatLevel || 'Unknown'}\n`;
+        report += `Abuse Contact: ${analysisData.abuseContact || 'N/A'}\n`;
+        report += `ISP: ${analysisData.isp || 'N/A'}\n`;
+        
+        if (analysisData.reputation) {
+          report += '\n--- REPUTATION ---\n';
+          report += `Score: ${analysisData.reputation.score || 0}/100\n`;
+          report += `Blacklisted: ${analysisData.reputation.blacklisted ? 'Yes' : 'No'}\n`;
+          if (analysisData.reputation.threats) {
+            report += 'Threats: ' + analysisData.reputation.threats.join(', ') + '\n';
+          }
+        }
+      }
+      else if (analysisType === 'domain') {
+        report += `Domain: ${analysisData.domain || 'N/A'}\n`;
+        report += `Registration Date: ${analysisData.registrationDate || 'N/A'}\n`;
+        report += `Expiration Date: ${analysisData.expirationDate || 'N/A'}\n`;
+        report += `Registrar: ${analysisData.registrar || 'N/A'}\n`;
+        report += `Status: ${analysisData.status || 'Unknown'}\n`;
+        
+        if (analysisData.whois) {
+          report += '\n--- WHOIS ---\n';
+          report += `Created: ${analysisData.whois.creation_date || 'N/A'}\n`;
+          report += `Updated: ${analysisData.whois.updated_date || 'N/A'}\n`;
+          report += `Registrant: ${analysisData.whois.registrant_name || 'N/A'}\n`;
+          report += `Name Servers: ${(analysisData.whois.name_servers || []).join(', ') || 'N/A'}\n`;
+        }
+      }
+
+      // Add footer
+      report += `\n\n---\n`;
+      report += `Report generated by PhishGuard AI - ${window.location.origin}\n`;
+      report += `© ${new Date().getFullYear()} PhishGuard AI. All rights reserved.`;
+      
+      return report;
+    }
+
+    function downloadAnalysisReport(analysisType, analysisData) {
+      try {
+        // Parse the analysisData if it's a string
+        const data = typeof analysisData === 'string' ? 
+          JSON.parse(analysisData.replace(/&quot;/g, '"')) : 
+          analysisData;
+        
+        const reportContent = generateReportContent(analysisType, data);
+        const timestamp = new Date().getTime();
+        const filename = `phishguard-${analysisType}-report-${timestamp}.txt`;
+        
+        // Create a Blob with the report content
+        const blob = new Blob([reportContent], { type: 'text/plain' });
+        
+        // Create a download link
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        
+        // Trigger the download
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+        }, 0);
+        
+        // Show success message
+        showToast('Report downloaded successfully!', 'success');
+      } catch (error) {
+        console.error('Error generating report:', error);
+        showToast('Error generating report. Please try again.', 'error');
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      // Create toast element if it doesn't exist
+      let toastContainer = document.getElementById('toast-container');
+      if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        toastContainer.style.position = 'fixed';
+        toastContainer.style.bottom = '20px';
+        toastContainer.style.right = '20px';
+        toastContainer.style.zIndex = '9999';
+        document.body.appendChild(toastContainer);
+      }
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      toast.style.padding = '12px 20px';
+      toast.style.borderRadius = '4px';
+      toast.style.marginBottom = '10px';
+      toast.style.color = 'white';
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s';
+      
+      // Set background color based on type
+      switch (type) {
+        case 'success':
+          toast.style.backgroundColor = '#4CAF50';
+          break;
+        case 'error':
+          toast.style.backgroundColor = '#f44336';
+          break;
+        case 'warning':
+          toast.style.backgroundColor = '#ff9800';
+          break;
+        default:
+          toast.style.backgroundColor = '#2196F3';
+      }
+
+      toastContainer.appendChild(toast);
+      
+      // Trigger reflow
+      setTimeout(() => {
+        toast.style.opacity = '1';
+      }, 10);
+      
+      // Remove toast after delay
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+          toastContainer.removeChild(toast);
+        }, 300);
+      }, 3000);
+    }
+
+    // Add download buttons to all analysis sections
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add download button to URL analysis section
+      const urlResultSection = document.querySelector('#url-analysis-result');
+      if (urlResultSection) {
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn btn-primary';
+        downloadBtn.style.marginTop: '15px';
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Report';
+        downloadBtn.onclick = function() {
+          const resultData = window.urlAnalysisResult || {};
+          downloadAnalysisReport('url', resultData);
+        };
+        urlResultSection.appendChild(downloadBtn);
+      }
+
+      // Add download button to Email analysis section
+      const emailResultSection = document.querySelector('#email-analysis-result');
+      if (emailResultSection) {
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn btn-primary';
+        downloadBtn.style.marginTop = '15px';
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Report';
+        downloadBtn.onclick = function() {
+          const resultData = window.emailAnalysisResult || {};
+          downloadAnalysisReport('email', resultData);
+        };
+        emailResultSection.appendChild(downloadBtn);
+      }
+
+      // Add download button to IP analysis section
+      const ipResultSection = document.querySelector('#ip-analysis-result');
+      if (ipResultSection) {
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn btn-primary';
+        downloadBtn.style.marginTop = '15px';
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Report';
+        downloadBtn.onclick = function() {
+          const resultData = window.ipAnalysisResult || {};
+          downloadAnalysisReport('ip', resultData);
+        };
+        ipResultSection.appendChild(downloadBtn);
+      }
+
+      // Add download button to Domain analysis section
+      const domainResultSection = document.querySelector('#domain-analysis-result');
+      if (domainResultSection) {
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'btn btn-primary';
+        downloadBtn.style.marginTop = '15px';
+        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Report';
+        downloadBtn.onclick = function() {
+          const resultData = window.domainAnalysisResult || {};
+          downloadAnalysisReport('domain', resultData);
+        };
+        domainResultSection.appendChild(downloadBtn);
+      }
+    });
   </script>
 </body>
 </html>
