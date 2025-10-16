@@ -1,125 +1,32 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory, send_file, session
-import os
+from flask import Flask, request, render_template, jsonify, redirect, url_for
 import joblib
-import numpy as np
-import pandas as pd
 import re
-import urllib.parse
-import json
-import logging
-import uuid
-from pathlib import Path
-from typing import Dict, Any, List, Optional
+import pandas as pd
+import numpy as np
 from scipy.sparse import hstack
-from datetime import datetime
-
-# Local imports
-from email_features import EmailAnalyzer, extract_all_features
+from email_features import extract_all_features
+from explanation_handler import ExplanationHandler
 from advanced_analysis import (
-    AdvancedAnalyzer, URLAnalyzer, IPAnalyzer, DomainAnalyzer, 
-    FileAnalyzer, DeepEmailAnalyzer, analyze_email_components, 
-    get_api_status, set_api_key
+    URLAnalyzer, IPAnalyzer, DomainAnalyzer, FileAnalyzer, DeepEmailAnalyzer,
+    analyze_email_components, get_api_status, set_api_key
 )
-from explanation_handler import XAIHandler
 
-# Initialize Flask app
-app = Flask(__name__)
-app.secret_key = os.urandom(24)  # For session management
-
-# Initialize analyzers
+# Initialize the deep email analyzer
 deep_analyzer = DeepEmailAnalyzer()
-xai_handler = XAIHandler()
+url_model = joblib.load("pkl/URL_detection_model.pkl")
+expected_columns = joblib.load("pkl/expected_columns.pkl")
+top_tlds = joblib.load("pkl/top_tlds.pkl")
 
-# Load models and preprocessing
-try:
-    url_model = joblib.load("pkl/URL_detection_model.pkl")
-    expected_columns = joblib.load("pkl/expected_columns.pkl")
-    top_tlds = joblib.load("pkl/top_tlds.pkl")
-    
-    # Email model + preprocessing assets
-    email_assets = joblib.load("pkl/phish_detector_joblib.pkl")
-    vectorizer = email_assets["vectorizer"]
-    scaler = email_assets["scaler"]
-    numeric_cols = email_assets["numeric_cols"]
-    email_model = email_assets["model"]
-except Exception as e:
-    logging.error(f"Error loading models: {str(e)}")
-    raise
+# Email model + preprocessing assets
+email_assets = joblib.load("pkl/phish_detector_joblib.pkl")
+vectorizer = email_assets["vectorizer"]
+scaler = email_assets["scaler"]
+numeric_cols = email_assets["numeric_cols"]
+email_model = email_assets["model"]
 
-
-# ------------------ XAI Endpoints ------------------
-
-def explain_email():
-    """Generate XAI explanation for email analysis"""
-    try:
-        data = request.get_json()
-        email_content = data.get('email_content')
-        
-        if not email_content:
-            return jsonify({'error': 'Email content is required'}), 400
-            
-        # Preprocess email and extract features
-        features = preprocess_raw_email(email_content)
-        
-        # Convert to numpy array for the model
-        X = np.array([list(features.values())])
-        
-        # Get prediction
-        prediction = email_model.predict_proba(X)[0][1]  # Probability of phishing
-        
-        # Generate explanations
-        explanations = {
-            'shap': xai_handler.explain_with_shap('email', X),
-            'lime': xai_handler.explain_with_lime('email', X),
-            'rule_based': xai_handler.generate_rule_based_explanation('email', features)
-        }
-        
-        # Format for UI
-        formatted_explanations = xai_handler.format_explanations_for_ui(explanations, 'email')
-        
-        # Generate report
-        report = xai_handler.generate_xai_report(
-            model_type='email',
-            input_data=email_content,
-            prediction=prediction,
-            explanations=explanations
-        )
-        
-        # Save report
-        report_id = str(uuid.uuid4())
-        report_path = REPORTS_DIR / f"xai_report_{report_id}.txt"
-        with open(report_path, 'w', encoding='utf-8') as f:
-            f.write(report)
-        
-        return jsonify({
-            'status': 'success',
-            'prediction': float(prediction),
-            'explanations': formatted_explanations,
-            'report_id': report_id
-        })
-        
-    except Exception as e:
-        logging.error(f"Error in explain_email: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/xai/report/<report_id>', methods=['GET'])
-def get_xai_report(report_id):
-    """Download XAI report"""
-    try:
-        report_path = REPORTS_DIR / f"xai_report_{report_id}.txt"
-        if not report_path.exists():
-            return jsonify({'error': 'Report not found'}), 404
-            
-        return send_file(
-            report_path,
-            as_attachment=True,
-            download_name=f"phishguard_xai_report_{report_id}.txt",
-            mimetype='text/plain'
-        )
-    except Exception as e:
-        logging.error(f"Error serving report {report_id}: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-
+# ------------------ Flask Init ------------------
+app = Flask(__name__)
+explanation_handler = ExplanationHandler()
 
 # ------------------ Feature Extraction: URL ------------------
 def extract_features(url):
@@ -565,112 +472,6 @@ def api_config():
     
     # GET request - show current status
     return jsonify(get_api_status())
-
-
-# ------------------ XAI Explanation Endpoints ------------------
-
-@app.route("/api/xai/explain/url", methods=["POST"])
-def explain_url():
-    """Generate XAI explanation for URL analysis"""
-    url = request.json.get("url", "")
-    if not url:
-        return jsonify({"error": "No URL provided"}), 400
-    
-    # Get prediction and features
-    X = extract_features(url)
-    prediction = url_model.predict(X)[0]
-    proba = url_model.predict_proba(X)[0]
-    
-    # Generate explanation report
-    prediction_result = {
-        "is_phishing": bool(prediction == 1),
-        "confidence": float(max(proba)),
-        "verdict": "Phishing" if prediction == 1 else "Legitimate"
-    }
-    
-    explanation_report = xai_handler.generate_explanation_report(
-        model_type="url",
-        input_data=url,
-        prediction=prediction_result
-    )
-    
-    return jsonify({
-        "prediction": prediction_result,
-        "explanation": explanation_report
-    })
-
-
-@app.route("/explain/email", methods=["POST"])
-def explain_email():
-    """Generate XAI explanation for email analysis"""
-    email_text = request.json.get("email", "")
-    if not email_text:
-        return jsonify({"error": "No email content provided"}), 400
-    
-    # Preprocess email and get features
-    df = preprocess_raw_email(email_text)
-    X_text = vectorizer.transform(df["body"])
-    X_num = df[numeric_cols].values
-    X_num = scaler.transform(X_num)
-    X_final = hstack([X_text, X_num])
-    
-    # Get prediction
-    prediction = email_model.predict(X_final)[0]
-    proba = email_model.predict_proba(X_final)[0]
-    
-    # Generate explanation report
-    prediction_result = {
-        "is_phishing": bool(prediction == 1),
-        "confidence": float(max(proba)),
-        "verdict": "Phishing" if prediction == 1 else "Legitimate"
-    }
-    
-    explanation_report = xai_handler.generate_explanation_report(
-        model_type="email",
-        input_data={"email_text": email_text, **df.iloc[0].to_dict()},
-        prediction=prediction_result
-    )
-    
-    return jsonify({
-        "prediction": prediction_result,
-        "explanation": explanation_report
-    })
-
-
-@app.route("/download_report", methods=["POST"])
-def download_report():
-    """Download XAI report as a text file"""
-    data = request.json
-    analysis_type = data.get("analysis_type")
-    analysis_data = data.get("analysis_data", {})
-    raw_input = data.get("raw_input", "")
-    
-    if not all([analysis_type, analysis_data, raw_input]):
-        return jsonify({"error": "Missing required parameters"}), 400
-    
-    # Generate and save the report
-    report_path = xai_handler.download_explanation_report(
-        analysis_type=analysis_type,
-        analysis_data=analysis_data,
-        raw_input=raw_input,
-        filename=f"phishguard_report_{int(datetime.now().timestamp())}.txt"
-    )
-    
-    return jsonify({
-        "status": "success",
-        "report_path": report_path
-    })
-
-
-@app.route("/reports/<path:filename>")
-def download_file(filename):
-    """Serve generated report files"""
-    return send_from_directory(
-        REPORTS_DIR,
-        filename,
-        as_attachment=True,
-        download_name=f"phishguard_report_{filename}"
-    )
 
 
 # ------------------ Run ------------------

@@ -845,7 +845,31 @@
     </div>
   </div>
 
+  <!-- XAI Explanations Section -->
+  <div id="xaiSection" class="card" style="display: none; margin-top: 2rem;">
+    <div class="card-header">
+      <h3><i class="fas fa-microscope"></i> AI Explanation</h3>
+      <a id="download-report" href="#" class="btn btn-sm btn-outline-primary" style="display: none;">
+        <i class="fas fa-download"></i> Download Full Report
+      </a>
+    </div>
+    <div id="xai-explanations" class="card-body">
+      <!-- XAI content will be loaded here -->
+    </div>
+  </div>
+
   <script>
+    // Function to toggle XAI section visibility
+    function toggleXaiSection(show = true) {
+      const xaiSection = document.getElementById('xaiSection');
+      if (show) {
+        xaiSection.style.display = 'block';
+        xaiSection.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        xaiSection.style.display = 'none';
+      }
+    }
+
     // Handle email form submission with AJAX
     document.getElementById('emailForm').addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -853,6 +877,7 @@
       const formData = new FormData(this);
       const resultDiv = document.getElementById('emailResult');
       
+      // Show loading state
       resultDiv.innerHTML = `
         <div class="loading show">
           <div class="spinner"></div>
@@ -860,7 +885,11 @@
         </div>
       `;
       
+      // Hide XAI section while loading
+      toggleXaiSection(false);
+      
       try {
+        // Submit form data
         const response = await fetch('/check_email', {
           method: 'POST',
           body: formData
@@ -868,7 +897,7 @@
         
         const data = await response.json();
         
-        // Build result HTML
+        // Display the result
         let html = '<div class="result">';
         html += '<div class="result-header">';
         html += '<span class="result-title">Analysis Result</span>';
@@ -877,7 +906,7 @@
         html += `${data.prediction}</span>`;
         html += '</div>';
         
-        // Probability
+        // Add probability bars
         html += '<div class="probability-container">';
         html += '<div class="probability-item">';
         html += '<div class="probability-label">';
@@ -902,123 +931,209 @@
         html += `<div class="progress-fill ${data.prediction === 'Phishing' ? 'progress-benign' : 'progress-malicious'}" style="width: ${oppositeProb}%"></div>`;
         html += '</div>';
         html += '</div>';
-        html += '</div>';
+        html += '</div>'; // Close probability-container
         
-        // Features
+        // Add feature analysis if available
         if (data.features) {
-          // Basic Statistics
           html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-chart-bar"></i> Basic Statistics</div>';
-          html += '<div class="features-grid-horizontal">';
-          html += `<div class="feature-item"><div class="feature-label">Body Length</div><div class="feature-value">${data.features.body_length}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Word Count</div><div class="feature-value">${data.features.body_words}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Uppercase Ratio</div><div class="feature-value">${(data.features.uppercase_ratio * 100).toFixed(1)}%</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Exclamation Marks</div><div class="feature-value">${data.features.exclamation_marks}</div></div>`;
-          html += '</div>';
-          html += '</div>';
+          html += '<div class="features-title"><i class="fas fa-chart-bar"></i> Feature Analysis</div>';
+          html += '<div class="features-grid">';
           
-          // Header Features
-          html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-envelope"></i> Header Analysis</div>';
-          html += '<div class="features-grid-horizontal">';
-          html += `<div class="feature-item"><div class="feature-label">SPF Authentication</div><div class="feature-value">${data.features.has_spf ? '<i class="fas fa-check text-green"></i> Present' : '<i class="fas fa-times text-red"></i> Missing'}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">DKIM Signature</div><div class="feature-value">${data.features.has_dkim ? '<i class="fas fa-check text-green"></i> Present' : '<i class="fas fa-times text-red"></i> Missing'}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Domain Mismatch</div><div class="feature-value">${data.features.from_return_mismatch ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
-          html += '<div class="feature-item"><div class="feature-label">Return Path</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Checked</div></div>';
-          html += '</div>';
-          html += '</div>';
-          
-          // URL Features
-          html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-link"></i> URL Analysis</div>';
-          html += '<div class="features-grid-horizontal">';
-          html += `<div class="feature-item"><div class="feature-label">Total URLs</div><div class="feature-value">${data.features.num_urls}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">URL Shorteners</div><div class="feature-value">${data.features.num_shorteners || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">IP-based URLs</div><div class="feature-value">${data.features.num_ip_urls || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Domain Mismatch</div><div class="feature-value">${data.features.domain_mismatch ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
-          html += '</div>';
-          html += '</div>';
-          
-          // Content Analysis
-          html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-file-text"></i> Content Analysis</div>';
-          html += '<div class="features-grid-horizontal">';
-          html += `<div class="feature-item"><div class="feature-label">Spammy Keywords</div><div class="feature-value">${data.features.spammy_keyword_count || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Urgency Keywords</div><div class="feature-value">${data.features.urgency_keyword_count || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Threat Keywords</div><div class="feature-value">${data.features.threat_keyword_count || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Generic Salutation</div><div class="feature-value">${data.features.has_generic_salutation ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
-          html += '</div>';
-          html += '</div>';
-          
-          // Psychological Features
-          html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-brain"></i> Psychological Triggers</div>';
-          html += '<div class="features-grid-horizontal">';
-          html += `<div class="feature-item"><div class="feature-label">Fear Triggers</div><div class="feature-value">${data.features.emotion_fear || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Urgency Triggers</div><div class="feature-value">${data.features.emotion_urgency || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Greed Triggers</div><div class="feature-value">${data.features.emotion_greed || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Scarcity Score</div><div class="feature-value">${data.features.scarcity_score || 0}</div></div>`;
-          html += '</div>';
-          html += '</div>';
-          
-          // Attachment Features
-          if (data.features.num_attachments > 0) {
-            html += '<div class="features-section">';
-            html += '<div class="features-title"><i class="fas fa-paperclip"></i> Attachment Analysis</div>';
-            html += '<div class="features-grid-horizontal">';
-            html += `<div class="feature-item"><div class="feature-label">Attachments</div><div class="feature-value">${data.features.num_attachments}</div></div>`;
-            html += `<div class="feature-item"><div class="feature-label">Suspicious Files</div><div class="feature-value">${data.features.has_suspicious_attachment ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
-            html += '<div class="feature-item"><div class="feature-label">File Types</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Analyzed</div></div>';
-            html += '<div class="feature-item"><div class="feature-label">Size Check</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Checked</div></div>';
-            html += '</div>';
-            html += '</div>';
+          // Add feature items
+          for (const [key, value] of Object.entries(data.features)) {
+            if (typeof value === 'number') {
+              html += `
+                <div class="feature-item">
+                  <div class="feature-label">${key.replace(/_/g, ' ')}</div>
+                  <div class="feature-value">${value.toFixed(4)}</div>
+                </div>
+              `;
+            }
           }
           
-          // Technical Features
-          html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-cogs"></i> Technical Analysis</div>';
-          html += '<div class="features-grid-horizontal">';
-          html += `<div class="feature-item"><div class="feature-label">Homoglyph Characters</div><div class="feature-value">${data.features.homoglyph_count || 0}</div></div>`;
-          html += `<div class="feature-item"><div class="feature-label">Suspicious Encoding</div><div class="feature-value">${data.features.suspicious_encoding ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
-          html += '<div class="feature-item"><div class="feature-label">Character Analysis</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Complete</div></div>';
-          html += '<div class="feature-item"><div class="feature-label">Encoding Check</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Complete</div></div>';
-          html += '</div>';
-          html += '</div>';
-          
-          // Suspicious keywords
-          html += '<div class="keywords-section">';
-          html += '<div class="features-title"><i class="fas fa-search"></i> Suspicious Keywords Detected</div>';
-          html += '<div class="keywords-grid">';
-          
-          const keywords = data.features.suspicious_keywords;
-          for (const [key, detected] of Object.entries(keywords)) {
-            const label = key.replace(/_/g, ' ').toUpperCase();
-            html += `<span class="keyword-tag ${detected ? 'keyword-detected' : 'keyword-safe'}">${label}</span>`;
-          }
-          
-          html += '</div>';
-          html += '</div>';
+          html += '</div>'; // Close features-grid
+          html += '</div>'; // Close features-section
         }
         
-        html += '</div>';
+        html += '</div>'; // Close result div
         
+        // Update the result div
         resultDiv.innerHTML = html;
+        
+        // Get XAI explanations
+        try {
+          const xaiResponse = await fetch('/api/xai/explain/email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email_content: formData.get('email')
+            })
+          });
+          
+          const xaiData = await xaiResponse.json();
+          if (xaiData.status === 'success') {
+            // Display XAI explanations
+            if (window.xaiDisplayer) {
+              window.xaiDisplayer.displayExplanations(xaiData);
+              toggleXaiSection(true);
+            }
+          }
+        } catch (xaiError) {
+          console.error('Error getting XAI explanations:', xaiError);
+          // Don't fail the whole request if XAI fails
+        }
       } catch (error) {
+        console.error('Error analyzing email:', error);
         resultDiv.innerHTML = `
-          <div class="result">
-            <div class="result-header">
-              <span class="result-title">Error</span>
-              <span class="result-badge badge-malicious">
-                <i class="fas fa-exclamation-triangle"></i>
-                Failed
-              </span>
-            </div>
-            <p style="color: var(--danger-500); margin-top: var(--space-4);">
-              <i class="fas fa-times-circle"></i>
-              Error analyzing email. Please try again.
-            </p>
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            Error analyzing email: ${error.message || 'Unknown error'}
           </div>
         `;
+      }
+    });
+    
+    // Handle URL form submission with AJAX
+    document.getElementById('urlForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const resultDiv = document.createElement('div');
+      const urlResultDiv = document.getElementById('urlResult') || resultDiv;
+      
+      // Show loading state
+      urlResultDiv.innerHTML = `
+        <div class="loading show">
+          <div class="spinner"></div>
+          <div class="loading-text">Analyzing URL<span class="loading-dots"></span></div>
+        </div>
+      `;
+      
+      // Hide XAI section while loading
+      toggleXaiSection(false);
+      
+      try {
+        // Submit form data
+        const response = await fetch('/check_url', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        // Display the result
+        let html = '<div class="result">';
+        html += '<div class="result-header">';
+        html += '<span class="result-title">Analysis Result</span>';
+        html += `<span class="result-badge ${data.prediction === 'Benign' ? 'badge-benign' : 'badge-malicious'}">`;
+        html += `<i class="fas ${data.prediction === 'Benign' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i>`;
+        html += `${data.prediction}</span>`;
+        html += '</div>';
+        
+        // Add URL being analyzed
+        html += `<div class="url-display">${data.url || formData.get('url')}</div>`;
+        
+        // Add probability bars
+        html += '<div class="probability-container">';
+        
+        // Benign probability
+        const benignProb = data.prediction === 'Benign' ? 
+          (data.probability * 100).toFixed(1) : 
+          ((1 - data.probability) * 100).toFixed(1);
+          
+        html += '<div class="probability-item">';
+        html += '<div class="probability-label">';
+        html += '<i class="fas fa-shield-alt"></i> Safe';
+        html += '</div>';
+        html += `<div class="probability-value ${data.prediction === 'Benign' ? 'safe' : 'text-muted'}">${benignProb}%</div>`;
+        html += '<div class="progress-bar">';
+        html += `<div class="progress-fill progress-benign" style="width: ${benignProb}%"></div>`;
+        html += '</div>';
+        html += '</div>';
+        
+        // Malicious probability
+        const maliciousProb = data.prediction === 'Malicious' ? 
+          (data.probability * 100).toFixed(1) : 
+          ((1 - data.probability) * 100).toFixed(1);
+          
+        html += '<div class="probability-item">';
+        html += '<div class="probability-label">';
+        html += '<i class="fas fa-exclamation-triangle"></i> Malicious';
+        html += '</div>';
+        html += `<div class="probability-value ${data.prediction === 'Malicious' ? 'danger' : 'text-muted'}">${maliciousProb}%</div>`;
+        html += '<div class="progress-bar">';
+        html += `<div class="progress-fill progress-malicious" style="width: ${maliciousProb}%"></div>`;
+        html += '</div>';
+        html += '</div>';
+        
+        html += '</div>'; // Close probability-container
+        
+        // Add feature analysis if available
+        if (data.features) {
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-chart-bar"></i> Feature Analysis</div>';
+          html += '<div class="features-grid">';
+          
+          // Add feature items
+          for (const [key, value] of Object.entries(data.features)) {
+            if (typeof value === 'number') {
+              html += `
+                <div class="feature-item">
+                  <div class="feature-label">${key.replace(/_/g, ' ')}</div>
+                  <div class="feature-value">${value.toFixed(4)}</div>
+                </div>
+              `;
+            }
+          }
+          
+          html += '</div>'; // Close features-grid
+          html += '</div>'; // Close features-section
+        }
+        
+        html += '</div>'; // Close result div
+        
+        // Update the result div
+        urlResultDiv.innerHTML = html;
+        
+        // Get XAI explanations
+        try {
+          const xaiResponse = await fetch('/api/xai/explain/url', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              url: formData.get('url')
+            })
+          });
+          
+          const xaiData = await xaiResponse.json();
+          if (xaiData.status === 'success' && window.xaiDisplayer) {
+            window.xaiDisplayer.displayExplanations(xaiData);
+            toggleXaiSection(true);
+          }
+        } catch (xaiError) {
+          console.error('Error getting XAI explanations:', xaiError);
+          // Don't fail the whole request if XAI fails
+        }
+      } catch (error) {
+        console.error('Error analyzing URL:', error);
+        const errorDiv = document.getElementById('urlResult') || document.createElement('div');
+        errorDiv.innerHTML = `
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle"></i>
+            Error analyzing URL: ${error.message || 'Unknown error'}
+          </div>
+        `;
+      }
+    });
+    
+    // Initialize XAI displayer
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.xaiDisplayer) {
+        window.xaiDisplayer = new XAIDisplayer();
       }
     });
   </script>
