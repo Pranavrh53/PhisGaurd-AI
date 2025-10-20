@@ -741,8 +741,166 @@
       color: var(--primary-500);
     }
   </style>
+  <script type="module">
+
+    
+  // Import Firebase (we'll expand this in Step 4)
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { 
+    getAuth, 
+    onAuthStateChanged,
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    sendPasswordResetEmail, 
+    signInWithPopup, 
+    GoogleAuthProvider, 
+    GithubAuthProvider 
+  } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  
+  // Your config from Step 1
+  const firebaseConfig = {
+    // PASTE YOUR CONFIG HERE
+    apiKey: "AIzaSyA7aO-t7jtiYz7ejFUSKpqs5lmtCLBxxXQ",
+    authDomain: "phishgaurdai-e8d89.firebaseapp.com",
+    projectId: "phishgaurdai-e8d89",
+    storageBucket: "phishgaurdai-e8d89.firebasestorage.app",
+    messagingSenderId: "746329814999",
+    appId: "1:746329814999:web:f8f0f71e4c84eb655d7d92",
+    
+  };
+  
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  
+  // Listen for auth changes (redirect if not logged in)
+  onAuthStateChanged(auth, (user) => {
+    const appContent = document.getElementById('app-content');
+    if (user) {
+      // User is signed in - show app
+      document.getElementById('login-prompt')?.remove();
+      if (appContent) appContent.style.display = 'block';
+      addLogoutButton();
+    } else {
+      // User not signed in - show login prompt
+      if (appContent) appContent.style.display = 'none';
+      showLoginPrompt();
+      removeLogoutButton();
+    }
+  });
+  
+  function showLoginPrompt() {
+    // Simple prompt to login (we'll style it later)
+    const prompt = document.createElement('div');
+    prompt.id = 'login-prompt';
+    prompt.innerHTML = `
+      <div style="text-align: center; margin: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9;">
+        <h3>Please log in to use PhishGuard AI</h3>
+        <button id="email-login-btn" style="margin: 5px; padding: 10px;">Email Login</button>
+        <button id="google-login-btn" style="margin: 5px; padding: 10px;">Google Login</button>
+        <button id="github-login-btn" style="margin: 5px; padding: 10px;">GitHub Login</button>
+        <button id="signup-btn" style="margin: 5px; padding: 10px;">Sign Up</button>
+      </div>
+    `;
+    document.body.insertBefore(prompt, document.body.firstChild);
+    
+    // Button event listeners (we'll implement in Step 4)
+    document.getElementById('email-login-btn')?.addEventListener('click', () => openEmailModal('login'));
+    document.getElementById('google-login-btn')?.addEventListener('click', () => signInWithGoogle());
+    document.getElementById('github-login-btn')?.addEventListener('click', () => signInWithGitHub());
+    document.getElementById('signup-btn')?.addEventListener('click', () => openEmailModal('signup'));
+  }
+  
+// Email/Password Auth
+let isSignupMode = false;
+
+function openEmailModal(mode) {
+  isSignupMode = mode === 'signup';
+  document.getElementById('authModalTitle').textContent = isSignupMode ? 'Sign Up' : 'Sign In';
+  document.getElementById('toggleMode').textContent = isSignupMode ? "Already have an account? Sign in" : "Don't have an account? Sign up";
+  document.getElementById('submitAuth').textContent = isSignupMode ? 'Sign Up' : 'Sign In';
+  $('#authModal').modal('show'); // Show modal (requires jQuery/Bootstrap)
+}
+
+// Toggle between login/signup
+document.getElementById('toggleMode')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  openEmailModal(isSignupMode ? 'login' : 'signup');
+});
+
+// Handle form submit
+document.getElementById('authForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('auth-email').value;
+  const password = document.getElementById('auth-password').value;
+  const errorDiv = document.getElementById('authError');
+  
+  try {
+    if (isSignupMode) {
+      await createUserWithEmailAndPassword(auth, email, password);
+      alert('Account created! Welcome to PhishGuard AI.');
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert('Signed in successfully!');
+    }
+    $('#authModal').modal('hide'); // Close modal
+    document.getElementById('login-prompt')?.remove(); // Hide prompt
+  } catch (error) {
+    errorDiv.textContent = error.message; // Show error (e.g., "Invalid email")
+  }
+});
+
+// Google Sign-In
+const googleProvider = new GoogleAuthProvider();
+async function signInWithGoogle() {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    console.log('Google sign-in success:', result.user);
+    document.getElementById('login-prompt')?.remove();
+    alert('Signed in with Google!');
+  } catch (error) {
+    alert('Google sign-in failed: ' + error.message);
+  }
+}
+
+// GitHub Sign-In
+const githubProvider = new GithubAuthProvider();
+async function signInWithGitHub() {
+  try {
+    const result = await signInWithPopup(auth, githubProvider);
+    console.log('GitHub sign-in success:', result.user);
+    document.getElementById('login-prompt')?.remove();
+    alert('Signed in with GitHub!');
+  } catch (error) {
+    alert('GitHub sign-in failed: ' + error.message);
+  }
+}
+
+function addLogoutButton() {
+  if (document.getElementById('logout-btn')) return;
+
+  const logoutBtn = document.createElement('button');
+  logoutBtn.id = 'logout-btn';
+  logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+  logoutBtn.className = 'btn btn-secondary';
+  logoutBtn.onclick = () => auth.signOut();
+  
+  const headerActions = document.querySelector('.header-actions');
+  if (headerActions) {
+    headerActions.appendChild(logoutBtn);
+  }
+}
+
+function removeLogoutButton() {
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.remove();
+    }
+}
+</script>
 </head>
 <body>
+  <div id="app-content" style="display: none;">
   <div class="header">
     <div class="header-content">
       <h1><i class="fas fa-shield-alt"></i> PhishGuard AI</h1>
@@ -843,6 +1001,7 @@
       
       <div id="emailResult"></div>
     </div>
+  </div>
   </div>
 
   <script>
@@ -1022,5 +1181,7 @@
       }
     });
   </script>
+  {% include 'auth_modal.html' %}
+
 </body>
 </html>

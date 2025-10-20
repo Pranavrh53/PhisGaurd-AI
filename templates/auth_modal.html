@@ -1,0 +1,34 @@
+<!-- Email/Password Login/Signup Modal -->
+<div id="authModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authModalTitle">Sign In</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="authForm">
+          <div class="form-group">
+            <label for="auth-email">Email</label>
+            <input type="email" class="form-control" id="auth-email" required>
+          </div>
+          <div class="form-group">
+            <label for="auth-password">Password</label>
+            <input type="password" class="form-control" id="auth-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submitAuth">Sign In</button>
+          <div id="authError" style="color: red; margin-top: 10px;"></div>
+        </form>
+        <p style="text-align: center; margin-top: 20px;">
+          <a href="#" id="toggleMode">Don't have an account? Sign up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add to <head> if not already in index.html: Bootstrap for modal (if you don't have it) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
