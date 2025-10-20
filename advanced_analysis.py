@@ -2489,59 +2489,6 @@ def analyze_email_components(email_data: Dict[str, Any]) -> Dict[str, Any]:
     return results
 
 
-# ==================== ADVANCED ANALYZER ====================
-
-class AdvancedAnalyzer:
-    """
-    Main class for advanced analysis of emails, URLs, IPs, and domains.
-    Provides a unified interface to all analysis functionality.
-    """
-    
-    def __init__(self):
-        self.url_analyzer = URLAnalyzer()
-        self.ip_analyzer = IPAnalyzer()
-        self.domain_analyzer = DomainAnalyzer()
-        self.file_analyzer = FileAnalyzer()
-        self.email_analyzer = DeepEmailAnalyzer()
-    
-    def analyze_url(self, url: str) -> dict:
-        """Analyze a URL for potential threats"""
-        return self.url_analyzer.analyze_url_comprehensive(url)
-    
-    def analyze_ip(self, ip: str) -> dict:
-        """Analyze an IP address for reputation and threats"""
-        return self.ip_analyzer.analyze_ip_comprehensive(ip)
-    
-    def analyze_domain(self, domain: str) -> dict:
-        """Analyze a domain for reputation and registration details"""
-        return self.domain_analyzer.analyze_domain_comprehensive(domain)
-    
-    def analyze_file(self, file_content: bytes, filename: str) -> dict:
-        """Analyze a file for potential threats"""
-        return self.file_analyzer.analyze_file(file_content, filename)
-    
-    def analyze_email(self, email_data: dict) -> dict:
-        """
-        Analyze an email and its components
-        
-        Args:
-            email_data: Dictionary containing email components:
-                - headers: Dict of email headers
-                - from_email: Sender email address
-                - subject: Email subject
-                - body: Email body content
-                - body_type: Content type ('text/plain' or 'text/html')
-                - urls: List of URLs found in the email
-                - attachments: List of attachments (filename, content)
-                - ips: List of IP addresses found
-                - domains: List of domains found
-                
-        Returns:
-            Dict with comprehensive analysis results
-        """
-        return analyze_email_components(email_data)
-
-
 # ==================== CONFIGURATION HELPER ====================
 
 def get_api_status():
