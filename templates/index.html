@@ -694,8 +694,8 @@
     }
     
     .spinner {
-      border: 3px solid var(--dark-bg-tertiary);
-      border-top: 3px solid var(--primary-500);
+      border: 3px solid rgba(59, 130, 246, 0.2);
+      border-top-color: var(--primary-500);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -739,6 +739,232 @@
     
     .text-blue {
       color: var(--primary-500);
+    }
+    
+    /* Email Analysis Results Styling */
+    .analysis-result {
+      background: var(--dark-bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-top: var(--space-6);
+      border: 1px solid var(--dark-border);
+      box-shadow: var(--shadow-md);
+      transition: all var(--transition-normal);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--dark-border);
+    }
+    
+    .result-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark-text-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    
+    .result-badge {
+      padding: var(--space-1) var(--space-3);
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      transition: all var(--transition-normal);
+    }
+    
+    .badge-benign {
+      background-color: rgba(16, 185, 129, 0.1);
+      color: var(--success-500);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .badge-phishing {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: var(--danger-500);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .badge-suspicious {
+      background-color: rgba(245, 158, 11, 0.1);
+      color: var(--warning-500);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    
+    .result-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      margin: var(--space-4) 0;
+    }
+    
+    .metric-card {
+      background: var(--dark-bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      border-left: 3px solid var(--primary-500);
+      transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    }
+    
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: var(--space-1) 0;
+      color: var(--dark-text-primary);
+    }
+    
+    .metric-label {
+      font-size: 0.875rem;
+      color: var(--dark-text-muted);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    
+    .probability-container {
+      margin: var(--space-6) 0;
+    }
+    
+    .probability-item {
+      margin-bottom: var(--space-4);
+    }
+    
+    .probability-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--space-2);
+    }
+    
+    .probability-label {
+      font-weight: 500;
+      color: var(--dark-text-secondary);
+    }
+    
+    .probability-value {
+      font-weight: 600;
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background: var(--dark-bg-tertiary);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: var(--space-2);
+    }
+    
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 1s ease-in-out;
+    }
+    
+    .progress-benign {
+      background: linear-gradient(90deg, var(--success-500), #34d399);
+    }
+    
+    .progress-phishing {
+      background: linear-gradient(90deg, var(--danger-500), #f87171);
+    }
+    
+    .progress-suspicious {
+      background: linear-gradient(90deg, var(--warning-500), #fbbf24);
+    }
+    
+    .feature-list {
+      margin-top: var(--space-6);
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--dark-border);
+    }
+    
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+    
+    .feature-icon {
+      margin-right: var(--space-3);
+      color: var(--primary-500);
+      font-size: 1.25rem;
+      margin-top: 2px;
+    }
+    
+    .feature-content {
+      flex: 1;
+    }
+    
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: var(--space-1);
+      color: var(--dark-text-primary);
+    }
+    
+    .feature-desc {
+      font-size: 0.9rem;
+      color: var(--dark-text-muted);
+      line-height: 1.5;
+    }
+    
+    .feature-risk {
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: var(--space-3);
+      font-weight: 500;
+    }
+    
+    .risk-high {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger-500);
+    }
+    
+    .risk-medium {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning-500);
+    }
+    
+    .risk-low {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success-500);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+      flex-wrap: wrap;
+    }
+    
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
     }
   </style>
 </head>
@@ -877,13 +1103,21 @@
       const formData = new FormData(this);
       const resultDiv = document.getElementById('emailResult');
       
-      // Show loading state
+      // Show loading state with animation
       resultDiv.innerHTML = `
-        <div class="loading show">
-          <div class="spinner"></div>
-          <div class="loading-text">Analyzing email<span class="loading-dots"></span></div>
+        <div class="loading-container" style="text-align: center; padding: 2rem 0;">
+          <div class="loading"></div>
+          <div class="loading-text">Analyzing email content<span class="loading-dots"></span></div>
+          <p style="margin-top: 1rem; color: var(--dark-text-muted); font-size: 0.9rem;">
+            Scanning for phishing indicators and security threats...
+          </p>
         </div>
       `;
+      
+      // Smooth scroll to results
+      setTimeout(() => {
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
       
       // Hide XAI section while loading
       toggleXaiSection(false);
@@ -898,98 +1132,189 @@
         const data = await response.json();
         
         // Display the result
-        let html = '<div class="result">';
-        html += '<div class="result-header">';
-        html += '<span class="result-title">Analysis Result</span>';
-        html += `<span class="result-badge ${data.prediction === 'Legit' ? 'badge-legit' : 'badge-phishing'}">`;
-        html += `<i class="fas ${data.prediction === 'Legit' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i>`;
-        html += `${data.prediction}</span>`;
-        html += '</div>';
+        if (data.error) {
+          throw new Error(data.error);
+        }
         
-        // Add probability bars
-        html += '<div class="probability-container">';
-        html += '<div class="probability-item">';
-        html += '<div class="probability-label">';
-        html += `<i class="fas ${data.prediction === 'Phishing' ? 'fa-exclamation-triangle' : 'fa-shield-alt'}"></i>`;
-        html += `${data.prediction === 'Phishing' ? 'Phishing' : 'Legitimate'}`;
-        html += '</div>';
-        html += `<div class="probability-value ${data.prediction === 'Phishing' ? 'danger' : 'safe'}">${(data.probability * 100).toFixed(1)}%</div>`;
-        html += '<div class="progress-bar">';
-        html += `<div class="progress-fill ${data.prediction === 'Phishing' ? 'progress-malicious' : 'progress-benign'}" style="width: ${data.probability * 100}%"></div>`;
-        html += '</div>';
-        html += '</div>';
+        // Format the result with better UI
+        const isPhishing = data.prediction === 'Phishing';
+        const isSuspicious = data.prediction === 'Suspicious';
+        const phishingProb = (data.prob_phishing * 100).toFixed(1);
+        const benignProb = (data.prob_benign * 100).toFixed(1);
         
-        // Add opposite probability for comparison
-        const oppositeProb = ((1 - data.probability) * 100).toFixed(1);
-        html += '<div class="probability-item">';
-        html += '<div class="probability-label">';
-        html += `<i class="fas ${data.prediction === 'Phishing' ? 'fa-shield-alt' : 'fa-exclamation-triangle'}"></i>`;
-        html += `${data.prediction === 'Phishing' ? 'Legitimate' : 'Phishing'}`;
-        html += '</div>';
-        html += `<div class="probability-value ${data.prediction === 'Phishing' ? 'safe' : 'danger'}">${oppositeProb}%</div>`;
-        html += '<div class="progress-bar">';
-        html += `<div class="progress-fill ${data.prediction === 'Phishing' ? 'progress-benign' : 'progress-malicious'}" style="width: ${oppositeProb}%"></div>`;
-        html += '</div>';
-        html += '</div>';
-        html += '</div>'; // Close probability-container
-        
-        // Add feature analysis if available
-        if (data.features) {
-          html += '<div class="features-section">';
-          html += '<div class="features-title"><i class="fas fa-chart-bar"></i> Feature Analysis</div>';
-          html += '<div class="features-grid">';
-          
-          // Add feature items
-          for (const [key, value] of Object.entries(data.features)) {
-            if (typeof value === 'number') {
-              html += `
-                <div class="feature-item">
-                  <div class="feature-label">${key.replace(/_/g, ' ')}</div>
-                  <div class="feature-value">${value.toFixed(4)}</div>
+        // Create a template for the analysis result
+        const resultTemplate = `
+          <div class="analysis-result">
+            <div class="result-header">
+              <h3 class="result-title">
+                <i class="fas fa-${isPhishing ? 'exclamation-triangle text-red' : isSuspicious ? 'exclamation-circle text-yellow' : 'check-circle text-green'}"></i>
+                Email Analysis Result
+              </h3>
+              <span class="result-badge ${isPhishing ? 'badge-phishing' : isSuspicious ? 'badge-suspicious' : 'badge-benign'}">
+                <i class="fas fa-${isPhishing ? 'exclamation-triangle' : isSuspicious ? 'exclamation-circle' : 'check-circle'}"></i>
+                ${data.prediction}
+              </span>
+            </div>
+            
+            <div class="result-metrics">
+              <div class="metric-card">
+                <div class="metric-label">
+                  <i class="fas fa-shield-alt"></i>
+                  Confidence
                 </div>
-              `;
-            }
-          }
-          
-          html += '</div>'; // Close features-grid
-          html += '</div>'; // Close features-section
-        }
+                <div class="metric-value">${Math.max(phishingProb, benignProb)}%</div>
+                <div class="metric-desc">
+                  ${isPhishing ? 'High likelihood of phishing attempt' : isSuspicious ? 'Suspicious activity detected' : 'Email appears to be safe'}
+                </div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">
+                  <i class="fas fa-chart-bar"></i>
+                  Analysis Score
+                </div>
+                <div class="metric-value">${data.analysis_score || 'N/A'}</div>
+                <div class="metric-desc">
+                  Based on ${Object.keys(data.features || {}).length} security indicators
+                </div>
+              </div>
+              
+              <div class="metric-card">
+                <div class="metric-label">
+                  <i class="fas fa-clock"></i>
+                  Processing Time
+                </div>
+                <div class="metric-value">${(data.processing_time || 0).toFixed(2)}s</div>
+                <div class="metric-desc">
+                  Analyzed ${data.email_length || 0} characters
+                </div>
+              </div>
+            </div>
+            
+            <div class="probability-container">
+              <h4 class="section-title">Threat Assessment</h4>
+              
+              <div class="probability-item">
+                <div class="probability-header">
+                  <span class="probability-label">
+                    <i class="fas fa-shield-alt"></i>
+                    Safe Email
+                  </span>
+                  <span class="probability-value text-green">${benignProb}%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill progress-benign" style="width: ${benignProb}%"></div>
+                </div>
+              </div>
+              
+              <div class="probability-item">
+                <div class="probability-header">
+                  <span class="probability-label">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Phishing Attempt
+                  </span>
+                  <span class="probability-value text-red">${phishingProb}%</span>
+                </div>
+                <div class="progress-bar">
+                  <div class="progress-fill ${isPhishing ? 'progress-phishing' : 'progress-suspicious'}" style="width: ${phishingProb}%"></div>
+                </div>
+              </div>
+            </div>
+            
+            ${data.features && Object.keys(data.features).length > 0 ? `
+              <div class="feature-list">
+                <h4 class="section-title">Key Indicators</h4>
+                ${Object.entries(data.features).map(([feature, value]) => {
+                  const riskLevel = value.risk || 'low';
+                  const riskIcons = {
+                    high: 'exclamation-triangle',
+                    medium: 'exclamation-circle',
+                    low: 'check-circle'
+                  };
+                  const riskColors = {
+                    high: 'text-red',
+                    medium: 'text-yellow',
+                    low: 'text-green'
+                  };
+                  
+                  return `
+                    <div class="feature-item">
+                      <i class="fas ${riskIcons[riskLevel]} ${riskColors[riskLevel]} feature-icon"></i>
+                      <div class="feature-content">
+                        <div class="feature-title">
+                          ${feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          <span class="feature-desc">${value.description || ''}</span>
+                        </div>
+                        ${value.risk ? `
+                          <span class="feature-risk risk-${riskLevel}">
+                            <i class="fas ${riskIcons[riskLevel]}"></i>
+                            ${riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)} Risk
+                          </span>
+                        ` : ''}
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
+            
+            <div class="action-buttons">
+              <button class="btn btn-primary btn-icon" onclick="toggleXaiSection(true)">
+                <i class="fas fa-microscope"></i>
+                View Detailed Analysis
+              </button>
+              <button class="btn btn-secondary btn-icon">
+                <i class="fas fa-download"></i>
+                Download Report
+              </button>
+              <button class="btn btn-outline btn-icon" onclick="this.closest('.analysis-result').querySelector('.feature-list').scrollIntoView({ behavior: 'smooth' })">
+                <i class="fas fa-arrow-down"></i>
+                View Indicators
+              </button>
+            </div>
+          </div>
+        `;
         
-        html += '</div>'; // Close result div
+        // Animate the result in
+        resultDiv.innerHTML = resultTemplate;
         
-        // Update the result div
-        resultDiv.innerHTML = html;
-        
-        // Get XAI explanations
-        try {
-          const xaiResponse = await fetch('/api/xai/explain/email', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email_content: formData.get('email')
-            })
+        // Add animation to progress bars
+        setTimeout(() => {
+          const progressBars = resultDiv.querySelectorAll('.progress-fill');
+          progressBars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+              bar.style.width = width;
+            }, 100);
           });
-          
-          const xaiData = await xaiResponse.json();
-          if (xaiData.status === 'success') {
-            // Display XAI explanations
-            if (window.xaiDisplayer) {
-              window.xaiDisplayer.displayExplanations(xaiData);
-              toggleXaiSection(true);
+        }, 100);
+        
+        // If XAI data is available, prepare the display
+        if (data.xai_data) {
+          // Initialize XAI displayer with the data
+          if (window.xaiDisplayer) {
+            window.xaiDisplayer.loadData(data.xai_data);
+            toggleXaiSection(true);
+            
+            // Show download report button if available
+            const downloadBtn = document.getElementById('download-report');
+            if (downloadBtn) {
+              downloadBtn.style.display = 'inline-flex';
+              downloadBtn.onclick = (e) => {
+                e.preventDefault();
+                window.xaiDisplayer.downloadReport();
+              };
             }
           }
-        } catch (xaiError) {
-          console.error('Error getting XAI explanations:', xaiError);
-          // Don't fail the whole request if XAI fails
         }
+        
       } catch (error) {
         console.error('Error analyzing email:', error);
         resultDiv.innerHTML = `
           <div class="alert alert-danger">
             <i class="fas fa-exclamation-circle"></i>
-            Error analyzing email: ${error.message || 'Unknown error'}
+            Error analyzing email: ${error.message || 'Unknown error occurred'}
           </div>
         `;
       }
