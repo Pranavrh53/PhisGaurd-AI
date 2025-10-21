@@ -88,7 +88,7 @@
     
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(135deg, var(--dark-bg-primary) 0%, #1a202c 100%);
+      background: #060404;
       min-height: 100vh;
       padding: 0;
       color: var(--dark-text-primary);
@@ -99,7 +99,7 @@
     }
     
     .header {
-      background: linear-gradient(135deg, var(--dark-bg-secondary) 0%, var(--dark-bg-primary) 100%);
+      
       border-bottom: 1px solid var(--dark-border);
       padding: var(--space-12) var(--space-4);
       text-align: center;
@@ -107,17 +107,6 @@
       overflow: hidden;
     }
     
-    .header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-      pointer-events: none;
-    }
     
     .header-content {
       position: relative;
@@ -740,6 +729,60 @@
     .text-blue {
       color: var(--primary-500);
     }
+
+    .features-section-landing {
+      padding: var(--space-16) var(--space-4);
+      text-align: center;
+    }
+
+    .features-section-landing h2 {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-12);
+      color: var(--dark-text-primary);
+    }
+
+    .features-grid-landing {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-8);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: var(--dark-bg-secondary);
+      padding: var(--space-8);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--dark-border);
+      transition: all var(--transition-normal);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary-500);
+    }
+
+    .feature-card .card-icon {
+      margin-bottom: var(--space-4);
+    }
+
+    .footer {
+      text-align: center;
+      padding: var(--space-8) var(--space-4);
+      background: var(--dark-bg-secondary);
+      border-top: 1px solid var(--dark-border);
+      color: var(--dark-text-muted);
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -10;
+      background-color: #060404;
+    }
   </style>
   <script type="module">
 
@@ -773,36 +816,70 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   
-  // Listen for auth changes (redirect if not logged in)
+  // Listen for auth changes
   onAuthStateChanged(auth, (user) => {
     const appContent = document.getElementById('app-content');
     if (user) {
-      // User is signed in - show app
+      // User is signed in
       document.getElementById('login-prompt')?.remove();
       if (appContent) appContent.style.display = 'block';
-      addLogoutButton();
+      addDashboardButton(); // Add dashboard button instead of just logout
+
+      // Add user ID to forms
+      const userIdFieldUrl = document.createElement('input');
+      userIdFieldUrl.type = 'hidden';
+      userIdFieldUrl.name = 'userId';
+      userIdFieldUrl.value = user.uid;
+      document.getElementById('urlForm')?.appendChild(userIdFieldUrl);
+
+      const userIdFieldEmail = document.createElement('input');
+      userIdFieldEmail.type = 'hidden';
+      userIdFieldEmail.name = 'userId';
+      userIdFieldEmail.value = user.uid;
+      document.getElementById('emailForm')?.appendChild(userIdFieldEmail);
+
     } else {
       // User not signed in - show login prompt
       if (appContent) appContent.style.display = 'none';
       showLoginPrompt();
-      removeLogoutButton();
+      removeDashboardButton();
     }
   });
   
   function showLoginPrompt() {
-    // Simple prompt to login (we'll style it later)
+    if (document.getElementById('login-prompt')) return;
+
     const prompt = document.createElement('div');
     prompt.id = 'login-prompt';
+    prompt.style.position = 'fixed';
+    prompt.style.top = '0';
+    prompt.style.left = '0';
+    prompt.style.width = '100%';
+    prompt.style.height = '100%';
+    prompt.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    prompt.style.display = 'flex';
+    prompt.style.justifyContent = 'center';
+    prompt.style.alignItems = 'center';
+    prompt.style.zIndex = '1000';
+
     prompt.innerHTML = `
-      <div style="text-align: center; margin: 20px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background: #f9f9f9;">
-        <h3>Please log in to use PhishGuard AI</h3>
-        <button id="email-login-btn" style="margin: 5px; padding: 10px;">Email Login</button>
-        <button id="google-login-btn" style="margin: 5px; padding: 10px;">Google Login</button>
-        <button id="github-login-btn" style="margin: 5px; padding: 10px;">GitHub Login</button>
-        <button id="signup-btn" style="margin: 5px; padding: 10px;">Sign Up</button>
+      <div class="card" style="max-width: 500px; width: 90%; text-align: center; backdrop-filter: blur(10px); background: rgba(30, 41, 59, 0.8);">
+        <div class="card-header">
+          <div class="card-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h2>Welcome to PhishGuard AI</h2>
+        </div>
+        <p style="margin-bottom: var(--space-6); color: var(--dark-text-secondary);">Please log in to continue</p>
+        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+          <button id="email-login-btn" class="btn btn-secondary"><i class="fas fa-envelope"></i> Sign in with Email</button>
+          <button id="google-login-btn" class="btn btn-secondary"><i class="fab fa-google"></i> Sign in with Google</button>
+          <button id="github-login-btn" class="btn btn-secondary"><i class="fab fa-github"></i> Sign in with GitHub</button>
+          <button id="signup-btn" class="btn btn-primary" style="margin-top: var(--space-4);">Create an Account</button>
+        </div>
       </div>
     `;
-    document.body.insertBefore(prompt, document.body.firstChild);
+    document.body.appendChild(prompt);
     
     // Button event listeners (we'll implement in Step 4)
     document.getElementById('email-login-btn')?.addEventListener('click', () => openEmailModal('login'));
@@ -843,8 +920,8 @@ document.getElementById('authForm')?.addEventListener('submit', async (e) => {
       await signInWithEmailAndPassword(auth, email, password);
       alert('Signed in successfully!');
     }
-    $('#authModal').modal('hide'); // Close modal
-    document.getElementById('login-prompt')?.remove(); // Hide prompt
+    // On successful login/signup, redirect to dashboard
+    window.location.href = '/dashboard';
   } catch (error) {
     errorDiv.textContent = error.message; // Show error (e.g., "Invalid email")
   }
@@ -856,8 +933,7 @@ async function signInWithGoogle() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     console.log('Google sign-in success:', result.user);
-    document.getElementById('login-prompt')?.remove();
-    alert('Signed in with Google!');
+    window.location.href = '/dashboard';
   } catch (error) {
     alert('Google sign-in failed: ' + error.message);
   }
@@ -869,37 +945,51 @@ async function signInWithGitHub() {
   try {
     const result = await signInWithPopup(auth, githubProvider);
     console.log('GitHub sign-in success:', result.user);
-    document.getElementById('login-prompt')?.remove();
-    alert('Signed in with GitHub!');
+    window.location.href = '/dashboard';
   } catch (error) {
     alert('GitHub sign-in failed: ' + error.message);
   }
 }
 
-function addLogoutButton() {
-  if (document.getElementById('logout-btn')) return;
+function addDashboardButton() {
+  if (document.getElementById('dashboard-btn-group')) return;
 
-  const logoutBtn = document.createElement('button');
-  logoutBtn.id = 'logout-btn';
-  logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-  logoutBtn.className = 'btn btn-secondary';
-  logoutBtn.onclick = () => auth.signOut();
-  
-  const headerActions = document.querySelector('.header-actions');
-  if (headerActions) {
-    headerActions.appendChild(logoutBtn);
+  const buttonGroup = document.createElement('div');
+  buttonGroup.id = 'dashboard-btn-group';
+  buttonGroup.className = 'header-actions'; // Use same class for styling
+  buttonGroup.innerHTML = `
+    <a href="/dashboard" class="btn btn-primary">
+      <i class="fas fa-tachometer-alt"></i> Dashboard
+    </a>
+    <button id="logout-btn" class="btn btn-secondary">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+  `;
+
+  const headerContent = document.querySelector('.header-content');
+  if (headerContent) {
+      // Remove existing buttons to avoid duplication
+      document.querySelector('.header-actions')?.remove();
+      headerContent.appendChild(buttonGroup);
   }
+
+  document.getElementById('logout-btn').onclick = () => {
+      auth.signOut().then(() => {
+          window.location.href = '/';
+      });
+  };
 }
 
-function removeLogoutButton() {
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-        logoutBtn.remove();
+function removeDashboardButton() {
+    const buttonGroup = document.getElementById('dashboard-btn-group');
+    if (buttonGroup) {
+        buttonGroup.remove();
     }
 }
 </script>
 </head>
 <body>
+  <div id="particles-js"></div>
   <div id="app-content" style="display: none;">
   <div class="header">
     <div class="header-content">
@@ -1002,8 +1092,35 @@ function removeLogoutButton() {
       <div id="emailResult"></div>
     </div>
   </div>
+
+  <div class="features-section-landing" id="features">
+    <h2>Why PhishGuard AI?</h2>
+    <div class="features-grid-landing">
+      <div class="feature-card">
+        <div class="card-icon"><i class="fas fa-brain"></i></div>
+        <h3>Advanced AI Detection</h3>
+        <p>Leverages machine learning to detect phishing attempts with high accuracy.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon"><i class="fas fa-microscope"></i></div>
+        <h3>Deep URL & Email Analysis</h3>
+        <p>Goes beyond surface-level checks to analyze content and structure.</p>
+      </div>
+      <div class="feature-card">
+        <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Real-time Protection</h3>
+        <p>Get instant feedback on suspicious links and emails to prevent attacks.</p>
+      </div>
+    </div>
   </div>
 
+  <footer class="footer">
+    <p>&copy; 2025 PhishGuard AI. All rights reserved.</p>
+  </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="/static/js/particles-config.js"></script>
   <script>
     // Handle email form submission with AJAX
     document.getElementById('emailForm').addEventListener('submit', async function(e) {

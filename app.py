@@ -1,5 +1,8 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for
 import joblib
+import firebase_admin
+from firebase_admin import credentials, firestore
+import datetime
 import re
 import pandas as pd
 import numpy as np
@@ -27,6 +30,16 @@ email_model = email_assets["model"]
 # ------------------ Flask Init ------------------
 app = Flask(__name__)
 explanation_handler = ExplanationHandler()
+
+# ------------------ Firebase Init ------------------
+try:
+    cred = credentials.Certificate("firebase-service-account.json")
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    print("Firebase Admin SDK initialized successfully.")
+except Exception as e:
+    print(f"Error initializing Firebase Admin SDK: {e}")
+    db = None
 
 # ------------------ Feature Extraction: URL ------------------
 def extract_features(url):
@@ -103,10 +116,14 @@ def preprocess_raw_email(raw_email_str):
 def home():
     return render_template("index.html")
 
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
 
 @app.route("/check_url", methods=["POST"])
 def check_url():
     url = request.form["url"]
+    user_id = request.form.get("userId")
 
     # Extract features
     X = extract_features(url)
@@ -118,6 +135,23 @@ def check_url():
 
     # Get prediction
     prediction = "Benign" if benign_prob > malicious_prob else "Malicious"
+
+    if db and user_id:
+        try:
+            history_ref = db.collection('analysis_history').document()
+            history_ref.set({
+                'userId': user_id,
+                'scanType': 'url',
+                'inputSnippet': url,
+                'result': prediction,
+                'timestamp': datetime.datetime.now(datetime.timezone.utc),
+                'metadata': {
+                    'prob_benign': benign_prob,
+                    'prob_malicious': malicious_prob
+                }
+            })
+        except Exception as e:
+            print(f"Error saving to Firestore: {e}")
 
     return render_template(
         "index.html",
@@ -133,6 +167,7 @@ def check_url():
 @app.route("/check_email", methods=["POST"])
 def check_email():
     raw_email = request.form.get("email", "")
+    user_id = request.form.get("userId")
 
     # Extract features
     df = preprocess_raw_email(raw_email)
@@ -209,8 +244,26 @@ def check_email():
         }
     }
 
+    prediction_text = "Phishing" if pred == 1 else "Legit"
+
+    if db and user_id:
+        try:
+            history_ref = db.collection('analysis_history').document()
+            history_ref.set({
+                'userId': user_id,
+                'scanType': 'email',
+                'inputSnippet': raw_email[:200],  # Store a snippet of the email
+                'result': prediction_text,
+                'timestamp': datetime.datetime.now(datetime.timezone.utc),
+                'metadata': {
+                    'probability': float(prob)
+                }
+            })
+        except Exception as e:
+            print(f"Error saving to Firestore: {e}")
+
     return jsonify({
-        "prediction": "Phishing" if pred == 1 else "Legit",
+        "prediction": prediction_text,
         "probability": float(prob),
         "features": features_dict
     })

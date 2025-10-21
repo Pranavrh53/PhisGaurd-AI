@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard AI - Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .dashboard-header {
+            background-color: #ffffff;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .analysis-section {
+            margin-top: 30px;
+        }
+        .history-section {
+            margin-top: 30px;
+        }
+        .history-item {
+            border-left-width: 5px;
+            margin-bottom: 10px;
+        }
+        .history-item.malicious {
+            border-left-color: #dc3545;
+        }
+        .history-item.benign {
+            border-left-color: #28a745;
+        }
+        .history-item p {
+            margin-bottom: 0.25rem;
+        }
+        .history-item .input-snippet {
+            font-family: monospace;
+            word-break: break-all;
+            background-color: #e9ecef;
+            padding: 5px;
+            border-radius: 4px;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-header">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h3>PhishGuard AI Dashboard</h3>
+            <button id="logout-btn" class="btn btn-danger">Logout</button>
+        </div>
+    </div>
+
+    <div class="container analysis-section">
+        <h2>Analysis Options</h2>
+        <div class="list-group">
+            <a href="/" class="list-group-item list-group-item-action">Normal Analysis</a>
+            <a href="/advanced_analysis" class="list-group-item list-group-item-action">Advanced Analysis</a>
+        </div>
+    </div>
+
+    <div class="container history-section">
+        <h2>View Past Analysis</h2>
+        <div id="analysis-history" class="list-group">
+            <!-- Analysis history will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA7aO-t7jtiYz7ejFUSKpqs5lmtCLBxxXQ",
+  authDomain: "phishgaurdai-e8d89.firebaseapp.com",
+  projectId: "phishgaurdai-e8d89",
+  storageBucket: "phishgaurdai-e8d89.firebasestorage.app",
+  messagingSenderId: "746329814999",
+  appId: "1:746329814999:web:f8f0f71e4c84eb655d7d92"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            auth.signOut().then(() => {
+                window.location.href = '/';
+            });
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, load their analysis history
+                loadAnalysisHistory(user.uid);
+            } else {
+                // No user is signed in, redirect to home
+                window.location.href = '/';
+            }
+        });
+
+        function loadAnalysisHistory(userId) {
+            const historyContainer = document.getElementById('analysis-history');
+            historyContainer.innerHTML = '<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>';
+
+            db.collection('analysis_history').where('userId', '==', userId).orderBy('timestamp', 'desc').limit(20).get()
+                .then(querySnapshot => {
+                    if (querySnapshot.empty) {
+                        historyContainer.innerHTML = '<div class="alert alert-info">No past analysis found.</div>';
+                        return;
+                    }
+                    let historyHtml = '';
+                    querySnapshot.forEach(doc => {
+                        const data = doc.data();
+                        const resultClass = (data.result === 'Malicious' || data.result === 'Phishing') ? 'malicious' : 'benign';
+                        const probability = data.metadata ? (data.metadata.prob_malicious || data.metadata.probability || 0) * 100 : 0;
+
+                        historyHtml += `
+                            <div class="list-group-item history-item ${resultClass}">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1 text-capitalize">${data.scanType}: <span class="font-weight-bold text-${resultClass}">${data.result}</span></h5>
+                                    <small>${new Date(data.timestamp.seconds * 1000).toLocaleString()}</small>
+                                </div>
+                                <p class="mb-1"><strong>Input:</strong> <code class="input-snippet">${data.inputSnippet}</code></p>
+                                ${probability ? `<small><strong>Malicious Probability:</strong> ${probability.toFixed(2)}%</small>` : ''}
+                            </div>
+                        `;
+                    });
+                    historyContainer.innerHTML = historyHtml;
+                }).catch(error => {
+                    console.error("Error loading history:", error);
+                    historyContainer.innerHTML = '<div class="alert alert-danger">Error loading analysis history.</div>';
+                });
+        }
+    </script>
+</body>
+</html>
