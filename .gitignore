@@ -1,1 +1,3 @@
 *.pkl
+extra
+firebase-service-account.json

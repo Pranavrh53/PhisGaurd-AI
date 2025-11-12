@@ -166,107 +166,118 @@ def check_url():
 
 @app.route("/check_email", methods=["POST"])
 def check_email():
-    raw_email = request.form.get("email", "")
-    user_id = request.form.get("userId")
+    try:
+        raw_email = request.form.get("email", "")
+        user_id = request.form.get("userId")
 
-    # Extract features
-    df = preprocess_raw_email(raw_email)
+        if not raw_email or not raw_email.strip():
+            return jsonify({"error": "Email content is required"}), 400
 
-    # Text features
-    X_text = vectorizer.transform(df["body"])
+        # Extract features
+        df = preprocess_raw_email(raw_email)
 
-    # Numeric features
-    X_num = df[numeric_cols].values
-    X_num = scaler.transform(X_num)
+        # Text features
+        X_text = vectorizer.transform(df["body"])
 
-    # Combine
-    X_final = hstack([X_text, X_num])
+        # Numeric features
+        X_num = df[numeric_cols].values
+        X_num = scaler.transform(X_num)
 
-    # Predict
-    pred = email_model.predict(X_final)[0]
-    prob = email_model.predict_proba(X_final)[0][1]
+        # Combine
+        X_final = hstack([X_text, X_num])
 
-    # Extract comprehensive features for response
-    features_dict = {
-        # Basic statistics
-        "body_length": int(df["body_len"].values[0]) if "body_len" in df.columns else 0,
-        "body_words": int(df["body_words"].values[0]) if "body_words" in df.columns else 0,
-        "uppercase_ratio": float(df["uppercase_ratio"].values[0]) if "uppercase_ratio" in df.columns else 0,
-        "exclamation_marks": int(df["exclaim_count"].values[0]) if "exclaim_count" in df.columns else 0,
-        "question_marks": int(df["question_count"].values[0]) if "question_count" in df.columns else 0,
-        
-        # URL features
-        "num_urls": int(df["num_urls"].values[0]) if "num_urls" in df.columns else 0,
-        "num_shorteners": int(df["num_shorteners"].values[0]) if "num_shorteners" in df.columns else 0,
-        "num_ip_urls": int(df["num_ip_urls"].values[0]) if "num_ip_urls" in df.columns else 0,
-        "domain_mismatch": bool(df["domain_mismatch"].values[0]) if "domain_mismatch" in df.columns else False,
-        
-        # Attachment features
-        "num_attachments": int(df["num_attachments"].values[0]) if "num_attachments" in df.columns else 0,
-        "has_suspicious_attachment": bool(df["has_suspicious_attachment"].values[0]) if "has_suspicious_attachment" in df.columns else False,
-        
-        # Header features
-        "has_spf": bool(df["has_spf"].values[0]) if "has_spf" in df.columns else False,
-        "has_dkim": bool(df["has_dkim"].values[0]) if "has_dkim" in df.columns else False,
-        "from_return_mismatch": bool(df["from_return_mismatch"].values[0]) if "from_return_mismatch" in df.columns else False,
-        
-        # Content features
-        "spammy_keyword_count": int(df["spammy_keyword_count"].values[0]) if "spammy_keyword_count" in df.columns else 0,
-        "urgency_keyword_count": int(df["urgency_keyword_count"].values[0]) if "urgency_keyword_count" in df.columns else 0,
-        "threat_keyword_count": int(df["threat_keyword_count"].values[0]) if "threat_keyword_count" in df.columns else 0,
-        "has_generic_salutation": bool(df["has_generic_salutation"].values[0]) if "has_generic_salutation" in df.columns else False,
-        
-        # Psychological features
-        "emotion_fear": int(df["emotion_fear"].values[0]) if "emotion_fear" in df.columns else 0,
-        "emotion_urgency": int(df["emotion_urgency"].values[0]) if "emotion_urgency" in df.columns else 0,
-        "emotion_greed": int(df["emotion_greed"].values[0]) if "emotion_greed" in df.columns else 0,
-        "scarcity_score": int(df["scarcity_score"].values[0]) if "scarcity_score" in df.columns else 0,
-        
-        # Technical features
-        "homoglyph_count": int(df["homoglyph_count"].values[0]) if "homoglyph_count" in df.columns else 0,
-        "suspicious_encoding": bool(df["suspicious_encoding"].values[0]) if "suspicious_encoding" in df.columns else False,
-        
-        # Individual keyword flags
-        "suspicious_keywords": {
-            "verify": bool(df["kw_verify"].values[0]) if "kw_verify" in df.columns else False,
-            "password": bool(df["kw_password"].values[0]) if "kw_password" in df.columns else False,
-            "account": bool(df["kw_account"].values[0]) if "kw_account" in df.columns else False,
-            "urgent": bool(df["kw_urgent"].values[0]) if "kw_urgent" in df.columns else False,
-            "click_here": bool(df["kw_click here"].values[0]) if "kw_click here" in df.columns else False,
-            "bank": bool(df["kw_bank"].values[0]) if "kw_bank" in df.columns else False,
-            "login": bool(df["kw_login"].values[0]) if "kw_login" in df.columns else False,
-            "update": bool(df["kw_update"].values[0]) if "kw_update" in df.columns else False,
-            "suspend": bool(df["kw_suspend"].values[0]) if "kw_suspend" in df.columns else False,
-            "confirm": bool(df["kw_confirm"].values[0]) if "kw_confirm" in df.columns else False,
-            "security": bool(df["kw_security"].values[0]) if "kw_security" in df.columns else False,
-            "ssn": bool(df["kw_ssn"].values[0]) if "kw_ssn" in df.columns else False,
-            "credit_card": bool(df["kw_credit card"].values[0]) if "kw_credit card" in df.columns else False,
+        # Predict
+        pred = email_model.predict(X_final)[0]
+        prob = email_model.predict_proba(X_final)[0][1]
+
+        # Extract comprehensive features for response
+        features_dict = {
+            # Basic statistics
+            "body_length": int(df["body_len"].values[0]) if "body_len" in df.columns else 0,
+            "body_words": int(df["body_words"].values[0]) if "body_words" in df.columns else 0,
+            "uppercase_ratio": float(df["uppercase_ratio"].values[0]) if "uppercase_ratio" in df.columns else 0,
+            "exclamation_marks": int(df["exclaim_count"].values[0]) if "exclaim_count" in df.columns else 0,
+            "question_marks": int(df["question_count"].values[0]) if "question_count" in df.columns else 0,
+            
+            # URL features
+            "num_urls": int(df["num_urls"].values[0]) if "num_urls" in df.columns else 0,
+            "num_shorteners": int(df["num_shorteners"].values[0]) if "num_shorteners" in df.columns else 0,
+            "num_ip_urls": int(df["num_ip_urls"].values[0]) if "num_ip_urls" in df.columns else 0,
+            "domain_mismatch": bool(df["domain_mismatch"].values[0]) if "domain_mismatch" in df.columns else False,
+            
+            # Attachment features
+            "num_attachments": int(df["num_attachments"].values[0]) if "num_attachments" in df.columns else 0,
+            "has_suspicious_attachment": bool(df["has_suspicious_attachment"].values[0]) if "has_suspicious_attachment" in df.columns else False,
+            
+            # Header features
+            "has_spf": bool(df["has_spf"].values[0]) if "has_spf" in df.columns else False,
+            "has_dkim": bool(df["has_dkim"].values[0]) if "has_dkim" in df.columns else False,
+            "from_return_mismatch": bool(df["from_return_mismatch"].values[0]) if "from_return_mismatch" in df.columns else False,
+            
+            # Content features
+            "spammy_keyword_count": int(df["spammy_keyword_count"].values[0]) if "spammy_keyword_count" in df.columns else 0,
+            "urgency_keyword_count": int(df["urgency_keyword_count"].values[0]) if "urgency_keyword_count" in df.columns else 0,
+            "threat_keyword_count": int(df["threat_keyword_count"].values[0]) if "threat_keyword_count" in df.columns else 0,
+            "has_generic_salutation": bool(df["has_generic_salutation"].values[0]) if "has_generic_salutation" in df.columns else False,
+            
+            # Psychological features
+            "emotion_fear": int(df["emotion_fear"].values[0]) if "emotion_fear" in df.columns else 0,
+            "emotion_urgency": int(df["emotion_urgency"].values[0]) if "emotion_urgency" in df.columns else 0,
+            "emotion_greed": int(df["emotion_greed"].values[0]) if "emotion_greed" in df.columns else 0,
+            "scarcity_score": int(df["scarcity_score"].values[0]) if "scarcity_score" in df.columns else 0,
+            
+            # Technical features
+            "homoglyph_count": int(df["homoglyph_count"].values[0]) if "homoglyph_count" in df.columns else 0,
+            "suspicious_encoding": bool(df["suspicious_encoding"].values[0]) if "suspicious_encoding" in df.columns else False,
+            
+            # Individual keyword flags
+            "suspicious_keywords": {
+                "verify": bool(df["kw_verify"].values[0]) if "kw_verify" in df.columns else False,
+                "password": bool(df["kw_password"].values[0]) if "kw_password" in df.columns else False,
+                "account": bool(df["kw_account"].values[0]) if "kw_account" in df.columns else False,
+                "urgent": bool(df["kw_urgent"].values[0]) if "kw_urgent" in df.columns else False,
+                "click_here": bool(df["kw_click here"].values[0]) if "kw_click here" in df.columns else False,
+                "bank": bool(df["kw_bank"].values[0]) if "kw_bank" in df.columns else False,
+                "login": bool(df["kw_login"].values[0]) if "kw_login" in df.columns else False,
+                "update": bool(df["kw_update"].values[0]) if "kw_update" in df.columns else False,
+                "suspend": bool(df["kw_suspend"].values[0]) if "kw_suspend" in df.columns else False,
+                "confirm": bool(df["kw_confirm"].values[0]) if "kw_confirm" in df.columns else False,
+                "security": bool(df["kw_security"].values[0]) if "kw_security" in df.columns else False,
+                "ssn": bool(df["kw_ssn"].values[0]) if "kw_ssn" in df.columns else False,
+                "credit_card": bool(df["kw_credit card"].values[0]) if "kw_credit card" in df.columns else False,
+            }
         }
-    }
 
-    prediction_text = "Phishing" if pred == 1 else "Legit"
+        prediction_text = "Phishing" if pred == 1 else "Legit"
 
-    if db and user_id:
-        try:
-            history_ref = db.collection('analysis_history').document()
-            history_ref.set({
-                'userId': user_id,
-                'scanType': 'email',
-                'inputSnippet': raw_email[:200],  # Store a snippet of the email
-                'result': prediction_text,
-                'timestamp': datetime.datetime.now(datetime.timezone.utc),
-                'metadata': {
-                    'probability': float(prob)
-                }
-            })
-        except Exception as e:
-            print(f"Error saving to Firestore: {e}")
+        if db and user_id:
+            try:
+                history_ref = db.collection('analysis_history').document()
+                history_ref.set({
+                    'userId': user_id,
+                    'scanType': 'email',
+                    'inputSnippet': raw_email[:200],  # Store a snippet of the email
+                    'result': prediction_text,
+                    'timestamp': datetime.datetime.now(datetime.timezone.utc),
+                    'metadata': {
+                        'probability': float(prob)
+                    }
+                })
+            except Exception as e:
+                print(f"Error saving to Firestore: {e}")
 
-    return jsonify({
-        "prediction": prediction_text,
-        "probability": float(prob),
-        "features": features_dict
-    })
+        return jsonify({
+            "prediction": prediction_text,
+            "probability": float(prob),
+            "features": features_dict
+        })
+    except Exception as e:
+        import traceback
+        error_msg = str(e)
+        traceback.print_exc()
+        return jsonify({
+            "error": f"Error processing email: {error_msg}"
+        }), 500
 
 
 # ------------------ Advanced Analysis Routes ------------------

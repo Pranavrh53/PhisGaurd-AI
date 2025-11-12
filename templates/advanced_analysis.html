@@ -1047,6 +1047,14 @@
         return html;
       }
 
+      // Add download report button at the top
+      html += `
+      <div style="text-align: right; margin-bottom: 20px;">
+        <button onclick="downloadAnalysisReport('email', ${JSON.stringify(data).replace(/"/g, '&quot;')})" class="btn btn-primary">
+          <i class="fas fa-download"></i> Download Full Report
+        </button>
+      </div>`;
+
       // Email Features
       if (data.email_features) {
         html += '<div class="result-section">';
@@ -1519,13 +1527,21 @@
       return report;
     }
 
-    function downloadAnalysisReport(url, verdict, confidence, maliciousSources, totalSources, analysisData) {
+    function downloadAnalysisReport(analysisType, analysisData) {
       try {
         // Parse the analysisData if it's a string
         const data = typeof analysisData === 'string' ? JSON.parse(analysisData.replace(/&quot;/g, '"')) : analysisData;
         
-        const reportContent = generateReportContent(url, verdict, confidence, maliciousSources, totalSources, data);
-        const filename = `phishguard-report-${url.replace(/[^a-z0-9]/gi, '-').toLowerCase()}-${new Date().getTime()}.txt`;
+        let reportContent = '';
+        let filename = '';
+        
+        if (analysisType === 'email') {
+          reportContent = generateEmailReport(data);
+          filename = `phishguard-email-report-${new Date().getTime()}.md`;
+        } else {
+          reportContent = generateReportContent(analysisType, data);
+          filename = `phishguard-${analysisType}-report-${new Date().getTime()}.md`;
+        }
         
         // Create a Blob with the report content
         const blob = new Blob([reportContent], { type: 'text/plain' });
@@ -1553,39 +1569,73 @@
       }
     }
 
-    async function shareAnalysisResults(url, verdict) {
-      try {
-        if (navigator.share) {
-          await navigator.share({
-            title: 'PhishGuard AI Analysis',
-            text: `PhishGuard AI Analysis for ${url} - Verdict: ${verdict}`,
-            url: window.location.href,
-          });
-        } else {
-          // Fallback for browsers that don't support Web Share API
-          const shareText = `PhishGuard AI Analysis for ${url}\nVerdict: ${verdict}\n\nView full report at: ${window.location.href}`;
-          
-          // Try to copy to clipboard
-          if (navigator.clipboard) {
-            await navigator.clipboard.writeText(shareText);
-            showToast('Link copied to clipboard!', 'success');
-          } else {
-            // Fallback to prompt
-            const textArea = document.createElement('textarea');
-            textArea.value = shareText;
-            document.body.appendChild(textArea);
-            textArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textArea);
-            showToast('Link copied to clipboard!', 'success');
-          }
-        }
-      } catch (error) {
-        console.error('Error sharing results:', error);
-        if (error.name !== 'AbortError') {
-          showToast('Error sharing results. Please try again.', 'error');
-        }
+    function generateEmailReport(data) {
+      const reportDate = new Date().toLocaleString();
+      let report = `PhishGuard AI Email Analysis Report\n`;
+      report += `================================\n\n`;
+      report += `Analysis Date: ${reportDate}\n`;
+      
+      // Add email features
+      if (data.email_features) {
+        report += `\n=== EMAIL FEATURES ===\n`;
+        report += `From Domain: ${data.email_features.from_domain || 'N/A'}\n`;
+        report += `URLs Found: ${data.email_features.num_urls || 0}\n`;
+        report += `IPs Found: ${data.email_features.num_ips || 0}\n`;
+        report += `Domains Found: ${data.email_features.num_domains || 0}\n`;
       }
+      
+      // Add URL analysis results
+      if (data.urls && data.urls.length > 0) {
+        report += `\n=== URL ANALYSIS RESULTS ===\n`;
+        data.urls.forEach(item => {
+          const isMalicious = item.verdict === 'malicious' || (item.is_malicious === true);
+          const confidence = item.confidence || 0;
+          
+          report += `URL: ${item.url || 'Unknown URL'}\n`;
+          report += `Verdict: ${isMalicious ? 'MALICIOUS' : 'CLEAN'}\n`;
+          report += `Confidence: ${confidence}%\n`;
+          if (item.error) {
+            report += `Error: ${item.error}\n`;
+          }
+          report += '\n';
+        });
+      }
+      
+      // Add IP analysis results
+      if (data.ips && data.ips.length > 0) {
+        report += `\n=== IP ANALYSIS RESULTS ===\n`;
+        data.ips.forEach(item => {
+          const isMalicious = item.verdict === 'malicious' || (item.is_malicious === true);
+          
+          report += `IP: ${item.ip || 'Unknown IP'}\n`;
+          report += `Verdict: ${isMalicious ? 'MALICIOUS' : 'CLEAN'}\n`;
+          if (item.error) {
+            report += `Error: ${item.error}\n`;
+          }
+          report += '\n';
+        });
+      }
+      
+      // Add domain analysis results
+      if (data.domains && data.domains.length > 0) {
+        report += `\n=== DOMAIN ANALYSIS RESULTS ===\n`;
+        data.domains.forEach(item => {
+          const isMalicious = item.verdict === 'malicious' || (item.is_malicious === true);
+          
+          report += `Domain: ${item.domain || 'Unknown Domain'}\n`;
+          report += `Verdict: ${isMalicious ? 'MALICIOUS' : 'CLEAN'}\n`;
+          if (item.error) {
+            report += `Error: ${item.error}\n`;
+          }
+          report += '\n';
+        });
+      }
+      
+      report += `\n\n---\n`;
+      report += `Report generated by PhishGuard AI - ${window.location.origin}\n`;
+      report += `© ${new Date().getFullYear()} PhishGuard AI. All rights reserved.`;
+      
+      return report;
     }
 
     function showToast(message, type = 'info') {
@@ -1881,5 +1931,3 @@
       }
     });
   </script>
-</body>
-</html>

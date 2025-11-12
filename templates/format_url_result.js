@@ -42,10 +42,8 @@ function formatURLResult(data) {
   
   // Display confidence if we have any sources
   if (totalSources > 0) {
-    html += `<p style="color: var(--dark-text-secondary); margin-top: var(--space-2);">`;
-    html += `Confidence: <strong>${confidence.toFixed(1)}%</strong> `;
-    html += `(${maliciousSources}/${totalSources} sources flagged)`;
-    html += `</p>`;
+    html += `<p class="muted">Confidence: <strong>${confidence.toFixed(1)}%</strong> `;
+    html += `(${maliciousSources}/${totalSources} sources flagged)</p>`;
   }
   html += '</div>';
   
@@ -57,7 +55,7 @@ function formatURLResult(data) {
     if (virustotal.error) {
       html += `<p class="error-message">Error: ${virustotal.error}</p>`;
     } else {
-      html += `<p style="color: var(--dark-text-secondary);">`;
+      html += `<p class="muted">`;
       html += `Status: <strong>${virustotal.malicious > 0 ? 'Malicious' : 'Clean'}</strong> | `;
       html += `Confidence: <strong>${virustotal.confidence || 0}%</strong>`;
       
@@ -71,7 +69,7 @@ function formatURLResult(data) {
       html += `</p>`;
       
       if (virustotal.permalink) {
-        html += `<p><a href="${virustotal.permalink}" target="_blank" style="color: var(--primary-500); text-decoration: none;">`;
+        html += `<p><a href="${virustotal.permalink}" target="_blank" class="text-blue">`;
         html += `View Full Report <i class="fas fa-external-link-alt"></i></a></p>`;
       }
     }
@@ -86,7 +84,7 @@ function formatURLResult(data) {
     if (urlscan.error) {
       html += `<p class="error-message">Error: ${urlscan.error}</p>`;
     } else {
-      html += `<p style="color: var(--dark-text-secondary);">`;
+      html += `<p class="muted">`;
       html += `Status: <strong>${urlscan.malicious ? 'Malicious' : 'Clean'}</strong>`;
       
       if (urlscan.verdict) {
@@ -107,11 +105,11 @@ function formatURLResult(data) {
       html += `</p>`;
       
       if (urlscan.screenshot) {
-        html += `<p><img src="${urlscan.screenshot}" style="max-width: 100%; border-radius: var(--radius-lg); border: 1px solid var(--dark-border);" alt="Screenshot"></p>`;
+        html += `<p><img src="${urlscan.screenshot}" class="analysis-screenshot" alt="Screenshot"></p>`;
       }
       
       if (urlscan.report_url) {
-        html += `<p><a href="${urlscan.report_url}" target="_blank" style="color: var(--primary-500); text-decoration: none;">`;
+        html += `<p><a href="${urlscan.report_url}" target="_blank" class="text-blue">`;
         html += `View Full Report <i class="fas fa-external-link-alt"></i></a></p>`;
       }
     }
