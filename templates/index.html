@@ -200,18 +200,15 @@
       max-width: 1400px;
       margin: 0 auto;
       padding: var(--space-12) var(--space-4);
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: var(--space-8);
-      align-items: stretch;
-    }
-    
-    .main-container .card {
-      width: 100%;
+      align-items: start;
     }
     
     @media (max-width: 1024px) {
       .main-container {
+        grid-template-columns: 1fr;
         gap: var(--space-6);
       }
     }
@@ -233,15 +230,14 @@
     }
     
     .card {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+      background: var(--dark-bg-secondary);
       border: 1px solid var(--dark-border);
       border-radius: var(--radius-2xl);
       padding: var(--space-8);
       transition: all var(--transition-normal);
       position: relative;
       overflow: hidden;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(10px);
     }
     
     .card::before {
@@ -250,44 +246,20 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--primary-500), var(--primary-600), var(--primary-500), transparent);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary-500), transparent);
       opacity: 0;
       transition: opacity var(--transition-normal);
-      animation: shimmer 3s infinite;
-    }
-    
-    .card::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity var(--transition-slow);
-      pointer-events: none;
     }
     
     .card:hover {
-      border-color: rgba(59, 130, 246, 0.5);
-      transform: translateY(-6px) scale(1.01);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2), 0 0 30px rgba(59, 130, 246, 0.3);
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+      border-color: var(--dark-border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
     }
     
     .card:hover::before {
       opacity: 1;
-    }
-    
-    .card:hover::after {
-      opacity: 1;
-    }
-    
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
     }
     
     .card-header {
@@ -295,85 +267,28 @@
       align-items: center;
       gap: var(--space-4);
       margin-bottom: var(--space-6);
-      padding-bottom: var(--space-5);
-      border-bottom: 2px solid var(--dark-border);
-      position: relative;
-    }
-    
-    .card-header::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
-      transition: width var(--transition-slow);
-    }
-    
-    .card:hover .card-header::after {
-      width: 100%;
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--dark-border);
     }
     
     .card-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-xl);
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.75rem;
-      background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 50%, var(--primary-700) 100%);
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
       color: white;
-      box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      position: relative;
-      transition: all var(--transition-normal);
-      overflow: hidden;
-    }
-    
-    .card-icon::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transform: rotate(45deg);
-      transition: all var(--transition-slow);
-    }
-    
-    .card:hover .card-icon {
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-    
-    .card:hover .card-icon::before {
-      animation: shine 1.5s infinite;
-    }
-    
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+      box-shadow: var(--shadow-md);
     }
     
     .card-header h2 {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       color: var(--dark-text-primary);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      background: linear-gradient(135deg, var(--dark-text-primary) 0%, var(--primary-400) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      transition: all var(--transition-normal);
-    }
-    
-    .card:hover .card-header h2 {
-      background: linear-gradient(135deg, var(--dark-text-primary) 0%, var(--primary-500) 50%, var(--primary-400) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-weight: 600;
+      letter-spacing: -0.02em;
     }
     
     form {
@@ -395,35 +310,28 @@
     }
     
     input[type="text"], textarea {
-      padding: var(--space-4) var(--space-5);
+      padding: var(--space-4);
       border: 2px solid var(--dark-border);
       border-radius: var(--radius-lg);
       font-size: 1rem;
       font-family: inherit;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+      background: var(--dark-bg-primary);
       color: var(--dark-text-primary);
       transition: all var(--transition-normal);
       width: 100%;
       position: relative;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     input[type="text"]:focus, textarea:focus {
       outline: none;
       border-color: var(--primary-500);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(59, 130, 246, 0.2);
-      transform: translateY(-2px);
-    }
-    
-    input[type="text"]:hover, textarea:hover {
-      border-color: var(--dark-border-hover);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: var(--dark-bg-secondary);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      transform: translateY(-1px);
     }
     
     input[type="text"]::placeholder, textarea::placeholder {
       color: var(--dark-text-muted);
-      opacity: 0.7;
     }
     
     textarea {
@@ -433,13 +341,13 @@
     }
     
     .form-button {
-      padding: var(--space-5) var(--space-8);
+      padding: var(--space-4) var(--space-6);
       border: none;
       border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 50%, var(--primary-700) 100%);
+      background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
       color: white;
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-size: 1rem;
+      font-weight: 600;
       cursor: pointer;
       transition: all var(--transition-normal);
       position: relative;
@@ -447,10 +355,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: var(--space-3);
-      box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      gap: var(--space-2);
     }
     
     .form-button::before {
@@ -460,69 +365,38 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
       transition: left var(--transition-slow);
-    }
-    
-    .form-button::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
     }
     
     .form-button:hover::before {
       left: 100%;
     }
     
-    .form-button:hover::after {
-      width: 300px;
-      height: 300px;
-    }
-    
     .form-button:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 20px rgba(59, 130, 246, 0.4);
-      background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-500) 50%, var(--primary-600) 100%);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
     
     .form-button:active {
-      transform: translateY(-1px) scale(1);
-      box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      transform: translateY(0);
     }
     
     .form-button:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
       cursor: not-allowed;
       transform: none;
-      box-shadow: none;
-    }
-    
-    .form-button i {
-      font-size: 1.1rem;
-      transition: transform var(--transition-normal);
-    }
-    
-    .form-button:hover i {
-      transform: scale(1.2) rotate(5deg);
     }
     
     .result {
       margin-top: var(--space-6);
-      padding: var(--space-8);
-      border-radius: var(--radius-2xl);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+      padding: var(--space-6);
+      border-radius: var(--radius-xl);
+      background: var(--dark-bg-primary);
       border: 1px solid var(--dark-border);
-      animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
     }
     
     .result::before {
@@ -531,21 +405,9 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary-500), var(--primary-600), var(--success-500), var(--primary-600), var(--primary-500));
-      opacity: 0.9;
-      animation: shimmer 3s infinite;
-    }
-    
-    .result::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-      pointer-events: none;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary-500), var(--success-500));
+      opacity: 0.8;
     }
     
     @keyframes slideIn {
@@ -563,94 +425,38 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: var(--space-6);
-      padding-bottom: var(--space-5);
-      border-bottom: 2px solid var(--dark-border);
-      position: relative;
-    }
-    
-    .result-header::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
-      transition: width var(--transition-slow);
-      animation: expandWidth 0.8s ease-out forwards;
-    }
-    
-    @keyframes expandWidth {
-      from { width: 0; }
-      to { width: 100%; }
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-4);
+      border-bottom: 1px solid var(--dark-border);
     }
     
     .result-title {
-      font-weight: 700;
+      font-weight: 600;
       color: var(--dark-text-primary);
-      font-size: 1.25rem;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, var(--dark-text-primary) 0%, var(--primary-400) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 1.125rem;
     }
     
     .result-badge {
-      padding: var(--space-3) var(--space-6);
-      border-radius: var(--radius-xl);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-lg);
       font-weight: 700;
       font-size: 0.875rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.05em;
       display: flex;
       align-items: center;
       gap: var(--space-2);
-      box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-      transition: all var(--transition-normal);
-    }
-    
-    .result-badge::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left var(--transition-slow);
-    }
-    
-    .result-badge:hover::before {
-      left: 100%;
-    }
-    
-    .result-badge:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      box-shadow: var(--shadow-sm);
     }
     
     .badge-benign, .badge-legit {
-      background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 50%, var(--success-700) 100%);
+      background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
       color: white;
     }
     
     .badge-malicious, .badge-phishing {
-      background: linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 50%, var(--danger-700) 100%);
+      background: linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 100%);
       color: white;
-    }
-    
-    .result-badge i {
-      font-size: 1rem;
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
     }
     
     .probability-container {
@@ -661,38 +467,17 @@
     }
     
     .probability-item {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
-      border: 2px solid var(--dark-border);
-      border-radius: var(--radius-xl);
-      padding: var(--space-5);
+      background: var(--dark-bg-primary);
+      border: 1px solid var(--dark-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
       text-align: center;
       transition: all var(--transition-normal);
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .probability-item::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-500), transparent);
-      opacity: 0;
-      transition: opacity var(--transition-normal);
     }
     
     .probability-item:hover {
-      border-color: var(--primary-500);
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(59, 130, 246, 0.2);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
-    }
-    
-    .probability-item:hover::before {
-      opacity: 1;
+      border-color: var(--dark-border-hover);
+      transform: translateY(-2px);
     }
     
     .probability-label {
@@ -837,135 +622,6 @@
       font-weight: 600;
       color: var(--dark-text-primary);
       font-size: 1.125rem;
-    }
-    
-    .features-horizontal-container {
-      margin-top: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-4);
-    }
-    
-    .feature-category {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
-      border: 2px solid var(--dark-border);
-      border-radius: var(--radius-xl);
-      padding: var(--space-5);
-      transition: all var(--transition-normal);
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    
-    .feature-category::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary-500), transparent);
-      opacity: 0;
-      transition: opacity var(--transition-normal);
-    }
-    
-    .feature-category:hover {
-      border-color: var(--primary-500);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(59, 130, 246, 0.15);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
-    }
-    
-    .feature-category:hover::before {
-      opacity: 1;
-    }
-    
-    .category-label {
-      font-weight: 600;
-      color: var(--dark-text-primary);
-      font-size: 0.875rem;
-      margin-bottom: var(--space-3);
-      padding-bottom: var(--space-2);
-      border-bottom: 1px solid var(--dark-border);
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-    }
-    
-    .category-label i {
-      color: var(--primary-500);
-    }
-    
-    .category-items {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-3);
-    }
-    
-    .feature-item-compact {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-3) var(--space-4);
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--dark-border);
-      font-size: 0.875rem;
-      transition: all var(--transition-normal);
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    
-    .feature-item-compact::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-      transition: left var(--transition-normal);
-    }
-    
-    .feature-item-compact:hover {
-      border-color: var(--primary-500);
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 0 15px rgba(59, 130, 246, 0.2);
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
-    }
-    
-    .feature-item-compact:hover::before {
-      left: 100%;
-    }
-    
-    .item-label {
-      color: var(--dark-text-muted);
-      font-weight: 500;
-    }
-    
-    .item-value {
-      color: var(--dark-text-primary);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: var(--space-1);
-    }
-    
-    .item-value i {
-      font-size: 0.75rem;
-    }
-    
-    @media (max-width: 768px) {
-      .category-items {
-        flex-direction: column;
-        gap: var(--space-2);
-      }
-      
-      .feature-item-compact {
-        width: 100%;
-        justify-content: space-between;
-      }
     }
     
     .keywords-section {
@@ -1508,81 +1164,84 @@ function removeDashboardButton() {
         html += '</div>';
         html += '</div>';
         
-        // Features - Horizontal layout with labeled categories
+        // Features
         if (data.features) {
-          html += '<div class="features-horizontal-container">';
-          
           // Basic Statistics
-          html += '<div class="feature-category">';
-          html += '<div class="category-label"><i class="fas fa-chart-bar"></i> Basic Statistics</div>';
-          html += '<div class="category-items">';
-          html += `<div class="feature-item-compact"><span class="item-label">Body Length:</span><span class="item-value">${data.features.body_length}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Word Count:</span><span class="item-value">${data.features.body_words}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Uppercase Ratio:</span><span class="item-value">${(data.features.uppercase_ratio * 100).toFixed(1)}%</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Exclamation Marks:</span><span class="item-value">${data.features.exclamation_marks}</span></div>`;
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-chart-bar"></i> Basic Statistics</div>';
+          html += '<div class="features-grid-horizontal">';
+          html += `<div class="feature-item"><div class="feature-label">Body Length</div><div class="feature-value">${data.features.body_length}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Word Count</div><div class="feature-value">${data.features.body_words}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Uppercase Ratio</div><div class="feature-value">${(data.features.uppercase_ratio * 100).toFixed(1)}%</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Exclamation Marks</div><div class="feature-value">${data.features.exclamation_marks}</div></div>`;
           html += '</div>';
           html += '</div>';
           
           // Header Features
-          html += '<div class="feature-category">';
-          html += '<div class="category-label"><i class="fas fa-envelope"></i> Header Analysis</div>';
-          html += '<div class="category-items">';
-          html += `<div class="feature-item-compact"><span class="item-label">SPF:</span><span class="item-value">${data.features.has_spf ? '<i class="fas fa-check text-green"></i> Present' : '<i class="fas fa-times text-red"></i> Missing'}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">DKIM:</span><span class="item-value">${data.features.has_dkim ? '<i class="fas fa-check text-green"></i> Present' : '<i class="fas fa-times text-red"></i> Missing'}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Domain Mismatch:</span><span class="item-value">${data.features.from_return_mismatch ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</span></div>`;
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-envelope"></i> Header Analysis</div>';
+          html += '<div class="features-grid-horizontal">';
+          html += `<div class="feature-item"><div class="feature-label">SPF Authentication</div><div class="feature-value">${data.features.has_spf ? '<i class="fas fa-check text-green"></i> Present' : '<i class="fas fa-times text-red"></i> Missing'}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">DKIM Signature</div><div class="feature-value">${data.features.has_dkim ? '<i class="fas fa-check text-green"></i> Present' : '<i class="fas fa-times text-red"></i> Missing'}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Domain Mismatch</div><div class="feature-value">${data.features.from_return_mismatch ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
+          html += '<div class="feature-item"><div class="feature-label">Return Path</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Checked</div></div>';
           html += '</div>';
           html += '</div>';
           
           // URL Features
-          html += '<div class="feature-category">';
-          html += '<div class="category-label"><i class="fas fa-link"></i> URL Analysis</div>';
-          html += '<div class="category-items">';
-          html += `<div class="feature-item-compact"><span class="item-label">Total URLs:</span><span class="item-value">${data.features.num_urls}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Shorteners:</span><span class="item-value">${data.features.num_shorteners || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">IP URLs:</span><span class="item-value">${data.features.num_ip_urls || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Domain Mismatch:</span><span class="item-value">${data.features.domain_mismatch ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</span></div>`;
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-link"></i> URL Analysis</div>';
+          html += '<div class="features-grid-horizontal">';
+          html += `<div class="feature-item"><div class="feature-label">Total URLs</div><div class="feature-value">${data.features.num_urls}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">URL Shorteners</div><div class="feature-value">${data.features.num_shorteners || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">IP-based URLs</div><div class="feature-value">${data.features.num_ip_urls || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Domain Mismatch</div><div class="feature-value">${data.features.domain_mismatch ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
           html += '</div>';
           html += '</div>';
           
           // Content Analysis
-          html += '<div class="feature-category">';
-          html += '<div class="category-label"><i class="fas fa-file-text"></i> Content Analysis</div>';
-          html += '<div class="category-items">';
-          html += `<div class="feature-item-compact"><span class="item-label">Spammy Keywords:</span><span class="item-value">${data.features.spammy_keyword_count || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Urgency Keywords:</span><span class="item-value">${data.features.urgency_keyword_count || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Threat Keywords:</span><span class="item-value">${data.features.threat_keyword_count || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Generic Salutation:</span><span class="item-value">${data.features.has_generic_salutation ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</span></div>`;
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-file-text"></i> Content Analysis</div>';
+          html += '<div class="features-grid-horizontal">';
+          html += `<div class="feature-item"><div class="feature-label">Spammy Keywords</div><div class="feature-value">${data.features.spammy_keyword_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Urgency Keywords</div><div class="feature-value">${data.features.urgency_keyword_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Threat Keywords</div><div class="feature-value">${data.features.threat_keyword_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Generic Salutation</div><div class="feature-value">${data.features.has_generic_salutation ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
           html += '</div>';
           html += '</div>';
           
           // Psychological Features
-          html += '<div class="feature-category">';
-          html += '<div class="category-label"><i class="fas fa-brain"></i> Psychological Triggers</div>';
-          html += '<div class="category-items">';
-          html += `<div class="feature-item-compact"><span class="item-label">Fear:</span><span class="item-value">${data.features.emotion_fear || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Urgency:</span><span class="item-value">${data.features.emotion_urgency || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Greed:</span><span class="item-value">${data.features.emotion_greed || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Scarcity:</span><span class="item-value">${data.features.scarcity_score || 0}</span></div>`;
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-brain"></i> Psychological Triggers</div>';
+          html += '<div class="features-grid-horizontal">';
+          html += `<div class="feature-item"><div class="feature-label">Fear Triggers</div><div class="feature-value">${data.features.emotion_fear || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Urgency Triggers</div><div class="feature-value">${data.features.emotion_urgency || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Greed Triggers</div><div class="feature-value">${data.features.emotion_greed || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Scarcity Score</div><div class="feature-value">${data.features.scarcity_score || 0}</div></div>`;
           html += '</div>';
           html += '</div>';
           
           // Attachment Features
           if (data.features.num_attachments > 0) {
-            html += '<div class="feature-category">';
-            html += '<div class="category-label"><i class="fas fa-paperclip"></i> Attachment Analysis</div>';
-            html += '<div class="category-items">';
-            html += `<div class="feature-item-compact"><span class="item-label">Attachments:</span><span class="item-value">${data.features.num_attachments}</span></div>`;
-            html += `<div class="feature-item-compact"><span class="item-label">Suspicious Files:</span><span class="item-value">${data.features.has_suspicious_attachment ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</span></div>`;
+            html += '<div class="features-section">';
+            html += '<div class="features-title"><i class="fas fa-paperclip"></i> Attachment Analysis</div>';
+            html += '<div class="features-grid-horizontal">';
+            html += `<div class="feature-item"><div class="feature-label">Attachments</div><div class="feature-value">${data.features.num_attachments}</div></div>`;
+            html += `<div class="feature-item"><div class="feature-label">Suspicious Files</div><div class="feature-value">${data.features.has_suspicious_attachment ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
+            html += '<div class="feature-item"><div class="feature-label">File Types</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Analyzed</div></div>';
+            html += '<div class="feature-item"><div class="feature-label">Size Check</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Checked</div></div>';
             html += '</div>';
             html += '</div>';
           }
           
           // Technical Features
-          html += '<div class="feature-category">';
-          html += '<div class="category-label"><i class="fas fa-cogs"></i> Technical Analysis</div>';
-          html += '<div class="category-items">';
-          html += `<div class="feature-item-compact"><span class="item-label">Homoglyphs:</span><span class="item-value">${data.features.homoglyph_count || 0}</span></div>`;
-          html += `<div class="feature-item-compact"><span class="item-label">Suspicious Encoding:</span><span class="item-value">${data.features.suspicious_encoding ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</span></div>`;
+          html += '<div class="features-section">';
+          html += '<div class="features-title"><i class="fas fa-cogs"></i> Technical Analysis</div>';
+          html += '<div class="features-grid-horizontal">';
+          html += `<div class="feature-item"><div class="feature-label">Homoglyph Characters</div><div class="feature-value">${data.features.homoglyph_count || 0}</div></div>`;
+          html += `<div class="feature-item"><div class="feature-label">Suspicious Encoding</div><div class="feature-value">${data.features.suspicious_encoding ? '<i class="fas fa-exclamation-triangle text-yellow"></i> Yes' : '<i class="fas fa-check text-green"></i> No'}</div></div>`;
+          html += '<div class="feature-item"><div class="feature-label">Character Analysis</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Complete</div></div>';
+          html += '<div class="feature-item"><div class="feature-label">Encoding Check</div><div class="feature-value"><i class="fas fa-info-circle text-blue"></i> Complete</div></div>';
           html += '</div>';
           html += '</div>';
           
@@ -1599,7 +1258,6 @@ function removeDashboardButton() {
           
           html += '</div>';
           html += '</div>';
-          html += '</div>'; // Close features-horizontal-container
         }
         
         html += '</div>';
