@@ -1,195 +1,159 @@
-🛡️ PhishGuard-AI
-AI-Powered Email & URL Phishing Detection System
-<div align="center"> <img src="https://img.icons8.com/color/96/000000/cyber-security.png" width="110" /> <p> <img src="https://img.shields.io/badge/Python-3.8+-blue" /> <img src="https://img.shields.io/badge/Flask-3.0+-green" /> <img src="https://img.shields.io/badge/Machine%20Learning-Active-blueviolet" /> <img src="https://img.shields.io/badge/License-MIT-brightgreen" /> </p> <p> <a href="#-overview">Overview</a> • <a href="#-key-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-usage">Usage</a> • <a href="#-project-structure">Project Structure</a> • <a href="#-technical-details">Technical Details</a> • <a href="#-future-enhancements">Future Enhancements</a> • <a href="#-contributing">Contributing</a> </p> </div>
-🌟 Overview
+# 🛡️ PhishGuard-AI
 
-PhishGuard-AI is a real-time phishing detection system that analyzes:
+**AI-Powered Email & URL Phishing Detection System**
 
-✔️ URLs
-✔️ Emails
-✔️ IPs
-✔️ Domains
-✔️ Attachments
+<div align="center">
+  <img src="https://img.icons8.com/color/96/000000/cyber-security.png" width="110" />
+  <br>
+  <img src="https://img.shields.io/badge/Python-3.8%2B-blue" />
+  <img src="https://img.shields.io/badge/License-MIT-green" />
+</div>
 
-It combines machine learning, 50+ engineered email features, deep threat intelligence APIs, and Explainable AI to detect phishing attempts with high accuracy.
+---
 
-✨ Key Features
-🔹 Real-Time Phishing Detection
+## 🌟 Overview
 
-URL classification using ML models
+PhishGuard-AI is a real-time phishing detection system for:
 
-Email phishing prediction (50+ features)
+- **URLs**
+- **Emails**
+- **IP addresses**
+- **Domains**
+- **Attachments**
 
-Instant confidence score
+It leverages machine learning (ML), 50+ engineered features, deep threat intelligence, and Explainable AI (XAI) to provide high accuracy and actionable insights.
 
-🔹 Deep Threat Intelligence (Advanced Analysis)
-Capability	API Used	Description
-Multi-engine URL scan	VirusTotal	70+ antivirus engines
-Browser scan + screenshot	URLScan.io	Behavioral analysis
-Known phishing lookup	PhishTank	Community verified
-Threat database	Google Safe Browsing	Malware / phishing list
-IP reputation	AbuseIPDB	Abuse reports
-Domain Intelligence	WHOIS	Domain age, registrar
-🔹 Automatic Email Component Extraction
 
-URLs
+## ✨ Key Features
 
-IP addresses
+### Real-Time Phishing Detection
 
-Sender domain
+- URL classification via ML models
+- Email phishing prediction (50+ features)
+- Instant confidence scoring
 
-Return-Path
+### Deep Threat Intelligence (Advanced Analysis)
 
-Reply-To
+| Capability                  | API Used            | Description                 |
+|-----------------------------|---------------------|-----------------------------|
+| Multi-engine URL scan       | VirusTotal          | 70+ antivirus engines       |
+| Browser scan, screenshot    | URLScan.io          | Behavioral analysis         |
+| Known phishing lookup       | PhishTank           | Community-verified sites    |
+| Threat Database             | Google SafeBrowsing | Malware / phishing lists    |
+| IP Reputation               | AbuseIPDB           | Abuse reports               |
+| Domain Intelligence         | WHOIS               | Domain age, registrar info  |
 
-Attachments
+### Automatic Email Component Extraction
 
-HTML structure
+Automatically extracts:
+- URLs
+- IP addresses
+- Sender domain
+- Return-Path, Reply-To
+- Attachments
+- HTML structure
 
-🔹 Explainable AI (XAI)
+### Explainable AI (XAI)
 
-Shows why an email was flagged:
+Provides explanations for flagged emails:
+- Suspicious words
+- Spoofed domains
+- Authentication failures (SPF/DKIM/DMARC)
+- Mismatched headers
+- URL redirection patterns
 
-Suspicious words
+---
 
-Spoofed domains
+## 🚀 Quick Start
 
-Authentication failures
+```sh
+# 1. Clone the Repository
+git clone https://github.com/Pranavrh53/PhisGaurd-AI.git
+cd PhisGaurd-AI
 
-Mismatching sender headers
-
-URL redirection patterns
-
-🚀 Quick Start
-1. Clone the Repo
-git clone https://github.com/yourusername/PhishGuard-AI.git
-cd PhishGuard-AI
-
-2. Create Virtual Environment
+# 2. Set Up Virtual Environment
 python -m venv venv
-source venv/bin/activate       # Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-3. Install Dependencies
+# 3. Install Dependencies
 pip install -r requirements.txt
 
-4. Run the App
+# 4. Run the Application
 python app.py
 
+# Open in browser:
+# http://localhost:5000
+```
 
-Visit:
-👉 http://localhost:5000
+---
 
-🧪 Usage
-✔ Basic Analysis (No API Keys)
+## 🧪 Usage
 
-Open main page
+### Basic Analysis (No API Keys Needed)
 
-Paste email or URL
+1. Open main page
+2. Paste email or URL to analyze
+3. Click "Analyze"
+4. View prediction & explanation
 
-Click Analyze
+### Advanced Analysis (Requires API Keys for APIs)
 
-Get prediction + explanation
-
-✔ Advanced Analysis (Requires API Keys)
-
-Supports:
-
-VirusTotal
-
-URLScan
-
-Safe Browsing
-
-AbuseIPDB
-
-PhishTank
-
-WHOIS
+Supported APIs: VirusTotal, URLScan, SafeBrowsing, AbuseIPDB, PhishTank, WHOIS
 
 To enable:
+1. Go to `/advanced_analysis`
+2. Enter your API keys
+3. Click "Save"
 
-Go to /advanced_analysis
+---
 
-Enter API keys
+## 📊 Feature Breakdown
 
-Save
+**1. Header Features**
+- SPF, DKIM, DMARC
+- Sender mismatch, Reply-To anomalies
 
-📊 What Gets Analyzed (50+ Features)
-1. Header Features
+**2. Content Features**
+- Urgent/threat language
+- Spam keywords
+- HTML/text ratio
+- Uppercase/special characters
 
-SPF
+**3. URL Features**
+- Shorteners, IP-based URLs
+- Subdomain depth, protocol checks
+- Mismatch between URL text & href
 
-DKIM
+**4. Attachments**
+- Suspicious/double extensions
+- Heuristic file analysis
 
-DMARC
+**5. Psychological Features**
+- Fear, urgency, scarcity, greed usage
 
-Sender mismatch
+**6. Technical Features**
+- Homoglyph detection
+- Encoding irregularities
 
-Reply-To anomalies
+---
 
-2. Content Features
+## 📁 Project Structure
 
-Urgent language
-
-Threat words
-
-Spam keywords
-
-HTML to text ratio
-
-Uppercase / special character counts
-
-3. URL Features
-
-Shorteners
-
-IP-based URLs
-
-Subdomain depth
-
-Protocol check
-
-Mismatch between text and href
-
-4. Attachments
-
-Suspicious extensions
-
-Double extensions
-
-File naming heuristics
-
-5. Psychological Features
-
-Fear
-
-Urgency
-
-Scarcity
-
-Greed
-
-6. Technical Features
-
-Homoglyph detection
-
-Encoding irregularities
-
-📁 Project Structure
+```
 PhishGuard-AI/
 │
-├── app.py                     # Flask backend
-├── requirements.txt
+├── app.py                     # Flask backend entry
+├── requirements.txt           # Python dependencies
 │
 ├── email_features.py          # 50+ email features
-├── advanced_analysis.py        # API integrations
-├── test_email_features.py
+├── advanced_analysis.py       # Threat-intelligence API integration
+├── test_email_features.py     # Unit tests
 │
-├── models/
+├── models/                    # ML models
 │   ├── URL_detection_model.pkl
 │   └── phish_detector_joblib.pkl
 │
-├── templates/
+├── templates/                 # HTML pages
 │   ├── index.html
 │   └── advanced_analysis.html
 │
@@ -197,46 +161,59 @@ PhishGuard-AI/
 │   ├── css/
 │   └── js/
 │
-├── extension/                 # Browser extension
+├── extension/                 # Browser extension (WIP)
 │
-└── notebooks/                 # Model training
+└── notebooks/                 # Model training notebooks
     ├── URL_detection_model.ipynb
     └── Email_Phishing_Model.ipynb
+```
 
-🧠 Technical Details
-Machine Learning
+---
 
-Logistic Regression / Random Forest
+## 🧠 Technical Details
 
-TF-IDF + engineered features
+- **Machine Learning:** Logistic Regression & Random Forest
+- **Feature Engineering:** TF-IDF, manual feature sets
+- **Datasets:** Nazario, SpamAssassin, curated datasets
 
-Dataset: Nazario + SpamAssassin + curated datasets
+**Architecture:**
 
-Architecture
-User Input → Feature Extraction → ML Model → Prediction
-                       ↓
-          (Optional) Deep Threat Intelligence APIs
+`User Input → Feature Extraction → ML Model → Prediction`
+```
+                ↓
+       (Optional) Deep Threat Intelligence APIs
+```
 
-🚀 Future Enhancements
+---
 
-Attachment malware scanning
+## 🚀 Planned Enhancements
 
-Gmail/Outlook integration
+- Attachment malware scanning
+- Gmail/Outlook integration
+- Browser real-time protection
+- Live dashboard analytics
+- SHAP-based advanced XAI visualizations
 
-Browser real-time protection
+---
 
-Live dashboard analytics
+## 🤝 Contributing
 
-SHAP-based XAI visualizations
+1. Create a feature branch:
+   ```sh
+   git checkout -b feature/my-feature
+   ```
+2. Commit your changes:
+   ```sh
+   git commit -m "Add my feature"
+   ```
+3. Push & open a Pull Request:
+   ```sh
+   git push origin feature/my-feature
+   ```
+   > All contributions and suggestions are welcome!
 
-🤝 Contributing
-git checkout -b feature/new-feature
-git commit -m "Added new feature"
-git push origin feature/new-feature
+---
 
+## 📄 License
 
-Open a PR!
-
-📄 License
-
-MIT License
+This project is licensed under the [MIT License](LICENSE).
