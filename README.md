@@ -1,379 +1,319 @@
-# PhishGuard-AI: Advanced Email & URL Phishing Detection
+🛡️ PhishGuard-AI
+AI-Powered Email & URL Phishing Detection System
+<div align="center"> <img src="https://img.icons8.com/color/96/000000/cyber-security.png" width="110" /> <h3>Protect Your Digital Life with Intelligent Phishing Detection</h3> <p> <img src="https://img.shields.io/badge/Python-3.8+-blue" /> <img src="https://img.shields.io/badge/Flask-3.0+-green" /> <img src="https://img.shields.io/badge/Machine%20Learning-Active-blueviolet" /> <img src="https://img.shields.io/badge/License-MIT-brightgreen" /> </p> <p> <a href="#-features">Features</a> • <a href="#-quick-start">Quick Start</a> • <a href="#-project-structure">Project Structure</a> • <a href="#-technical-details">Technical Details</a> • <a href="#-future-enhancements">Future Enhancements</a> • <a href="#-contributing">Contributing</a> </p> </div>
+🌟 Overview
 
-**PhishGuard-AI** is a comprehensive phishing detection system that uses machine learning and external security APIs to identify phishing emails and malicious URLs in real-time.
+PhishGuard-AI is a complete phishing detection suite that combines:
 
-## 🚀 Quick Start
+✔️ Machine Learning
+✔️ Email Feature Engineering (50+ features)
+✔️ URL Intelligence APIs
+✔️ Explainable AI
+✔️ Real-time threat scoring
 
-### 1. Install Dependencies
-```bash
+It detects phishing URLs, analyzes email content, checks domain/IP reputation, validates sender authentication, and provides multi-source threat intelligence.
+
+✨ Key Features
+🔹 1. Real-Time Phishing Detection
+
+URL classification using ML models
+
+Email phishing prediction using 50+ engineered features
+
+Instant confidence scoring
+
+🔹 2. Deep Threat Intelligence (Advanced Analysis Page)
+Capability	Integrated API
+Multi-engine URL scanning	VirusTotal
+Smart browser-based scanning + Screenshots	URLScan.io
+Known phishing DB check	PhishTank
+Google threat database lookup	Safe Browsing API
+IP reputation check	AbuseIPDB
+Domain age & WHOIS analysis	WHOIS
+🔹 3. Email Component Auto-Extraction
+
+Extracts & analyzes:
+
+URLs
+
+IP addresses
+
+Sender domain
+
+Return-Path
+
+Reply-To
+
+Attachments
+
+HTML structure
+
+🔹 4. Explainable AI (XAI)
+
+See exactly why an email was flagged:
+
+Keyword triggers
+
+Domain mismatch
+
+Authentication failures
+
+Suspicious URLs
+
+Sender anomalies
+
+🔹 5. Browser Extension (Optional Folder)
+
+Instant URL check inside the browser
+
+One-click phishing insights
+
+🚀 Quick Start
+Prerequisites
+
+Python 3.8+
+
+pip
+
+Modern Browser for extension (optional)
+
+Installation
+# Clone the repo
+git clone https://github.com/yourusername/PhishGuard-AI.git
+cd PhishGuard-AI
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate       # Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### 2. Run the Application
-```bash
+Run the Application
 python app.py
-```
 
-### 3. Open Your Browser
-Go to: **http://localhost:5000**
 
-### 4. Analyze Emails
-- Paste email content in the "Email Phishing Detector"
-- Click "Analyze Email"
-- Get instant results with 50+ features analyzed
+Now open:
 
----
+👉 http://localhost:5000
 
-## ✨ Features
+🧪 Using PhishGuard-AI
+✔️ Basic Email & URL Analysis (No API Keys Needed)
 
-### Basic Detection (Main Page)
-- **URL Scanner**: Check if URLs are malicious or safe
-- **Email Phishing Detector**: Analyze emails with 50+ advanced features
-- **Real-time Analysis**: Instant predictions using ML model
-- **Comprehensive Reports**: See exactly why an email is flagged
+Open main page
 
-### Advanced Analysis (Separate Page)
-- **Deep URL Analysis**: Scan with VirusTotal, URLScan.io, Google Safe Browsing, PhishTank
-- **IP Reputation**: Check IPs with VirusTotal and AbuseIPDB
-- **Domain Intelligence**: WHOIS lookup, domain age, reputation
-- **Email Component Extraction**: Automatically analyze all URLs/IPs/domains in emails
-- **Screenshots**: Visual confirmation of suspicious URLs
+Paste suspicious email or URL
 
----
+Click Analyze
 
-## 📊 What Gets Analyzed
+Get ML prediction + feature breakdown
 
-### 50+ Email Features Across 7 Categories:
+✔️ Deep Advanced Analysis (API Keys Required)
 
-#### 1. Header Analysis (10 features)
-- ✅ SPF authentication
-- ✅ DKIM signature
-- ✅ Domain mismatch (From vs Return-Path)
-- ✅ Reply-To analysis
-- ✅ Legitimate domain check
+Supports:
 
-#### 2. Content Analysis (20 features)
-- ✅ Spammy keywords (urgent, verify, suspended, etc.)
-- ✅ Urgency tactics (act now, limited time)
-- ✅ Threat language (account closure, legal action)
-- ✅ Generic salutations ("Dear Customer")
-- ✅ Financial info requests
-- ✅ Text statistics (length, uppercase ratio, punctuation)
+API	Purpose
+VirusTotal	Scan URLs/IPs/domain with 70+ antivirus engines
+URLScan.io	Browser scan, screenshot, behavior
+Safe Browsing	Google’s threat database
+AbuseIPDB	IP reputation
+PhishTank	Known phishing URLs
+WHOIS	Domain age, registrar
+Setup API Keys:
 
-#### 3. URL Analysis (10 features)
-- ✅ URL shorteners (bit.ly, tinyurl, etc.)
-- ✅ IP addresses in URLs
-- ✅ HTTPS vs HTTP
-- ✅ Subdomain counting
-- ✅ Anchor text mismatch
-- ✅ Domain mismatch
+Visit
+👉 http://localhost:5000/advanced_analysis
 
-#### 4. Attachment Analysis (5 features)
-- ✅ Suspicious file types (.exe, .scr, .js)
-- ✅ Double extensions (invoice.pdf.exe)
-- ✅ Attachment count and size
+Scroll to API Configuration
 
-#### 5. Psychological Triggers (5 features)
-- ✅ Fear tactics
-- ✅ Urgency pressure
-- ✅ Greed triggers (free money, prizes)
-- ✅ Scarcity tactics (limited offer)
+Enter your API keys
 
-#### 6. Technical Analysis (5 features)
-- ✅ Homoglyph detection (look-alike characters)
-- ✅ Suspicious encoding
-- ✅ HTML-to-text ratio
+Save
 
-#### 7. External API Analysis (Optional)
-- ✅ VirusTotal (70+ antivirus engines)
-- ✅ URLScan.io (screenshots + behavior)
-- ✅ Google Safe Browsing
-- ✅ AbuseIPDB (IP reputation)
-- ✅ PhishTank (known phishing URLs)
-- ✅ WHOIS (domain age)
+📊 What Gets Analyzed (50+ Features)
+1. Header Analysis
 
----
+SPF, DKIM, DMARC validation
 
-## 🎯 How to Use
+Domain mismatch (From vs Reply-To)
 
-### Basic Analysis (No API Keys Needed)
+Return-Path anomalies
 
-1. **Start the app**: `python app.py`
-2. **Open browser**: http://localhost:5000
-3. **Paste email**: Copy suspicious email content
-4. **Click "Analyze Email"**
-5. **Review results**: See prediction + all features
+2. Content Analysis
 
-### Advanced Analysis (Requires API Keys)
+Spam keywords
 
-1. **Get free API keys** (5 minutes):
-   - [VirusTotal](https://www.virustotal.com/gui/join-us) - 500 requests/day
-   - [URLScan.io](https://urlscan.io/user/signup) - 100 requests/day
-   - [Google Safe Browsing](https://developers.google.com/safe-browsing) - 10,000 requests/day
-   - [AbuseIPDB](https://www.abuseipdb.com/register) - 1,000 requests/day
+Urgency indicators
 
-2. **Configure APIs**:
-   - Go to http://localhost:5000/advanced_analysis
-   - Scroll to "API Configuration"
-   - Enter your API keys
-   - Click "Save"
+Threat language
 
-3. **Deep Analysis**:
-   - Paste email in "Email Deep Analysis" tab
-   - Wait 30-60 seconds
-   - Get comprehensive threat intelligence from multiple sources
+HTML-to-text ratio
 
----
+Uppercase & punctuation score
 
-## 📁 Project Structure
+3. URL Analysis
 
-```
+IP-based URLs
+
+Subdomain depth
+
+HTTPS/HTTP check
+
+URL shorteners
+
+Domain mismatch
+
+4. Attachments
+
+Suspicious filetypes
+
+Double extensions
+
+Size heuristics
+
+5. Psychological Indicators
+
+Fear
+
+Urgency
+
+Scarcity
+
+Greed
+
+6. Technical Anomalies
+
+Homoglyph detection
+
+Suspicious encoding
+
+Strange character sets
+
+📁 Project Structure
 PhishGuard-AI/
-├── app.py                      # Flask application (main + advanced routes)
-├── email_features.py           # Core feature extraction (50+ features)
-├── advanced_analysis.py        # External API integration (7 APIs)
-├── requirements.txt            # Python dependencies
-├── test_email_features.py      # Developer testing tool
+│
+├── app.py                       # Flask backend (basic + advanced routes)
+├── requirements.txt             # Dependencies
+│
+├── email_features.py            # 50+ feature extraction functions
+├── advanced_analysis.py         # All API integrations (VT, URLScan, AbuseIPDB...)
+├── test_email_features.py       # Developer test cases
+│
+├── models/ or root/
+│   ├── URL_detection_model.pkl
+│   └── phish_detector_joblib.pkl
+│
 ├── templates/
-│   ├── index.html             # Main UI (basic analysis)
-│   └── advanced_analysis.html # Advanced analysis UI
-└── [model files]              # Pre-trained ML models
-    ├── URL_detection_model.pkl
-    ├── phish_detector_joblib.pkl
-    └── ...
-```
+│   ├── index.html               # Basic analysis UI
+│   └── advanced_analysis.html   # Deep analysis dashboard
+│
+├── static/
+│   ├── css/
+│   └── js/
+│
+├── extension/                   # Browser extension (optional)
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html
+│   └── icons/
+│
+├── notebooks/                   # Model training notebooks
+│   ├── URL_detection_model.ipynb
+│   └── Email_Phishing_Model.ipynb
+│
+└── utils/
+    ├── xai_handler.py           # LIME/SHAP explainable AI
+    └── advanced_analysis.py     # API handlers
 
----
+🧠 Technical Details
+✔️ Machine Learning
 
-## 🔍 Example: Detecting a Phishing Email
+Models: Logistic Regression / Random Forest
 
-### Input Email:
-```
-From: security@paypa1-verify.com
-Subject: URGENT: Your Account Will Be Suspended!
+Feature set: 50+ features
 
-Dear Customer,
+Dataset: Nazario phishing + SpamAssassin + custom cleaned datasets
 
-Your account has been temporarily suspended due to unusual activity.
-Click here immediately: http://bit.ly/verify-account
+Preprocessing: TF-IDF, normalization, categorical encodings
 
-This is your final warning!
-```
+✔️ Architecture
+User Input
+     ↓
+Feature Extraction (email_features.py)
+     ↓
+ML Model (URL or Email)
+     ↓
+Prediction + Confidence
+     ↓
+(OPTIONAL) Deep Analysis → External Security APIs
 
-### PhishGuard-AI Detects:
-- ❌ **Typo in domain**: "paypa1" instead of "paypal"
-- ❌ **Generic salutation**: "Dear Customer"
-- ❌ **Urgency keywords**: "URGENT", "immediately", "final warning"
-- ❌ **URL shortener**: bit.ly
-- ❌ **Threat language**: "suspended", "warning"
-- ❌ **Missing SPF/DKIM**: No authentication
+🛡️ Security & Privacy
 
-### Result:
-**🚨 Prediction: PHISHING (95% confidence)**
+No email content stored
 
-### Advanced Analysis Shows:
-- **VirusTotal**: 15/70 engines flag URL as malicious
-- **PhishTank**: URL in known phishing database
-- **WHOIS**: Domain registered 3 days ago
-- **URLScan.io**: Screenshot shows fake PayPal login page
+API keys stored only in session memory
 
----
+No external API calls unless user enables deep analysis
 
-## 🛡️ Why Use PhishGuard-AI?
+Local processing on your machine
 
-### ✅ Advantages:
-1. **Comprehensive**: 50+ features + external API validation
-2. **Fast**: Instant ML predictions
-3. **Accurate**: Multi-source verification
-4. **Visual**: See screenshots of suspicious URLs
-5. **Educational**: Learn what makes emails suspicious
-6. **Free**: All APIs have free tiers
-7. **Privacy**: No data storage, all processing local
-8. **Open Source**: Fully auditable code
+🚨 Example Detection
 
-### ❌ What It Cannot Do:
-- Scan attachment contents for malware (use antivirus)
-- Guarantee 100% accuracy (no system is perfect)
-- Check if a company actually sent an email (contact them directly)
-- Protect you from all threats (use multiple security layers)
+Email:
 
----
+From: security@paypa1-support.com
+Subject: URGENT: Your Account is Suspended!
 
-## 🔧 For Developers
+Click here: http://bit.ly/verify-now
 
-### Test Feature Extraction:
-```bash
-python test_email_features.py
-```
 
-This runs 4 test cases showing how different phishing tactics are detected.
+Flags detected:
 
-### Add New Features:
-Edit `email_features.py` and add to any feature extractor class:
-```python
-@staticmethod
-def your_new_feature(text):
-    # Your logic here
-    return feature_value
-```
+❌ Domain spoofing (“paypa1”)
 
-### Add New APIs:
-Edit `advanced_analysis.py` and create a new analyzer class:
-```python
-class NewAPIAnalyzer:
-    @staticmethod
-    def analyze(data):
-        # API call logic
-        return results
-```
+❌ URL shortener
 
----
+❌ Urgency keywords
 
-## 📚 Technical Details
+❌ No DKIM/SPF
 
-### Machine Learning Model:
-- **Algorithm**: Logistic Regression / Random Forest (from your training)
-- **Features**: 50+ engineered features
-- **Vectorization**: TF-IDF for text + scaled numeric features
-- **Training**: Based on SpamAssassin + Nazario phishing datasets
+❌ Threat language
 
-### External APIs:
-- **VirusTotal**: Multi-engine scanning (70+ vendors)
-- **URLScan.io**: Automated browser analysis
-- **Google Safe Browsing**: Google's threat database
-- **AbuseIPDB**: Community-driven IP reputation
-- **PhishTank**: Verified phishing URL database
-- **WHOIS**: Domain registration information
+Result:
 
-### Architecture:
-```
-User Input → Feature Extraction → ML Model → Prediction
-                    ↓
-            (Optional) External APIs → Deep Analysis
-```
+🚨 PHISHING — 95% Confidence
+🚀 Future Enhancements
 
----
+Full attachment malware scanning
 
-## 🚨 Important Notes
+Gmail/Outlook integration
 
-### Security & Privacy:
-- ✅ Emails analyzed in real-time, not stored
-- ✅ API keys stored in memory only
-- ✅ No data sent to third parties (except for deep analysis when requested)
-- ✅ All processing on your server
+Real-time browser monitoring
 
-### Best Practices:
-1. **Use PhishGuard-AI as ONE tool** among many security measures
-2. **Always verify suspicious emails** through official channels
-3. **Don't click links** in emails flagged as phishing
-4. **Report phishing** to your email provider
-5. **Stay informed** about new phishing tactics
+SHAP-based visual explanations
 
-### Rate Limits:
-- VirusTotal: 4 requests/minute, 500/day
-- URLScan.io: 100 requests/day
-- Google Safe Browsing: 10,000 requests/day
-- AbuseIPDB: 1,000 requests/day
-- PhishTank: Unlimited (no key required)
+Cloud dashboard with analytics
 
----
+Auto-blocking via browser extension
 
-## 🐛 Troubleshooting
+🤝 Contributing
+git checkout -b feature/NewFeature
+git commit -m "Added NewFeature"
+git push origin feature/NewFeature
 
-### "ModuleNotFoundError"
-```bash
-pip install -r requirements.txt
-```
 
-### "Model file not found"
-Make sure `URL_detection_model.pkl` and `phish_detector_joblib.pkl` are in the project root.
+Open a Pull Request!
 
-### "API key not configured"
-Go to http://localhost:5000/advanced_analysis and configure your API keys.
+📄 License
 
-### "Rate limit exceeded"
-Wait a few minutes. Free tier APIs have rate limits.
+MIT License — Free for personal & commercial use.
 
----
+❤️ Acknowledgments
 
-## 📄 License
+Icons by Icons8
 
-This project is open source. Feel free to use, modify, and distribute.
+Open-source security datasets
 
----
+VirusTotal, URLScan.io, Google Safe Browsing APIs
 
-## 🤝 Contributing
-
-Contributions welcome! Areas for improvement:
-- Additional feature extraction methods
-- New external API integrations
-- UI/UX enhancements
-- Model retraining with new datasets
-- Performance optimizations
-
----
-
-## 📞 Support
-
-For issues or questions:
-- Check the `test_email_features.py` for examples
-- Review the code comments in `email_features.py` and `advanced_analysis.py`
-- Open an issue on GitHub
-
----
-
-## 🎓 Learn More
-
-This project demonstrates:
-- Feature engineering for security applications
-- ML-based classification
-- External API integration
-- Full-stack web development (Flask + HTML/JS)
-- Security best practices
-
----
-
-**Remember: PhishGuard-AI helps you make informed decisions, but always trust your instincts and verify suspicious communications through official channels!** 🛡️
-
----
-
-## 📝 Changelog
-
-### Version 2.0 (Current)
-- ✅ Added 50+ comprehensive email features
-- ✅ Integrated 7 external security APIs
-- ✅ Advanced analysis page with deep investigation
-- ✅ URL screenshot capability
-- ✅ Domain age and WHOIS lookup
-- ✅ IP reputation checking
-- ✅ Multi-source verdict aggregation
-
-### Version 1.0
-- Basic URL detection
-- Simple email analysis
-- ML model training uses machine learning algorithms to detect **phishing URLs** by analyzing the structural and semantic properties of URLs. The project trains a model on features extracted from a dataset of **phishing URLs** and **legitimate URLs**. The resulting model can classify new URLs as either phishing or legitimate.
-```
----
-
-## Future Enhancements (Planned)
-
-While the current version of PhisGaurd-AI focuses on phishing **URL detection**, the following features are planned for future updates:
-```
-- **Full Email Detection**: Expansion of the system to analyze phishing **email content** along with **URLs**.
-- **Phishing Attachment Detection**: Adding the ability to analyze email attachments and flag potential phishing content.
-- **Real-Time Detection and Alerts**: Implementing a live phishing detection system that can provide **real-time notifications** when phishing URLs are detected.
-- **Explainable AI (XAI)**: Adding interpretable explanations for why a particular URL is classified as phishing, using tools like **LIME** or **SHAP**.
-- **Web Dashboard**: Building a dashboard to visualize phishing detection trends, statistics, and more in real time.
-- **Email Integration**: Allowing integration with popular email services (e.g., Gmail, Outlook) to scan incoming emails for phishing attempts.
-```
----
-
-## Installation
-
-To install and run PhisGaurd-AI locally, follow these steps:
-
-### 1. Clone the repository:
-
-```bash
-git clone https://github.com/Pranavrh53/PhisGaurd-AI.git
-cd PhisGaurd-AI
+Built with ❤️ by the PhishGuard-AI Team
